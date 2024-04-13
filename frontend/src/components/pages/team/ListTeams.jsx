@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { teamService } from "../../services/team";
+import { teamService } from "../../../services/team";
 
 const ListTeams = () => {
   const [teams, setTeams] = useState([]);
@@ -56,6 +56,20 @@ const ListTeams = () => {
         title: "Supprimé !",
         text: "L'équipe a été supprimé.",
         icon: "success",
+        showClass: {
+          popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+        },
+        hideClass: {
+          popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+        }
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'équipe:", error);
@@ -64,18 +78,37 @@ const ListTeams = () => {
         title: "Erreur",
         text: "Une erreur s'est produite lors de la suppression de l'équipe.",
         icon: "error",
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `
+        }
       });
     }
   };
 
   //fonction pour afficher les détails d'un equipe :
   const showTeamDetails = (team) => {
+    console.log(team);
     // Construire une chaîne HTML pour afficher les détails du l'equipe
     let TeamDetailsHTML = `
       <div>
         <p><strong>Nom du l'équipe:</strong> ${team.teamName}</p>
-        <p><strong>Chef d'equipe:</strong> ${team.chef}</p>
-        <p><strong>Membres:</strong> ${team.employees.firstName}</p>
+        <p><strong>Chef d'equipe:</strong> ${team.chef.firstName} ${team.chef.lastName}</p>
+        <p><strong>Membres:</strong> ${team.employees.map((em) => {
+      return (
+        `<span class="badge bg-light text-dark">${em.firstName} ${em.lastName}</span>`
+      )
+    })}</p>
       </div>
     `;
 
@@ -115,6 +148,20 @@ const ListTeams = () => {
       title: "Détails de l'équipe",
       html: TeamDetailsHTML,
       confirmButtonText: "Fermer",
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
     });
   };
 
@@ -175,77 +222,3 @@ const ListTeams = () => {
 };
 
 export default ListTeams;
-
-{
-  /* <div className="container-fluid">
-      <div className="container-fluid">
-        <div className="card">
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-4">
-                <h5 className="card-title fw-semibold mb-4">Card</h5>
-                <div className="card">
-                  <img
-                    src="img/products/s4.jpg"
-                    className="card-img-top"
-                    alt="..."
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">Card title</h5>
-                    <p className="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <Link to="/card" className="btn btn-primary">
-                      Go somewhere
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <h5 className="card-title fw-semibold mb-4">
-                  Header and footer
-                </h5>
-                <div className="card">
-                  <div className="card-header">Featured</div>
-                  <div className="card-body">
-                    <h5 className="card-title">Special title treatment</h5>
-                    <p className="card-text">
-                      With supporting text below as a natural lead-in to
-                      additional content.
-                    </p>
-                    <Link to="/card" className="btn btn-primary">
-                      Go somewhere
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <h5 className="card-title fw-semibold mb-4">
-                  Titles, text, and links
-                </h5>
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Card title</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                      Card subtitle
-                    </h6>
-                    <p className="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
-                    <Link to="/card" className="card-link">
-                      Card link
-                    </Link>
-                    <Link to="/card" className="card-link">
-                      Another link
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> */
-}

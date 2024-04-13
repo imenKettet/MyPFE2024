@@ -54,7 +54,6 @@ exports.getOneProject = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
-    console.log(req.body);
     let taskIds = project.tasks.map((task) => task._id.toString());
     const receivedTaskIds = req.body.tasks
       .map((task) => {

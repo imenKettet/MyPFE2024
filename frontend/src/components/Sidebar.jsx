@@ -105,8 +105,8 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
           {role === "admin" && (
             <li className="sidebar-item">
               <Link
-                className={`sidebar-link ${isLinkActive("/listUsers")}`}
-                to="/listUsers"
+                className={`sidebar-link ${isLinkActive("/list-users")}`}
+                to="/list-users"
                 aria-expanded="false"
               >
                 <span>

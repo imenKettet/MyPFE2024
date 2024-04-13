@@ -1,26 +1,18 @@
 import React from "react";
-import { jwtDecode } from "jwt-decode";
 import { Navigate } from "react-router-dom";
-
-const decodeToken = (token) => {
-  return token ? jwtDecode(token) : {};
-};
-
-const isExpiredToken = (token) => {
-  return token.exp < token.iat;
-};
-
+import { getCookie, deleteCookie, isExpiredToken } from '../utils/functions';
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = getCookie("token");
   if (token) {
-    const decodedToken = decodeToken(token);
-    const expired = isExpiredToken(decodedToken);
+    const expired = isExpiredToken(token);
     if (expired) {
+      deleteCookie("token");
       return <Navigate to="login" />;
     } else {
       return children;
     }
   } else {
+    deleteCookie("token");
     return <Navigate to="login" />;
   }
 };

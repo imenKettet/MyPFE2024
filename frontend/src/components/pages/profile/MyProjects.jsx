@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { teamService } from "../../services/team";
+import { teamService } from "../../../services/team";
 
 const Myprojects = () => {
   const [projects, setProjects] = useState([]);

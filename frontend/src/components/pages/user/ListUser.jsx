@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { userService } from "../../services/user";
+import { userService } from "../../../services/user";
 import { FaSearch } from "react-icons/fa";
 
 const ListUsers = () => {
@@ -126,7 +126,7 @@ const ListUsers = () => {
                   <td>{user.role}</td>
                   <td>
                     <div>
-                      <Link to={`/EditUser/${user._id}`}>
+                      <Link to={`/edit-user/${user._id}`}>
                         <i className="ti ti-pencil h3 text-success me-2"></i>
                       </Link>
 

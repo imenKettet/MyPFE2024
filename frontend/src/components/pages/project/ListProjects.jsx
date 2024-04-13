@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { projectService } from "../../services/project";
+import { projectService } from "../../../services/project";
 
 const ListProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -68,11 +68,11 @@ const ListProjects = () => {
       <div>
         <p><strong>Nom du Projet:</strong> ${project.nameProject}</p>
         <p><strong>Date de Début:</strong> ${new Date(
-          project.dateStart
-        ).toLocaleDateString()}</p>
+      project.dateStart
+    ).toLocaleDateString()}</p>
         <p><strong>Date de Fin:</strong> ${new Date(
-          project.dateEnd
-        ).toLocaleDateString()}</p>
+      project.dateEnd
+    ).toLocaleDateString()}</p>
         <p><strong>Client:</strong> ${project.client}</p>
       </div>
     `;
@@ -111,6 +111,20 @@ const ListProjects = () => {
       title: "Détails du Projet",
       html: projectDetailsHTML,
       confirmButtonText: "Fermer",
+      showClass: {
+        popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+      },
+      hideClass: {
+        popup: `
+          animate__animated
+          animate__fadeOutDown
+          animate__faster
+        `
+      }
     });
   };
 
@@ -123,10 +137,10 @@ const ListProjects = () => {
             <Link to="/AddProject">
               <button
                 className="btn btn-primary  "
-                // style={{
-                //   background: "#e76f51",
-                //   border: "none",
-                // }}
+              // style={{
+              //   background: "#e76f51",
+              //   border: "none",
+              // }}
               >
                 Ajouter
               </button>
@@ -154,15 +168,15 @@ const ListProjects = () => {
                   <td>
                     <div>
                       <Link to={`/EditProject/${project._id}`}>
-                        <i className="ti ti-pencil h3 text-success me-2"></i>
+                        <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
                       </Link>
 
                       <i
-                        className="ti ti-trash h3 text-danger me-2"
+                        className="cursor-pointer ti ti-trash h3 text-danger me-2"
                         onClick={() => confirmDelete(project._id)}
                       ></i>
                       <i
-                        className="ti ti-alert-circle h3 "
+                        className="cursor-pointer ti ti-alert-circle h3 "
                         onClick={() => showProjectDetails(project)}
                       ></i>
                     </div>
@@ -178,60 +192,3 @@ const ListProjects = () => {
 };
 
 export default ListProjects;
-
-// const showProjectDetails = (project) => {
-//   setSelectedProject(project);
-//   Swal.fire({
-//     title: "Détails du Projet",
-//     html: `
-//       <div>
-//         <p><strong>Nom du Projet:</strong> ${project.nameProject}</p>
-//         <p><strong>Date de Début:</strong> ${new Date(
-//           project.dateStart
-//         ).toLocaleDateString()}</p>
-//         <p><strong>Date de Fin:</strong> ${new Date(
-//           project.dateEnd
-//         ).toLocaleDateString()}</p>
-//         <p><strong>Client:</strong> ${project.client}</p>
-//       </div>
-//     `,
-//     confirmButtonText: "Fermer",
-//   });
-// };
-
-// <div className="container-fluid">
-//     <div className="container-fluid">
-//         <div className="card">
-//             <div className="card-body">
-//                 <h5 className="card-title fw-semibold mb-4">Buttons</h5>
-//                 <div className="card">
-//                     <div className="card-body p-4">
-//                         <button type="button" className="btn btn-primary m-1">Primary</button>
-//                         <button type="button" className="btn btn-secondary m-1">Secondary</button>
-//                         <button type="button" className="btn btn-success m-1">Success</button>
-//                         <button type="button" className="btn btn-danger m-1">Danger</button>
-//                         <button type="button" className="btn btn-warning m-1">Warning</button>
-//                         <button type="button" className="btn btn-info m-1">Info</button>
-//                         <button type="button" className="btn btn-light m-1">Light</button>
-//                         <button type="button" className="btn btn-dark m-1">Dark</button>
-//                         <button type="button" className="btn btn-link m-1">Link</button>
-//                     </div>
-//                 </div>
-//                 <h5 className="card-title fw-semibold mb-4">Outline buttons</h5>
-//                 <div className="card mb-0">
-//                     <div className="card-body p-4">
-//                         <button type="button" className="btn btn-outline-primary m-1">Primary</button>
-//                         <button type="button" className="btn btn-outline-secondary m-1">Secondary</button>
-//                         <button type="button" className="btn btn-outline-success m-1">Success</button>
-//                         <button type="button" className="btn btn-outline-danger m-1">Danger</button>
-//                         <button type="button" className="btn btn-outline-warning m-1">Warning</button>
-//                         <button type="button" className="btn btn-outline-info m-1">Info</button>
-//                         <button type="button" className="btn btn-outline-light m-1">Light</button>
-//                         <button type="button" className="btn btn-outline-dark m-1">Dark</button>
-//                         <button type="button" className="btn btn-outline-link m-1">Link</button>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     </div>
-// </div>

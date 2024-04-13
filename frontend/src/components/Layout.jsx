@@ -6,7 +6,6 @@ const Layout = () => {
   const [isMiniSidebar, setIsMiniSidebar] = useState(window.innerWidth < 1200);
 
   const showSidebarFN = () => {
-    console.log("clicked");
     setIsMiniSidebar(!isMiniSidebar);
   };
   useEffect(() => {
@@ -22,9 +21,8 @@ const Layout = () => {
   }, []);
   return (
     <div
-      className={`page-wrapper ${
-        isMiniSidebar ? "mini-sidebar" : "show-sidebar"
-      }`}
+      className={`page-wrapper ${isMiniSidebar ? "mini-sidebar" : "show-sidebar"
+        }`}
       id="main-wrapper"
       data-layout="vertical"
       data-navbarbg="skin6"

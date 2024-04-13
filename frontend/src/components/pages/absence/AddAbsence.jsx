@@ -4,8 +4,8 @@ import Select from "react-select";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import { absenceService } from "../../services/absence";
-import { userService } from "../../services/user";
+import { absenceService } from "../../../services/absence";
+import { userService } from "../../../services/user";
 
 const AddAbsence = () => {
   const Navigate = useNavigate();

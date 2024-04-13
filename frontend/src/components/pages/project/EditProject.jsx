@@ -2,41 +2,55 @@ import React from "react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { Formik } from "formik";
+import { Formik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import Swal from "sweetalert2";
-import { projectService } from "../../services/project";
+import { projectService } from "../../../services/project";
 
 const EditProject = () => {
   const Navigate = useNavigate();
   const { id } = useParams();
   const [project, setproject] = useState();
-  const [tasks, setTasks] = useState([]);
-
-  const addTask = () => {
-    setTasks([...tasks, { nameTask: "", estimatedDuration: "" }]);
+  const initialValues = {
+    nameProject: "",
+    client: "",
+    dateStart: "",
+    dateEnd: "",
+    tasks: [{ nameTask: "", estimatedDuration: "" }]
   };
-  // Fonction pour supprimer une tâche par son index
-  const deleteTask = (indexToRemove) => {
-    setTasks((prevTasks) =>
-      prevTasks.filter((_, index) => index !== indexToRemove)
-    );
+  const validationSchema = Yup.object().shape({
+    nameProject: Yup.string().required('Nom du projet est obligatoire'),
+    client: Yup.string().required('Nom du client est obligatoire'),
+    dateStart: Yup.date().required('Date début obligatoire'),
+    dateEnd: Yup.date().required('Date fin obligatoire'),
+    tasks: Yup.array().of(
+      Yup.object().shape({
+        nameTask: Yup.string().required('Nom tache obligatoire'),
+        estimatedDuration: Yup.string().required('Date durée estimation obligatoire')
+      })
+    )
+  });
+  const addTask = (values, setValues) => {
+    setValues({ ...values, tasks: [...values.tasks, { nameTask: "", estimatedDuration: "" }] });
+  };
+  const deleteTask = (index, values, setValues) => {
+    const newTasks = [...values.tasks];
+    newTasks.splice(index, 1);
+    setValues({ ...values, tasks: newTasks });
   };
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
         const response = await projectService.getOne(id);
-        setTasks(response.data.tasks);
         setproject(response.data);
       } catch (error) {
         console.log(error);
       }
     };
-
     fetchProject();
   }, [id]);
 
-  // Fonction pour afficher la confirmation avant d'enregistrer les modifications
   const confirmSaveChanges = () => {
     return Swal.fire({
       title: "Voulez-vous enregistrer les modifications?",
@@ -52,18 +66,14 @@ const EditProject = () => {
         <div className="card-body">
           <Formik
             initialValues={
-              project || {
-                nameProject: "",
-                client: "",
-                dateStart: "",
-                dateEnd: "",
-              }
+              project || initialValues
             }
+            validationSchema={validationSchema}
             onSubmit={async (values) => {
               try {
                 const shouldSave = await confirmSaveChanges();
                 if (shouldSave.isConfirmed) {
-                  let project = { ...values, tasks };
+                  let project = { ...values };
                   const response = await projectService.updateOne(id, project);
                   toast.success(response.data.message);
                   Navigate("/ListProjects");
@@ -87,6 +97,7 @@ const EditProject = () => {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              setValues
               /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit}>
@@ -98,7 +109,6 @@ const EditProject = () => {
                     type="text"
                     className="form-control"
                     name="nameProject"
-                    aria-describedby="emailHelp"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.nameProject}
@@ -112,7 +122,6 @@ const EditProject = () => {
                     type="text"
                     className="form-control"
                     name="client"
-                    aria-describedby="emailHelp"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.client}
@@ -126,7 +135,6 @@ const EditProject = () => {
                     type="date"
                     className="form-control"
                     name="dateStart"
-                    aria-describedby="emailHelp"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.dateStart}
@@ -140,7 +148,6 @@ const EditProject = () => {
                     type="date"
                     className="form-control"
                     name="dateEnd"
-                    aria-describedby="emailHelp"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.dateEnd}
@@ -148,52 +155,46 @@ const EditProject = () => {
                 </div>
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-3">
-                    <label htmlFor="tasks" className="form-label">
-                      Tâches :
-                    </label>
-                    {/* Bouton pour ajouter une nouvelle tâche */}
-                    <button
-                      type="button"
-                      className="btn btn-outline-dark"
-                      onClick={addTask}
-                    >
-                      Ajouter une tâche
-                    </button>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <label htmlFor="tasks" className="form-label me-3">
+                        Tâches :
+                      </label>
+                      {/* Bouton pour ajouter une nouvelle tâche */}
+                      <button type="button" className="btn btn-primary" onClick={() => addTask(values, setValues)}>Ajouter un tâche</button>
+                    </div>
                   </div>
 
-                  {tasks.map((task, index) => (
+                  {values.tasks.map((task, index) => (
                     <div key={index} className="input-group mb-3">
-                      <input
-                        type="text"
-                        name="nameTask"
-                        className="form-control"
-                        placeholder="Nom de la tâche"
-                        value={task.nameTask}
-                        onChange={(e) => {
-                          const newTasks = [...tasks];
-                          newTasks[index].nameTask = e.target.value;
-                          setTasks(newTasks);
-                        }}
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="estimatedDuration"
-                        placeholder="Durée estimée"
-                        value={task.estimatedDuration}
-                        onChange={(e) => {
-                          const newTasks = [...tasks];
-                          newTasks[index].estimatedDuration = e.target.value;
-                          setTasks(newTasks);
-                        }}
-                      />
-                      <button
-                        type="submit"
-                        className="btn btn-danger"
-                        onClick={() => deleteTask(index)}
-                      >
-                        <i className="ti ti-trash"></i>
-                      </button>
+                      <div className="col-4 me-2">
+                        <Field
+                          type="text"
+                          name={`tasks.${index}.nameTask`}
+                          className="form-control"
+                          placeholder="Nom de la tâche"
+                        />
+                        <ErrorMessage name={`tasks.${index}.nameTask`} component="span" className="text-danger" /></div>
+                      <div className="col-4 me-2">
+                        <Field
+                          type="number"
+                          min="1"
+                          name={`tasks.${index}.estimatedDuration`}
+                          className="form-control"
+                          placeholder="Durée estimée"
+                        />
+                        <ErrorMessage name={`tasks.${index}.estimatedDuration`} component="span" className="text-danger" />
+                      </div>
+                      <div>
+                        {values.tasks.length !== 1 && (
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => deleteTask(index, values, setValues)}
+                          >
+                            <i className="ti ti-trash"></i>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

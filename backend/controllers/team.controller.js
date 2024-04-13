@@ -13,6 +13,7 @@ exports.createTeam = async (req, res) => {
     teamIds.map(async (id) => {
       await User.findByIdAndUpdate(id, { team: team._id }, { new: true });
     });
+    await User.findByIdAndUpdate(req.body.chef, { team: team._id }, { new: true });
     res.json({ message: "L'equipe a été créé!" });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
@@ -40,16 +41,16 @@ exports.getOneTeam = async (req, res) => {
       .populate("chef")
       .populate("employees")
       .populate("projects");
-    let teamIds = [];
+    let employees = [];
     team.employees.map((em) => {
-      teamIds.push({ value: em._id, label: em.firstName + " " + em.lastName });
+      employees.push({ value: em._id, label: em.firstName + " " + em.lastName });
     });
-    team.employees = teamIds;
-    team.chef = {
+    // team.employees = teamIds;
+    const chef = {
       value: team.chef._id,
       label: team.chef.firstName + " " + team.chef.lastName,
     };
-    res.json(team);
+    res.json({ team, teamName: team.teamName, employees, chef });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
   }
@@ -57,16 +58,11 @@ exports.getOneTeam = async (req, res) => {
 //Update a Team
 exports.updateTeam = async (req, res) => {
   try {
-    let teamIds = [];
-    req.body.employees.map((em) => {
-      teamIds.push(em.value);
-    });
-    req.body.employees = teamIds;
     await Team.findByIdAndUpdate(req.params.id, req.body);
-    teamIds.map(async (id) => {
+    req.body.employees.map(async (id) => {
       await User.findByIdAndUpdate(id, { team: req.params.id }, { new: true });
     });
-    res.json(" L'équipe a été modifié");
+    res.json({ message: " L'équipe a été modifié" });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
   }
@@ -74,6 +70,13 @@ exports.updateTeam = async (req, res) => {
 //delete a team
 exports.deleteTeam = async (req, res) => {
   try {
+    const team = await Team.findById(req.params.id);
+    await User.findByIdAndUpdate(team.chef, { $unset: { team: 1 } }, { new: true })
+    await Promise.all(
+      team.employees.map(async (employeeId) => {
+        await User.findByIdAndUpdate(employeeId, { $unset: { team: 1 } }, { new: true })
+      })
+    )
     await Team.findByIdAndDelete(req.params.id);
     res.json(" L'équipe a été supprimé ");
   } catch (error) {

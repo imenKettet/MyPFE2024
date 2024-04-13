@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCookie } from './functions'
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const axiosApiInstance = axios.create({
   baseURL: BASE_URL + "/api/",
@@ -10,10 +11,8 @@ const axiosApiInstance = axios.create({
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async (config) => {
-    const token = localStorage.getItem("token");
-
     config.headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getCookie('token')}`,
       Accept: "application/json",
     };
     return config;

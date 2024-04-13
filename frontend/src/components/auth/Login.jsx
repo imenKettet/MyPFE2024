@@ -5,9 +5,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-// import { TiEye, TiEyeOutline } from "react-icons/ti";
+import { useCookies } from 'react-cookie';
+const oneDayInSeconds = 24 * 60 * 60;
 
 const Login = () => {
+  const [cookies, setCookie] = useCookies();
   // const [showPassword, setShowPassword] = useState(false);
   // const togglePasswordVisibility = () => {
   //   setShowPassword(!showPassword);
@@ -55,7 +57,7 @@ const Login = () => {
                         values
                       );
                       toast.success(response.data.message);
-                      localStorage.setItem("token", response.data.token);
+                      setCookie("token", response.data.token, { maxAge: oneDayInSeconds });
                       localStorage.setItem("role", response.data.role);
                       Navigate("/");
                     } catch (error) {
@@ -114,7 +116,7 @@ const Login = () => {
                             name="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            // {showPassword ? "text" : "password"}
+                          // {showPassword ? "text" : "password"}
                           />
                           {/* <button
                             className=""
@@ -180,75 +182,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// const loginUser = async (e) => {
-//   e.preventDefault();
-// };
-
-// const Navigate = useNavigate();
-// const [data, setdata] = useState({
-//   email: "",
-//   password: "",
-// });
-
-// const handleChange = (e) => {
-//   const { id, value } = e.target;
-//   setdata((prevState) => {
-//     return { ...prevState, [id]: value };
-//   });
-// };
-
-/* <form onSubmit={loginUser}>
-                  <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" className="form-label">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      aria-describedby="emailHelp"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="exampleInputPassword1"
-                      className="form-label"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="d-flex align-items-center justify-content-between mb-4">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input primary"
-                        type="checkbox"
-                        value=""
-                        id="flexCheckChecked"
-                      />
-                      <label
-                        className="form-check-label text-dark"
-                        htmlFor="flexCheckChecked"
-                      >
-                        Remeber this Device
-                      </label>
-                    </div>
-                    <Link className="text-primary fw-bold" to="/">
-                      Forgot Password ?
-                    </Link>
-                  </div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2"
-                  >
-                    Sign In
-                  </button>
-                </form> */
-//p className="text-center">Your Social Campaigns</p>

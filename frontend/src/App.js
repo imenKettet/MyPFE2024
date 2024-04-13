@@ -1,12 +1,16 @@
 import "./App.css";
 import "./assets/css/styles.min.css";
 import "./assets/scss/styles.scss";
+import "animate.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Suspense, lazy } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import routes from "./routes";
 import { Toaster } from "react-hot-toast";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import { CoockieContext } from "./features/contexts";
+import { decodeToken, getCookie } from './utils/functions';
+
 const Layout = lazy(() => import("./components/Layout"));
 const Login = lazy(() => import("./components/auth/Login"));
 const Register = lazy(() => import("./components/auth/Register"));
@@ -63,12 +67,16 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const token = decodeToken(getCookie('token')) || {}
+
   return (
     <div>
       <Toaster />
-      <Suspense fallback={Loading}>
-        <RouterProvider router={router} fallbackElement={Loading} />
-      </Suspense>
+      <CoockieContext.Provider value={token}>
+        <Suspense fallback={Loading}>
+          <RouterProvider router={router} fallbackElement={Loading} />
+        </Suspense>
+      </CoockieContext.Provider>
     </div>
   );
 }

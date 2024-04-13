@@ -3,8 +3,9 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Select from "react-select";
-import { userService } from "../../services/user";
-import { teamService } from "../../services/team";
+import { userService } from "../../../services/user";
+import { teamService } from "../../../services/team";
+import * as Yup from 'yup';
 
 const AddTeam = () => {
   const Navigate = useNavigate();
@@ -18,7 +19,7 @@ const AddTeam = () => {
       const response = await userService.getall();
       const chefUsers = response.data.filter((user) => user.role === "chef");
       const employeeUsers = response.data.filter(
-        (user) => user.role === "employe"
+        (user) => user.role === "employe" && !user.team
       );
       setChefUsers(chefUsers);
       setEmployeeUsers(employeeUsers);
@@ -45,29 +46,32 @@ const AddTeam = () => {
           <Formik
             initialValues={{
               teamName: "",
-              chef: "",
-              employees: [],
             }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.teamName) {
-                errors.teamName = "Requis";
-              }
-              return errors;
-            }}
-            onSubmit={async (values) => {
+            validationSchema={Yup.object().shape({
+              teamName: Yup.string().required('Required'),
+            })}
+            onSubmit={async (values, { setSubmitting }) => {
               try {
+                if (!selectedChef) {
+                  toast.error("Chef d'équipe est requis");
+                  return;
+                }
+                if (selectedEmployees.length === 0) {
+                  toast.error("Au moins un membre est requis");
+                  return;
+                }
                 values.chef = selectedChef.value;
-                values.employees = selectedEmployees;
+                values.employees = selectedEmployees.map(emp => emp.value);
                 const response = await teamService.addOne(values);
-                console.log();
                 toast.success(response.data.message);
-                Navigate("/ListTeams");
+                Navigate("/listTeams");
               } catch (error) {
                 console.log(error);
                 if (error.response.status === 400) {
                   toast.error(error.response.data.message);
                 }
+              } finally {
+                setSubmitting(false);
               }
             }}
           >
@@ -78,8 +82,7 @@ const AddTeam = () => {
               handleChange,
               handleBlur,
               handleSubmit,
-              isSubmitting,
-              /* and other goodies */
+              isSubmitting
             }) => (
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
@@ -158,98 +161,3 @@ const AddTeam = () => {
 };
 
 export default AddTeam;
-
-//methode 1
-// <div className="mb-3">
-// <label
-//   htmlFor="exampleInputEmail1"
-//   className="form-label"
-// >
-//   Chef d'equipe
-// </label>
-// <Select
-//   className="form-select"
-//   name="chef"
-//   options={chefUsers.map((user) => ({
-//     value: user._id,
-//     label: `${user.firstName} ${user.lastName}`,
-//   }))}
-//   value={values.chef}
-//   onChange={handleChange}
-//   onBlur={handleBlur}
-// />
-// </div>
-// <div className="mb-3">
-// <label
-//   htmlFor="exampleInputEmail1"
-//   className="form-label"
-// >
-//   Membres
-// </label>
-// <Select
-//   className="form-select"
-//   name="employees"
-//   options={employeeUsers.map((user) => ({
-//     value: user._id,
-//     label: `${user.firstName} ${user.lastName}`,
-//   }))}
-//   value={values.employees}
-//   isMulti
-//   onChange={handleChange}
-//   onBlur={handleBlur}
-// />
-// </div>
-
-// methode 2
-// <div className="mb-3">
-// <label
-//   htmlFor="exampleInputEmail1"
-//   className="form-label"
-// >
-//   Chef d'equipe
-// </label>
-
-// <select
-//   className="form-select"
-//   aria-label="Sélectionnez le chef d'équipe"
-//   name="chef"
-//   onChange={handleChange}
-//   onBlur={handleBlur}
-//   value={values.chef}
-// >
-//   <option value="">
-//     Sélectionnez le chef de l'équipe
-//   </option>
-//   {chefUsers.map((user) => (
-//     <option key={user._id} value={user._id}>
-//       {`${user.firstName} ${user.lastName}`}
-//       {/* Concaténer prénom et nom */}
-//     </option>
-//   ))}
-// </select>
-// </div>
-// <div className="mb-3">
-// <label
-//   htmlFor="exampleInputEmail1"
-//   className="form-label"
-// >
-//   Membres
-// </label>
-// <select
-//   className="form-select"
-//   aria-label="Default select example"
-//   name="employee"
-//   aria-describedby="emailHelp"
-//   onChange={handleChange}
-//   onBlur={handleBlur}
-// >
-//   <option value="">
-//     Sélectionnez le chef de l'équipe
-//   </option>
-//   {employeeUsers.map((user) => (
-//     <option key={user._id} value={user._id}>
-//       {`${user.firstName} ${user.lastName}`}
-//     </option>
-//   ))}
-// </select>
-// </div>

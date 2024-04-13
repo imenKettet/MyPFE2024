@@ -3,23 +3,23 @@ const Dashboard = lazy(() => import("./components/pages/Dashboard"));
 const TablerIcons = lazy(() => import("./components/pages/TablerIcons"));
 const SamplePage = lazy(() => import("./components/pages/SamplePage"));
 const Forms = lazy(() => import("./components/pages/Forms"));
-const listProjects = lazy(() => import("./components/pages/ListProjects"));
-const listUsers = lazy(() => import("./components/pages/ListUser"));
-const listTeams = lazy(() => import("./components/pages/ListTeams"));
-const listAbsences = lazy(() => import("./components/pages/ListAbsences"));
+const listProjects = lazy(() => import("./components/pages/project/ListProjects"));
+const listUsers = lazy(() => import("./components/pages/user/ListUser"));
+const listTeams = lazy(() => import("./components/pages/team/ListTeams"));
+const listAbsences = lazy(() => import("./components/pages/absence/ListAbsences"));
 const listTimeSheet = lazy(() => import("./components/pages/ListTimeSheet"));
-const addProject = lazy(() => import("./components/pages/AddProject"));
-const addUser = lazy(() => import("./components/pages/AddUser"));
-const addTeam = lazy(() => import("./components/pages/AddTeam"));
-const addAbsence = lazy(() => import("./components/pages/AddAbsence"));
-const editProject = lazy(() => import("./components/pages/EditProject"));
-const editUser = lazy(() => import("./components/pages/EditUser"));
-const editTeam = lazy(() => import("./components/pages/EditTeam"));
-const myTasks = lazy(() => import("./components/pages/MyTasks"));
-const myProjects = lazy(() => import("./components/pages/MyProjects"));
-const myAbsences = lazy(() => import("./components/pages/MyAbsences"));
-const affectation = lazy(() => import("./components/pages/Affectation"));
-const affectedTasks = lazy(() => import("./components/pages/AffectedTasks"));
+const addProject = lazy(() => import("./components/pages/project/AddProject"));
+const addUser = lazy(() => import("./components/pages/user/AddUser"));
+const addTeam = lazy(() => import("./components/pages/team/AddTeam"));
+const addAbsence = lazy(() => import("./components/pages/absence/AddAbsence"));
+const editProject = lazy(() => import("./components/pages/project/EditProject"));
+const editUser = lazy(() => import("./components/pages/user/EditUser"));
+const editTeam = lazy(() => import("./components/pages/team/EditTeam"));
+const myTasks = lazy(() => import("./components/pages/profile/MyTasks"));
+const myProjects = lazy(() => import("./components/pages/profile/MyProjects"));
+const myAbsences = lazy(() => import("./components/pages/absence/MyAbsences"));
+const affectation = lazy(() => import("./components/pages/affectation/Affectation"));
+const affectedTasks = lazy(() => import("./components/pages/affectation/AffectedTasks"));
 
 const routes = [
   {
@@ -42,7 +42,7 @@ const routes = [
     exact: true,
   },
   {
-    path: "/listUsers",
+    path: "/list-users",
     element: listUsers,
     name: "listUsers",
     exact: true,
@@ -99,7 +99,7 @@ const routes = [
   },
 
   {
-    path: "/editUser/:id",
+    path: "/edit-user/:id",
     element: editUser,
     name: "editUser",
     exact: true,

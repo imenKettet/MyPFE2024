@@ -6,8 +6,6 @@ const nodemailer = require("nodemailer");
 exports.createUser = async (req, res) => {
   try {
     const email = req.body.email;
-    const encryptedPassword = await encryptPassword(req.body.password);
-    req.body.password = encryptedPassword;
     const user = await User.findOne({
       email,
     });
@@ -17,6 +15,8 @@ exports.createUser = async (req, res) => {
         message: " Utilisateur déja existe",
       });
     } else {
+      const encryptedPassword = await encryptPassword(req.body.password);
+      req.body.password = encryptedPassword;
       await User.create(req.body);
     }
     //send email
@@ -41,8 +41,8 @@ exports.createUser = async (req, res) => {
       <a href='http://localhost:3000/login'> Se connecter </a>`,
     });
     res.json({ message: " Un email a été envoyé à l'utilisateur avec succès" });
-    //res.json("Utilisateur créé!");
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message || "error server" });
   }
 };
@@ -51,7 +51,6 @@ exports.createUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-    console.log(req.user);
     res.json(users);
   } catch (error) {
     error;

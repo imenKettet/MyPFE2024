@@ -15,7 +15,7 @@ const userSchema = new Schema(
     adress: String,
     absences: [{ type: Schema.Types.ObjectId, ref: "Absence" }],
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
-    teams: { type: Schema.Types.ObjectId, ref: "Team" },
+    team: { type: Schema.Types.ObjectId, ref: "Team" },
   },
   {
     timestamps: true,

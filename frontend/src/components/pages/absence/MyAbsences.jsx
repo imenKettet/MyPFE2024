@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { userService } from "../../services/user";
+import { userService } from "../../../services/user";
 
 const MyAbsence = () => {
   const [absences, setAbsences] = useState([]);

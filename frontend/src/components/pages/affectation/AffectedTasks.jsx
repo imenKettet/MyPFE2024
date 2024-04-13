@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Formik } from "formik";
 import Select from "react-select";
-import { teamService } from "../../services/team";
-import { projectService } from "../../services/project";
+import { teamService } from "../../../services/team";
+import { projectService } from "../../../services/project";
 
 const AffectedTasks = () => {
   const [projects, setProjects] = useState([]);

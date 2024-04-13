@@ -98,7 +98,6 @@ function ResetPassword() {
                               background: "#F27438",
                               border: "none",
                             }}
-                            //onclick="this.disabled = true;"
                           >
                             Réinitialiser
                           </button>
@@ -117,26 +116,3 @@ function ResetPassword() {
 }
 
 export default ResetPassword;
-
-{
-  /* <div className="mb-4">
-                        <label
-                          htmlFor="exampleInputPassword1"
-                          className="form-label"
-                        >
-                          Confirmer votre mot de passe
-                        </label>
-                        <input
-                          type="password"
-                          className="form-control"
-                          name="password"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                        <div className="text-danger">
-                          {errors.password &&
-                            touched.password &&
-                            errors.password}
-                        </div>
-                      </div> */
-}

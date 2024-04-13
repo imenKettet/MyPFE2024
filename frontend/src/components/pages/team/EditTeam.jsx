@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Formik } from "formik";
 import Select from "react-select";
 import Swal from "sweetalert2";
-import { teamService } from "../../services/team";
-import { userService } from "../../services/user";
+import { teamService } from "../../../services/team";
+import { userService } from "../../../services/user";
 
 const EditTeam = () => {
   const Navigate = useNavigate();
@@ -13,11 +13,15 @@ const EditTeam = () => {
   const [team, setTeam] = useState();
   const [chefUsers, setChefUsers] = useState([]);
   const [employeeUsers, setEmployeeUsers] = useState([]);
+  const [selectedChef, setSelectedChef] = useState("");
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
         const response = await teamService.getOne(id);
+        setSelectedChef(response.data.chef)
+        setSelectedEmployees(response.data.employees)
         setTeam(response.data);
       } catch (error) {
         console.log(error);
@@ -30,18 +34,25 @@ const EditTeam = () => {
     try {
       const response = await userService.getall();
       const chefUsers = response.data.filter(
-        (user) => user.role === "Chef d'equipe"
+        (user) => user.role === "chef"
       );
       const employeeUsers = response.data.filter(
         (user) => user.role === "employe"
       );
       setChefUsers(chefUsers);
       setEmployeeUsers(employeeUsers);
+      console.log(employeeUsers);
     } catch (error) {
       console.log(error);
     }
   };
-
+  const selectChef = (e) => {
+    setSelectedChef(e);
+  };
+  const selectEmployees = (e) => {
+    setSelectedEmployees(e);
+    console.log(selectedEmployees);
+  };
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -64,19 +75,33 @@ const EditTeam = () => {
             initialValues={
               team || {
                 teamName: "",
-                chef: "",
-                employees: [],
               }
             }
             onSubmit={async (values) => {
               try {
                 const shouldSave = await confirmSaveChanges();
                 if (shouldSave.isConfirmed) {
-                  const response = await teamService.updateOne(id, values);
+                  if (!selectedChef) {
+                    toast.error("Chef d'équipe est requis");
+                    return;
+                  }
+                  if (selectedEmployees.length === 0) {
+                    toast.error("Au moins un membre est requis");
+                    return;
+                  }
+                  let chefId = selectedChef.value
+                  let employeesIds = []
+                  selectedEmployees.map(emp => employeesIds.push(emp.value))
+                  const team = {
+                    teamName: values.teamName,
+                    chef: chefId,
+                    employees: employeesIds
+                  }
+                  const response = await teamService.updateOne(id, team);
                   toast.success(response.data.message);
-                  Navigate("/ListTeams");
+                  Navigate("/listTeams");
                 } else if (shouldSave.isDenied) {
-                  Navigate("/ListTeams");
+                  Navigate("/listTeams");
                 }
               } catch (error) {
                 console.log(error);
@@ -118,18 +143,14 @@ const EditTeam = () => {
                     Chef d'equipe
                   </label>
                   <Select
-                    id="chefSelect"
-                    name="chefselect"
                     options={chefUsers.map((user) => {
                       return {
-                        key: user.id,
-                        value: user.id,
+                        value: user._id,
                         label: `${user.firstName} ${user.lastName}` /* Concaténer prénom et nom */,
                       };
                     })}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.chef}
+                    value={selectedChef}
+                    onChange={selectChef}
                   />
                 </div>
                 <div className="mb-3">
@@ -141,14 +162,13 @@ const EditTeam = () => {
                     name="employeeSelect"
                     options={employeeUsers.map((user) => {
                       return {
-                        key: user.id,
-                        value: user.id,
+                        value: user._id,
                         label: `${user.firstName} ${user.lastName}`,
                       };
                     })}
-                    onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.employees}
+                    value={selectedEmployees}
+                    onChange={selectEmployees}
                     isMulti
                   />
                 </div>
