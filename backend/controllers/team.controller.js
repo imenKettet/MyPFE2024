@@ -4,13 +4,8 @@ const User = require("../models/user");
 //Add team
 exports.createTeam = async (req, res) => {
   try {
-    let teamIds = [];
-    req.body.employees.map((em) => {
-      teamIds.push(em.value);
-    });
-    req.body.employees = teamIds;
     const team = await Team.create(req.body);
-    teamIds.map(async (id) => {
+    req.body.employees.map(async (id) => {
       await User.findByIdAndUpdate(id, { team: team._id }, { new: true });
     });
     await User.findByIdAndUpdate(req.body.chef, { team: team._id }, { new: true });

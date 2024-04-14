@@ -6,6 +6,7 @@ import Select from "react-select";
 import Swal from "sweetalert2";
 import { teamService } from "../../../services/team";
 import { userService } from "../../../services/user";
+import PageContainer from "../../reusedComponents/PageContainer";
 
 const EditTeam = () => {
   const Navigate = useNavigate();
@@ -34,10 +35,10 @@ const EditTeam = () => {
     try {
       const response = await userService.getall();
       const chefUsers = response.data.filter(
-        (user) => user.role === "chef"
+        (user) => user.role === "chef" && !user.team
       );
       const employeeUsers = response.data.filter(
-        (user) => user.role === "employe"
+        (user) => user.role === "employe" && !user.team
       );
       setChefUsers(chefUsers);
       setEmployeeUsers(employeeUsers);
@@ -68,128 +69,124 @@ const EditTeam = () => {
     });
   };
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <Formik
-            initialValues={
-              team || {
-                teamName: "",
+    <PageContainer title='Modifier une équipe' path='/listTeams' btnColor="dark" btntxt='Retour' >
+      <Formik
+        initialValues={
+          team || {
+            teamName: "",
+          }
+        }
+        onSubmit={async (values) => {
+          try {
+            const shouldSave = await confirmSaveChanges();
+            if (shouldSave.isConfirmed) {
+              if (!selectedChef) {
+                toast.error("Chef d'équipe est requis");
+                return;
               }
+              if (selectedEmployees.length === 0) {
+                toast.error("Au moins un membre est requis");
+                return;
+              }
+              let chefId = selectedChef.value
+              let employeesIds = []
+              selectedEmployees.map(emp => employeesIds.push(emp.value))
+              const team = {
+                teamName: values.teamName,
+                chef: chefId,
+                employees: employeesIds
+              }
+              const response = await teamService.updateOne(id, team);
+              toast.success(response.data.message);
+              Navigate("/listTeams");
+            } else if (shouldSave.isDenied) {
+              Navigate("/listTeams");
             }
-            onSubmit={async (values) => {
-              try {
-                const shouldSave = await confirmSaveChanges();
-                if (shouldSave.isConfirmed) {
-                  if (!selectedChef) {
-                    toast.error("Chef d'équipe est requis");
-                    return;
-                  }
-                  if (selectedEmployees.length === 0) {
-                    toast.error("Au moins un membre est requis");
-                    return;
-                  }
-                  let chefId = selectedChef.value
-                  let employeesIds = []
-                  selectedEmployees.map(emp => employeesIds.push(emp.value))
-                  const team = {
-                    teamName: values.teamName,
-                    chef: chefId,
-                    employees: employeesIds
-                  }
-                  const response = await teamService.updateOne(id, team);
-                  toast.success(response.data.message);
-                  Navigate("/listTeams");
-                } else if (shouldSave.isDenied) {
-                  Navigate("/listTeams");
-                }
-              } catch (error) {
-                console.log(error);
-                if (error.response.status === 400) {
-                  toast.error(error.response.data.message);
-                }
-              }
-            }}
-            enableReinitialize
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
-              setFieldValue,
-              /* and other goodies */
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="teamName" className="form-label">
-                    Nom du l'équipe
-                  </label>
-                  <input
-                    id="teamName"
-                    type="text"
-                    className="form-control"
-                    name="teamName"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.teamName}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="chefSelect" className="form-label">
-                    Chef d'equipe
-                  </label>
-                  <Select
-                    options={chefUsers.map((user) => {
-                      return {
-                        value: user._id,
-                        label: `${user.firstName} ${user.lastName}` /* Concaténer prénom et nom */,
-                      };
-                    })}
-                    value={selectedChef}
-                    onChange={selectChef}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="employeeSelect" className="form-label">
-                    Membres
-                  </label>
-                  <Select
-                    id="employeeSelect"
-                    name="employeeSelect"
-                    options={employeeUsers.map((user) => {
-                      return {
-                        value: user._id,
-                        label: `${user.firstName} ${user.lastName}`,
-                      };
-                    })}
-                    onBlur={handleBlur}
-                    value={selectedEmployees}
-                    onChange={selectEmployees}
-                    isMulti
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary py-8 fs-4 mb-4 rounded-2"
-                  disabled={isSubmitting}
-                  style={{
-                    margin: "0 auto",
-                    display: "block",
-                    width: "200px",
-                  }}
-                >
-                  Valider
-                </button>
-              </form>
-            )}
-          </Formik>
-        </div>
-      </div>
-    </div>
+          } catch (error) {
+            console.log(error);
+            if (error.response.status === 400) {
+              toast.error(error.response.data.message);
+            }
+          }
+        }}
+        enableReinitialize
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          setFieldValue,
+          /* and other goodies */
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="teamName" className="form-label">
+                Nom du l'équipe
+              </label>
+              <input
+                id="teamName"
+                type="text"
+                className="form-control"
+                name="teamName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.teamName}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="chefSelect" className="form-label">
+                Chef d'equipe
+              </label>
+              <Select
+                options={chefUsers.map((user) => {
+                  return {
+                    value: user._id,
+                    label: `${user.firstName} ${user.lastName}` /* Concaténer prénom et nom */,
+                  };
+                })}
+                value={selectedChef}
+                onChange={selectChef}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="employeeSelect" className="form-label">
+                Membres
+              </label>
+              <Select
+                id="employeeSelect"
+                name="employeeSelect"
+                options={employeeUsers.map((user) => {
+                  return {
+                    value: user._id,
+                    label: `${user.firstName} ${user.lastName}`,
+                  };
+                })}
+                onBlur={handleBlur}
+                value={selectedEmployees}
+                onChange={selectEmployees}
+                isMulti
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary py-8 fs-4 mb-4 rounded-2"
+              disabled={isSubmitting}
+              style={{
+                margin: "0 auto",
+                display: "block",
+                width: "200px",
+              }}
+            >
+              Valider
+            </button>
+          </form>
+        )}
+      </Formik>
+    </PageContainer>
   );
 };
 

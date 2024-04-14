@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -10,10 +10,10 @@ const oneDayInSeconds = 24 * 60 * 60;
 
 const Login = () => {
   const [cookies, setCookie] = useCookies();
-  // const [showPassword, setShowPassword] = useState(false);
-  // const togglePasswordVisibility = () => {
-  //   setShowPassword(!showPassword);
-  // };
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const Navigate = useNavigate();
   return (
     <div className="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
@@ -111,24 +111,23 @@ const Login = () => {
                         <div className="input-group">
                           <input
                             id="exampleInputPassword1"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             className="form-control"
                             name="password"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                          // {showPassword ? "text" : "password"}
                           />
-                          {/* <button
-                            className=""
+                          <button
+                            className="btn text-dark border border-2 ms-0"
                             type="button"
                             onClick={togglePasswordVisibility}
                           >
                             {showPassword ? (
-                              <TiEye className="h4" />
+                              <i className="ti ti-eye" />
                             ) : (
-                              <TiEyeOutline className="h4" />
+                              <i className="ti ti-eye-off" />
                             )}
-                          </button> */}
+                          </button>
                         </div>
                         <div className="text-danger">
                           {errors.password &&
@@ -172,6 +171,9 @@ const Login = () => {
                     </form>
                   )}
                 </Formik>
+                <div className="d-none">
+                  {JSON.stringify(cookies)}
+                </div>
               </div>
             </div>
           </div>

@@ -197,32 +197,3 @@ exports.affectTasksToEmploye = async (req, res) => {
     res.status(500).json({ message: error.message || "error server" });
   }
 };
-
-//console.log(req.body);
-// await Promise.all(
-//   req.body.users.map(async (user) => {
-//     await User.findByIdAndUpdate(
-//       user.value,
-//       { $push: { tasks: req.body.task } },
-//       { new: true }
-//     );
-//   })
-// );
-
-// await Promise.all(
-//   req.body.users.map(async (user) => {
-//     await Task.findByIdAndUpdate(
-//       req.body.task,
-//       { $push: { user: user.value } },
-//       { new: true }
-//     );
-//   })
-// );
-//delete
-//   try {
-//     await Project.findByIdAndDelete(req.params.id);
-//     res.json({ message: " Le projet a été supprimé " });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message || "error server" });
-//   }
-// };

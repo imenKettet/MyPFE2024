@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { projectService } from "../../../services/project";
+import PageContainer from "../../reusedComponents/PageContainer";
 
 const ListProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -129,65 +130,48 @@ const ListProjects = () => {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="fw-semibold text-center "> Liste des projets </h5>
-            <Link to="/AddProject">
-              <button
-                className="btn btn-primary  "
-              // style={{
-              //   background: "#e76f51",
-              //   border: "none",
-              // }}
-              >
-                Ajouter
-              </button>
-            </Link>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Num</th>
-                <th scope="col">Nom du Projet</th>
-                <th scope="col">Date_Début</th>
-                <th scope="col">Date_Fin</th>
-                <th scope="col">Client</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => (
-                <tr key={project._id}>
-                  <td> {index + 1} </td>
-                  <td>{project.nameProject}</td>
-                  <td>{new Date(project.dateStart).toLocaleDateString()}</td>
-                  <td>{new Date(project.dateEnd).toLocaleDateString()}</td>
-                  <td>{project.client}</td>
-                  <td>
-                    <div>
-                      <Link to={`/EditProject/${project._id}`}>
-                        <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
-                      </Link>
+    <PageContainer title="Liste des projets" path='/addProject' btnColor="primary" btntxt='Ajouter' >
 
-                      <i
-                        className="cursor-pointer ti ti-trash h3 text-danger me-2"
-                        onClick={() => confirmDelete(project._id)}
-                      ></i>
-                      <i
-                        className="cursor-pointer ti ti-alert-circle h3 "
-                        onClick={() => showProjectDetails(project)}
-                      ></i>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Num</th>
+            <th scope="col">Nom du Projet</th>
+            <th scope="col">Date_Début</th>
+            <th scope="col">Date_Fin</th>
+            <th scope="col">Client</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {projects.map((project, index) => (
+            <tr key={project._id}>
+              <td> {index + 1} </td>
+              <td>{project.nameProject}</td>
+              <td>{new Date(project.dateStart).toLocaleDateString()}</td>
+              <td>{new Date(project.dateEnd).toLocaleDateString()}</td>
+              <td>{project.client}</td>
+              <td>
+                <div>
+                  <Link to={`/EditProject/${project._id}`}>
+                    <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
+                  </Link>
+
+                  <i
+                    className="cursor-pointer ti ti-trash h3 text-danger me-2"
+                    onClick={() => confirmDelete(project._id)}
+                  ></i>
+                  <i
+                    className="cursor-pointer ti ti-alert-circle h3 "
+                    onClick={() => showProjectDetails(project)}
+                  ></i>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </PageContainer>
   );
 };
 

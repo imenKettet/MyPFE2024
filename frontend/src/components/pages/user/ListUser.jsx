@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { userService } from "../../../services/user";
 import { FaSearch } from "react-icons/fa";
+import PageContainer from "../../reusedComponents/PageContainer";
 
 const ListUsers = () => {
   const [users, setUsers] = useState([]);
@@ -73,76 +74,61 @@ const ListUsers = () => {
   //   );
   // });
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="fw-semibold "> Liste des employés</h5>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <div className="input-group mb-0 me-5 ms-5">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Rechercher par nom, prénom ou email"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-              <FaSearch className="position-absolute top-50 translate-middle-y end-0 me-2" />
-            </div>
-            <Link to="/AddUser">
-              <button
-                // style={{
-                //   background: "#F27438",
-                //   border: "none",
-                // }}
-                className="btn btn-primary  "
-              >
-                Ajouter
-              </button>
-            </Link>
-          </div>
+    <PageContainer title='Liste des employées' path='/AddUser' btnColor="primary" btntxt='Ajouter' >
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Num</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">téléphone</th>
-                <th scope="col">Adresse</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={user._id}>
-                  <td> {index + 1} </td>
-                  <td>{user.lastName}</td>
-                  <td>{user.firstName}</td>
-                  <td>{user.phone}</td>
-                  <td>{user.adress}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
-                  <td>
-                    <div>
-                      <Link to={`/edit-user/${user._id}`}>
-                        <i className="ti ti-pencil h3 text-success me-2"></i>
-                      </Link>
-
-                      <i
-                        className="ti ti-trash h3 text-danger me-2"
-                        onClick={() => confirmDelete(user._id)}
-                      ></i>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="input-group mb-0 me-5 ms-5">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Rechercher par nom, prénom ou email"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <FaSearch className="position-absolute top-50 translate-middle-y end-0 me-2" />
         </div>
       </div>
-    </div>
+
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Num</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">téléphone</th>
+            <th scope="col">Adresse</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user, index) => (
+            <tr key={user._id}>
+              <td> {index + 1} </td>
+              <td>{user.lastName}</td>
+              <td>{user.firstName}</td>
+              <td>{user.phone}</td>
+              <td>{user.adress}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <div>
+                  <Link to={`/edit-user/${user._id}`}>
+                    <i className="ti ti-pencil h3 text-success me-2"></i>
+                  </Link>
+
+                  <i
+                    className="ti ti-trash h3 text-danger me-2"
+                    onClick={() => confirmDelete(user._id)}
+                  ></i>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </PageContainer>
   );
 };
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { teamService } from "../../../services/team";
+import PageContainer from "../../reusedComponents/PageContainer";
 
 const ListTeams = () => {
   const [teams, setTeams] = useState([]);
@@ -166,58 +167,44 @@ const ListTeams = () => {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="fw-semibold text-center ">Les équipes</h5>
-            <Link to="/AddTeam">
-              <button className="btn btn-primary">Ajouter</button>
-            </Link>
-          </div>
-          <div className="row">
-            {teams.map((team) => (
-              <div key={team._id} className="col-md-4 mb-4">
-                <div className="card" style={cardStyle}>
-                  <div className="card-body">
-                    <h5 className="card-title text-center mb-4 ">
-                      {team.teamName}
-                    </h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                      <strong>Chef d'équipe:</strong>
-                      {team.chef
-                        ? `${team.chef.firstName} ${team.chef.lastName}`
-                        : "N/A"}
-                    </h6>
-                    <strong className="card-text">Membres de l'équipe:</strong>
-                    <ul>
-                      {team.employees.map((employee) => (
-                        <li key={employee._id}>
-                          {employee.firstName} {employee.lastName}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-3 text-center ">
-                      <Link to={`/EditTeam/${team._id}`}>
-                        <i className="ti ti-pencil h3 text-success me-2"></i>
-                      </Link>
-                      <i
-                        className="ti ti-trash h3 text-danger me-2"
-                        onClick={() => confirmDelete(team._id)}
-                      ></i>
-                      <i
-                        className="ti ti-alert-circle h3 "
-                        onClick={() => showTeamDetails(team)}
-                      ></i>
-                    </div>
-                  </div>
+    <PageContainer title="Liste d'équipes" path='/addTeam' btnColor="primary" btntxt='Ajouter' >
+      <div className="row">
+        {teams.map((team) => (
+          <div key={team._id} className="col-md-4 mb-4">
+            <div className="card" style={cardStyle}>
+              <div className="card-body p-3">
+                <div className="d-flex justify-content-between">
+                  <h3 className="text-center mb-5">
+                    {team.teamName}
+                  </h3>
+                  <i
+                    className="ti ti-trash h4 text-danger cursor-pointer"
+                    onClick={() => confirmDelete(team._id)}
+
+                  ></i>
+                </div>
+                <h5 className="card-subtitle mb-2 text-muted">
+                  <strong>Chef d'équipe:</strong>
+                  {`${team.chef.firstName} ${team.chef.lastName}`}
+                </h5>
+                <strong className="card-text">Membres de l'équipe: {team.employees.length}</strong>
+
+                <div className="mt-3 d-flex justify-content-between">
+                  <Link className="btn btn-success" to={`/EditTeam/${team._id}`}>
+                    Modifier <i className="ti ti-pencil"></i>
+                  </Link>
+
+                  <button
+                    className="btn btn-info"
+                    onClick={() => showTeamDetails(team)}
+                  >Détails <i className="ti ti-alert-circle"></i></button>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-    </div>
+    </PageContainer>
   );
 };
 
