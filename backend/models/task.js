@@ -5,10 +5,14 @@ const taskSchema = new Schema(
   {
     nameTask: String,
     estimatedDuration: Number,
-    totalDuration: Number,
-    Status: String,
+    totalDuration: { type: Number, default: 0 },
+    Status: { type: String, default: 'En attente' },
     project: { type: Schema.Types.ObjectId, ref: "Project" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
+    worked: [{
+      workTime: Number,
+      dateWorked: String
+    }]
   },
   {
     timestamps: true,

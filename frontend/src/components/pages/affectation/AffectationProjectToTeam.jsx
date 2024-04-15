@@ -6,7 +6,7 @@ import { projectService } from "../../../services/project";
 import { teamService } from "../../../services/team";
 import PageContainer from "../../reusedComponents/PageContainer";
 
-const Affectation = () => {
+const AffectationProjectToTeam = () => {
   const [projects, setProjects] = useState([]);
   const [teams, setTeams] = useState([]);
   const [selectedProject, setSelectedProject] = useState("");
@@ -78,7 +78,6 @@ const Affectation = () => {
         }) => (
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <h4 className=" text-center">Affectation </h4>
               <label htmlFor="projectSelect" className="form-label">
                 choix de projet
               </label>
@@ -131,4 +130,4 @@ const Affectation = () => {
   );
 };
 
-export default Affectation;
+export default AffectationProjectToTeam;

@@ -15,11 +15,13 @@ const addAbsence = lazy(() => import("./components/pages/absence/AddAbsence"));
 const editProject = lazy(() => import("./components/pages/project/EditProject"));
 const editUser = lazy(() => import("./components/pages/user/EditUser"));
 const editTeam = lazy(() => import("./components/pages/team/EditTeam"));
-const myTasks = lazy(() => import("./components/pages/profile/MyTasks"));
-const myProjects = lazy(() => import("./components/pages/profile/MyProjects"));
+const myTasks = lazy(() => import("./components/pages/myteam/MyTasks"));
+const MyTeam = lazy(() => import("./components/pages/myteam/MyTeam"));
+const myProjects = lazy(() => import("./components/pages/myteam/MyProjects"));
+const Profile = lazy(() => import("./components/pages/profile/MyProfile"));
 const myAbsences = lazy(() => import("./components/pages/absence/MyAbsences"));
-const affectation = lazy(() => import("./components/pages/affectation/Affectation"));
-const affectedTasks = lazy(() => import("./components/pages/affectation/AffectedTasks"));
+const AffectationProjectToTeam = lazy(() => import("./components/pages/affectation/AffectationProjectToTeam"));
+const AffectTasks = lazy(() => import("./components/pages/affectation/AffectTasks"));
 
 const routes = [
   {
@@ -106,7 +108,7 @@ const routes = [
   },
   {
     path: "/affectation",
-    element: affectation,
+    element: AffectationProjectToTeam,
     name: "affectation",
     exact: true,
   },
@@ -115,6 +117,19 @@ const routes = [
     path: "/myTasks",
     element: myTasks,
     name: "myTasks",
+    exact: true,
+  },
+
+  {
+    path: "/my-team",
+    element: MyTeam,
+    name: "My team",
+    exact: true,
+  },
+  {
+    path: "/affect-tasks/:id",
+    element: AffectTasks,
+    name: "Affect Tasks",
     exact: true,
   },
 
@@ -132,9 +147,9 @@ const routes = [
     exact: true,
   },
   {
-    path: "/affectedTasks",
-    element: affectedTasks,
-    name: "affectedTasks",
+    path: "/profile",
+    element: Profile,
+    name: "Profile",
     exact: true,
   },
 

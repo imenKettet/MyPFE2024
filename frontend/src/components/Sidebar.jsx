@@ -158,6 +158,22 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
                 <span className="hide-menu"> Mes projets </span>
               </Link>
             </li>
+
+          )}
+          {["employe", "chef"].includes(role) && (
+            <li className="sidebar-item">
+              <Link
+                className={`sidebar-link ${isLinkActive("/my-team")}`}
+                to="/my-team"
+                aria-expanded="false"
+              >
+                <span>
+                  <i className="ti ti-article"></i>
+                </span>
+                <span className="hide-menu"> Mon équipe </span>
+              </Link>
+            </li>
+
           )}
           {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
@@ -199,20 +215,6 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
                   <i className="ti ti-float-left"></i>
                 </span>
                 <span className="hide-menu"> Mes absences </span>
-              </Link>
-            </li>
-          )}
-          {role === "chef" && (
-            <li className="sidebar-item">
-              <Link
-                className={`sidebar-link ${isLinkActive("/affectedTasks")}`}
-                to="/affectedTasks"
-                aria-expanded="false"
-              >
-                <span>
-                  <i className="ti ti-typography"></i>
-                </span>
-                <span className="hide-menu"> Affecter les tâches </span>
               </Link>
             </li>
           )}

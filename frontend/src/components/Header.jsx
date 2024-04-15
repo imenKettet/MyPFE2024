@@ -3,6 +3,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { deleteCookie } from "../utils/functions";
 
 const Header = ({ showSidebarFN }) => {
   const navigate = useNavigate();
@@ -10,9 +11,8 @@ const Header = ({ showSidebarFN }) => {
     try {
       const response = await axios.post("http://localhost:4000/auth/logout");
       toast.success(response.data.message);
-      navigate("/login");
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
+      navigate('/login')
+      deleteCookie('token')
     } catch (error) {
       console.log(error);
     }
@@ -62,20 +62,19 @@ const Header = ({ showSidebarFN }) => {
                 aria-labelledby="drop2"
               >
                 <div className="message-body">
-                  <Link to={"/MyProfile"}>
+                  <Link to={"/profile"}>
                     <div className="d-flex align-items-center gap-2 dropdown-item">
                       <i className="ti ti-user fs-6"></i>
                       <p className="mb-0 fs-3"> Mon Profil</p>
                     </div>
                   </Link>
-                  {/* <div className="d-flex align-items-center gap-2 dropdown-item">
-                    <i className="ti ti-mail fs-6"></i>
-                    <p className="mb-0 fs-3">My Account</p>
-                  </div>
-                  <div className="d-flex align-items-center gap-2 dropdown-item">
-                    <i className="ti ti-list-check fs-6"></i>
-                    <p className="mb-0 fs-3">My Task</p>
-                  </div> */}
+                  <Link to={"/myTasks"}>
+                    <div className="d-flex align-items-center gap-2 dropdown-item">
+                      <i className="ti ti-list-check fs-6"></i>
+                      <p className="mb-0 fs-3">Mes tâches</p>
+                    </div>
+                  </Link>
+
                   <button
                     onClick={logout}
                     className="btn btn-outline-primary mx-3 mt-2 d-block "

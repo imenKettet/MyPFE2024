@@ -39,6 +39,7 @@ const projectApi = require("./routes/projectApi");
 const authApi = require("./routes/authApi");
 const taskApi = require("./routes/taskApi");
 const absenceApi = require("./routes/absencesApi");
+const chefApi = require("./routes/chefApi");
 
 app.use("/auth", authApi);
 
@@ -47,6 +48,7 @@ app.use("/api/team", teamApi);
 app.use("/api/project", projectApi);
 app.use("/api/task", taskApi);
 app.use("/api/absence", absenceApi);
+app.use("/api/chef", chefApi);
 
 app.listen(4000, () => {
   console.log("server is running");

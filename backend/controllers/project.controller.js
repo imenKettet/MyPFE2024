@@ -6,14 +6,9 @@ const User = require("../models/user");
 //Add Project with associated tasks
 exports.createProject = async (req, res) => {
   try {
-    // Créez les tâches associées au projet
     const tasks = req.body.tasks || [];
-
-    // Créez les tâches et récupérez leurs identifiants
     const createdTasks = await Task.insertMany(tasks);
     const taskIds = createdTasks.map((task) => task._id);
-
-    // Créez le projet avec les identifiants de tâche associés
     const project = await Project.create({ ...req.body, tasks: taskIds });
     taskIds.map(async (id) => {
       await Task.findByIdAndUpdate(id, { project: project._id }, { new: true });
@@ -27,7 +22,6 @@ exports.createProject = async (req, res) => {
   }
 };
 
-//Affiche Projects
 exports.getAllProject = async (req, res) => {
   try {
     const projects = await Project.find().populate("tasks").populate("teams");
@@ -38,7 +32,6 @@ exports.getAllProject = async (req, res) => {
   }
 };
 
-//get one Project from database by id
 exports.getOneProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id)
@@ -50,7 +43,6 @@ exports.getOneProject = async (req, res) => {
   }
 };
 
-//Update a Project
 exports.updateProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -110,21 +102,12 @@ exports.updateProject = async (req, res) => {
   }
 };
 
-//delete a Project
 exports.deleteProject = async (req, res) => {
   try {
-    // Récupérer le projet à supprimer
     const project = await Project.findById(req.params.id);
-
-    // Récupérer les IDs des tâches associées au projet
     const taskIds = project.tasks.map((task) => task._id);
-
-    // Supprimer les tâches associées au projet
     await Task.deleteMany({ _id: { $in: taskIds } });
-
-    // Supprimer le projet lui-même
     await Project.findByIdAndDelete(req.params.id);
-
     res.json({
       message:
         "Le projet et ses tâches associées ont été supprimés avec succès.",
@@ -138,7 +121,6 @@ exports.deleteProject = async (req, res) => {
   }
 };
 
-//affectation de projet à des  équipe
 exports.affectProjectToTeam = async (req, res) => {
   try {
     console.log(req.body);
@@ -151,7 +133,6 @@ exports.affectProjectToTeam = async (req, res) => {
         );
       })
     );
-    //affectation meme projet a des equipes
     await Promise.all(
       req.body.teams.map(async (team) => {
         await Team.findByIdAndUpdate(

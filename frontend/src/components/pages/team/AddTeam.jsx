@@ -34,7 +34,6 @@ const AddTeam = () => {
   };
   const selectEmployees = (e) => {
     setSelectedEmployees(e);
-    console.log(selectedEmployees);
   };
   useEffect(() => {
     fetchUsers();
