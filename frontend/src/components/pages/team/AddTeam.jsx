@@ -7,9 +7,12 @@ import { userService } from "../../../services/user";
 import { teamService } from "../../../services/team";
 import * as Yup from 'yup';
 import PageContainer from "../../reusedComponents/PageContainer";
+import Button from "../../reusedComponents/Button";
+import Loading from "../../reusedComponents/Loading";
 
 const AddTeam = () => {
   const Navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const [chefUsers, setChefUsers] = useState([]);
   const [employeeUsers, setEmployeeUsers] = useState([]);
   const [selectedChef, setSelectedChef] = useState("");
@@ -46,7 +49,7 @@ const AddTeam = () => {
           teamName: "",
         }}
         validationSchema={Yup.object().shape({
-          teamName: Yup.string().required('Required'),
+          teamName: Yup.string().required('Nom de l\'équipe est obligatoire'),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           try {
@@ -58,14 +61,17 @@ const AddTeam = () => {
               toast.error("Au moins un membre est requis");
               return;
             }
+            setLoading(true)
             values.chef = selectedChef.value;
             values.employees = selectedEmployees.map(emp => emp.value);
             console.log(values);
             const response = await teamService.addOne(values);
             toast.success(response.data.message);
             Navigate("/listTeams");
+            setLoading(false)
           } catch (error) {
             console.log(error);
+            setLoading(false)
             if (error.response.status === 400) {
               toast.error(error.response.data.message);
             }
@@ -97,6 +103,7 @@ const AddTeam = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.teamName}
+                placeholder="Nom de l'équipe"
               />
               <div className="text-danger">
                 {errors.teamName && touched.teamName && errors.teamName}
@@ -137,19 +144,8 @@ const AddTeam = () => {
                 isMulti
               ></Select>
             </div>
+            <Button type='submit' btntxt={<>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>} btnColor='primary' />
 
-            <button
-              type="submit"
-              className="btn btn-primary py-8 fs-4 mb-4 rounded-2"
-              disabled={isSubmitting}
-              style={{
-                margin: "0 auto",
-                display: "block",
-                width: "200px",
-              }}
-            >
-              Enregistrer
-            </button>
           </form>
         )}
       </Formik>

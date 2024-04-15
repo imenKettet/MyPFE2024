@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
 import { absenceService } from "../../../services/absence";
+import PageContainer from "../../reusedComponents/PageContainer";
 
 const ListAbsences = () => {
   const [Absences, setAbsences] = useState([]);
@@ -60,48 +60,43 @@ const ListAbsences = () => {
     }
   };
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="fw-semibold text-center "> Liste des Absences </h5>
-            <Link to="/AddAbsence">
-              <button className="btn btn-primary  ">Ajouter</button>
-            </Link>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Type d'absence</th>
-                <th scope="col">Date </th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Absences.map((absence) => (
-                <tr key={absence._id}>
-                  <td>{absence.employe.firstName}</td>
-                  <td>{absence.employe.lastName}</td>
-                  <td>{absence.absenceType}</td>
-                  <td>{new Date(absence.date).toLocaleDateString()}</td>
-                  <td>
-                    <div>
-                      <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
-                      <i
-                        className="cursor-pointer ti ti-trash h3 text-danger me-2"
-                        onClick={() => confirmDelete(absence._id)}
-                      ></i>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <PageContainer
+      title='Liste des absences'
+      path="/AddAbsence"
+      btnColor="primary"
+      btntxt='Ajouter'
+    >
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Type d'absence</th>
+            <th scope="col">Date </th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Absences.map((absence) => (
+            <tr key={absence._id}>
+              <td>{absence.employe.firstName}</td>
+              <td>{absence.employe.lastName}</td>
+              <td>{absence.absenceType}</td>
+              <td>{new Date(absence.date).toLocaleDateString()}</td>
+              <td>
+                <div>
+                  <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
+                  <i
+                    className="cursor-pointer ti ti-trash h3 text-danger me-2"
+                    onClick={() => confirmDelete(absence._id)}
+                  ></i>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </PageContainer>
   );
 };
 

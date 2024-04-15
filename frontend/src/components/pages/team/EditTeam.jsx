@@ -7,11 +7,14 @@ import Swal from "sweetalert2";
 import { teamService } from "../../../services/team";
 import { userService } from "../../../services/user";
 import PageContainer from "../../reusedComponents/PageContainer";
+import Button from "../../reusedComponents/Button";
+import Loading from "../../reusedComponents/Loading";
 
 const EditTeam = () => {
   const Navigate = useNavigate();
   const { id } = useParams();
   const [team, setTeam] = useState();
+  const [loading, setLoading] = useState(false)
   const [chefUsers, setChefUsers] = useState([]);
   const [employeeUsers, setEmployeeUsers] = useState([]);
   const [selectedChef, setSelectedChef] = useState("");
@@ -78,6 +81,7 @@ const EditTeam = () => {
         }
         onSubmit={async (values) => {
           try {
+            setLoading(true)
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
               if (!selectedChef) {
@@ -99,10 +103,13 @@ const EditTeam = () => {
               const response = await teamService.updateOne(id, team);
               toast.success(response.data.message);
               Navigate("/listTeams");
+              setLoading(false)
             } else if (shouldSave.isDenied) {
               Navigate("/listTeams");
+              setLoading(false)
             }
           } catch (error) {
+            setLoading(false)
             console.log(error);
             if (error.response.status === 400) {
               toast.error(error.response.data.message);
@@ -171,18 +178,8 @@ const EditTeam = () => {
                 isMulti
               />
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary py-8 fs-4 mb-4 rounded-2"
-              disabled={isSubmitting}
-              style={{
-                margin: "0 auto",
-                display: "block",
-                width: "200px",
-              }}
-            >
-              Valider
-            </button>
+            <Button type='submit' btntxt={<>{loading ? <Loading text='Modification en cours...' /> : 'Valider'}</>} btnColor='primary' />
+
           </form>
         )}
       </Formik>

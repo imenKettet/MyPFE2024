@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { chefService } from "../../../services/chef";
 import { CoockieContext } from "../../../features/contexts";
 import Modal from 'react-modal';
+import PageContainer from "../../reusedComponents/PageContainer";
 Modal.setAppElement("*");
 
 const modalStyles = {
@@ -76,38 +77,33 @@ const Myprojects = () => {
   }, [Context.id]);
 
   return (
-    <div className="container-fluid">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="fw-semibold text-center "> Liste des projets </h5>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Num</th>
-                <th scope="col">Nom du Projet</th>
-                <th scope="col">Date_Début</th>
-                <th scope="col">Date_Fin</th>
-                <th scope="col">Client</th>
-                <th scope="col">Détails</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => (
-                <tr key={index}>
-                  <td> {index + 1} </td>
-                  <td>{project.nameProject}</td>
-                  <td>{new Date(project.dateStart).toLocaleDateString()}</td>
-                  <td>{new Date(project.dateEnd).toLocaleDateString()}</td>
-                  <td>{project.client}</td>
-                  <td><button className="btn btn-info"
-                    onClick={() => openModal(project)}
-                  ><i className="ti ti-info-circle"></i></button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <PageContainer title={"Liste des projets"}>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Num</th>
+            <th scope="col">Nom du Projet</th>
+            <th scope="col">Date_Début</th>
+            <th scope="col">Date_Fin</th>
+            <th scope="col">Client</th>
+            <th scope="col">Détails</th>
+          </tr>
+        </thead>
+        <tbody>
+          {projects.map((project, index) => (
+            <tr key={index}>
+              <td> {index + 1} </td>
+              <td>{project.nameProject}</td>
+              <td>{new Date(project.dateStart).toLocaleDateString()}</td>
+              <td>{new Date(project.dateEnd).toLocaleDateString()}</td>
+              <td>{project.client}</td>
+              <td><button className="btn btn-info"
+                onClick={() => openModal(project)}
+              ><i className="ti ti-info-circle"></i></button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -147,7 +143,8 @@ const Myprojects = () => {
                   <th scope="row">{index + 1}</th>
                   <td>{task.nameTask}</td>
                   <td>{task.estimatedDuration}</td>
-                  <td><span className={"badge  " + (task.Status === 'En attente' ? 'text-bg-secondary' : task.Status === 'En cours' ? 'text-bg-info' : 'text-bg-dark')}>{task.Status}</span></td>
+                  <td>
+                    <span className={"badge  " + (task.Status === 'En attente' ? 'text-bg-secondary' : task.Status === 'En cours' ? 'text-bg-info' : 'text-bg-dark')}>{task.Status}</span></td>
                 </tr>
               )
             })}
@@ -156,7 +153,7 @@ const Myprojects = () => {
         </div>}
 
       </Modal>
-    </div>
+    </PageContainer >
   );
 };
 

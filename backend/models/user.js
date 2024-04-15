@@ -6,13 +6,11 @@ const userSchema = new Schema(
     firstName: String,
     lastName: String,
     email: String,
-    password: {
-      type: String,
-      default: "$2a$10$MDIRedaQqMwEzx78OdnOR.8ve5/W42.qDXm/GgQYkTsYfeioKmBkG",
-    },
+    password: String,
     role: String,
-    phone: Number,
+    phone: String,
     adress: String,
+    soldeCongé: Number, // to add
     absences: [{ type: Schema.Types.ObjectId, ref: "Absence" }],
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
     team: { type: Schema.Types.ObjectId, ref: "Team" },
@@ -24,5 +22,3 @@ const userSchema = new Schema(
 );
 
 module.exports = mongoose.model("User", userSchema);
-
-//role: { type: String, default: "employee" },

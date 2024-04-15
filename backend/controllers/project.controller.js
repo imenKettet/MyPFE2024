@@ -123,7 +123,6 @@ exports.deleteProject = async (req, res) => {
 
 exports.affectProjectToTeam = async (req, res) => {
   try {
-    console.log(req.body);
     await Promise.all(
       req.body.teams.map(async (team) => {
         await Project.findByIdAndUpdate(
@@ -142,35 +141,6 @@ exports.affectProjectToTeam = async (req, res) => {
         );
       })
     );
-
-    res.json({ message: "Affecté avec succés" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message || "error server" });
-  }
-};
-
-//affect tasks to employe
-exports.affectTasksToEmploye = async (req, res) => {
-  try {
-    const { employeeId, taskId } = req.body;
-    const employee = await User.findById(employeeId);
-    if (!employee) {
-      return res.status(404).json({ message: "Employé non trouvé" });
-    }
-
-    // Recherche de la tâche par ID
-    const task = await Task.findById(taskId);
-    if (!task) {
-      return res.status(404).json({ message: "Tâche non trouvée" });
-    }
-
-    // Affecter la tâche à l'employé
-    employee.tasks.push(taskId);
-    await employee.save();
-
-    task.user = employeeId;
-    await task.save();
 
     res.json({ message: "Affecté avec succés" });
   } catch (error) {

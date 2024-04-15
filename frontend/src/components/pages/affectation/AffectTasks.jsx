@@ -8,6 +8,8 @@ import { CoockieContext } from "../../../features/contexts";
 import { chefService } from "../../../services/chef";
 import { userService } from "../../../services/user";
 import { projectService } from "../../../services/project";
+import Loading from "../../reusedComponents/Loading";
+import Button from "../../reusedComponents/Button";
 
 const AffectTasks = () => {
   const Navigate = useNavigate();
@@ -115,15 +117,8 @@ const AffectTasks = () => {
             noOptionsMessage={() => "Pas de tâches disponibles pour affecter"}
             isMulti
           ></Select></>}
-        <div className='d-flex justify-content-end mb-4'>
-          <button
-            className='btn btn-primary ms-auto mt-4'
-            type='submit'
-            disabled={loading}
-          >
-            {loading ? <><span className="spinner-border spinner-border-sm" aria-hidden="true"></span> Affectation en cours...</> : <><i className="ti ti-device-floppy" style={{ fontSize: '16px' }}></i>&nbsp;<span style={{ fontSize: '16px' }}>Sauvegarder</span></>}
-          </button>
-        </div>
+        <Button type='submit' btntxt={<>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>} btnColor='primary' />
+
       </form>
     </PageContainer>
   );

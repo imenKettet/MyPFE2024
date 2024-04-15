@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const {
   createProject,
   getAllProject,
@@ -6,11 +7,8 @@ const {
   updateProject,
   deleteProject,
   affectProjectToTeam,
-  affectTasksToEmploye,
 } = require("../controllers/project.controller");
 const passport = require("passport");
-
-const router = express.Router();
 
 router.post(
   "/",
@@ -41,11 +39,6 @@ router.post(
   "/affect",
   passport.authenticate("bearer", { session: false }),
   affectProjectToTeam
-);
-router.post(
-  "/affectTasks",
-  passport.authenticate("bearer", { session: false }),
-  affectTasksToEmploye
 );
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const User = require("../models/user");
+const Team = require("../models/team");
+const Project = require("../models/project");
 const { encryptPassword } = require("../common/utils");
 const nodemailer = require("nodemailer");
 
@@ -85,7 +87,26 @@ exports.updateUser = async (req, res) => {
 //delete a User
 exports.deleteUser = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id)
+    if (user.role === 'chef') {
+      const team = await Team.findOne({ chef: req.params.id });
+      await Promise.all(
+        team.employees.map(async (employee) => {
+          await User.findByIdAndUpdate(employee, { $unset: { team: 1 } }, { new: true })
+        })
+      )
+      await Team.findByIdAndDelete(team._id)
+      await Promise.all(
+        team.projects.map(async (project) => {
+          await Project.findByIdAndUpdate(project, { $pull: { teams: team._id } }, { new: true })
+        })
+      )
+      await User.findByIdAndDelete(req.params.id);
+    }
+    if (user.role === 'employee') {
+      await Team.findByIdAndUpdate(user.team, { $pull: { employees: req.params.id } }, { new: true });
+      await User.findByIdAndDelete(req.params.id);
+    }
     res.json({ message: " L'utilisateur a été supprimé " });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

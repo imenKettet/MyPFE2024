@@ -7,10 +7,13 @@ import * as Yup from 'yup';
 import Swal from "sweetalert2";
 import { projectService } from "../../../services/project";
 import PageContainer from "../../reusedComponents/PageContainer";
+import Button from "../../reusedComponents/Button";
+import Loading from "../../reusedComponents/Loading";
 
 const EditProject = () => {
   const Navigate = useNavigate();
   const { id } = useParams();
+  const [loading, setLoading] = useState(false)
   const [project, setproject] = useState();
   const initialValues = {
     nameProject: "",
@@ -22,8 +25,12 @@ const EditProject = () => {
   const validationSchema = Yup.object().shape({
     nameProject: Yup.string().required('Nom du projet est obligatoire'),
     client: Yup.string().required('Nom du client est obligatoire'),
-    dateStart: Yup.date().required('Date début obligatoire'),
-    dateEnd: Yup.date().required('Date fin obligatoire'),
+    dateStart: Yup.string().required('Date début obligatoire'),
+    dateEnd: Yup.string()
+      .required('Date fin obligatoire')
+      .when('dateStart', (dateStart, schema) => {
+        return schema.min(dateStart, 'La date de fin doit être après la date de début');
+      }),
     tasks: Yup.array().of(
       Yup.object().shape({
         nameTask: Yup.string().required('Nom tache obligatoire'),
@@ -71,16 +78,20 @@ const EditProject = () => {
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
+            setLoading(true)
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
               let project = { ...values };
               const response = await projectService.updateOne(id, project);
               toast.success(response.data.message);
               Navigate("/ListProjects");
+              setLoading(false)
             } else if (shouldSave.isDenied) {
               Navigate("/ListProjects");
+              setLoading(false)
             }
           } catch (error) {
+            setLoading(false)
             console.log(error);
             if (error.response.status === 400) {
               toast.error(error.response.data.message);
@@ -102,56 +113,51 @@ const EditProject = () => {
         }) => (
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" className="form-label">
+              <label htmlFor="nameProject" className="form-label">
                 Nom du projet
               </label>
-              <input
+              <Field
                 type="text"
                 className="form-control"
                 name="nameProject"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.nameProject}
               />
+              <ErrorMessage name="nameProject" component="div" className="text-danger" />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" className="form-label">
+              <label htmlFor="client" className="form-label">
                 Client
               </label>
-              <input
+              <Field
                 type="text"
                 className="form-control"
                 name="client"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.client}
               />
+              <ErrorMessage name="client" component="div" className="text-danger" />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" className="form-label">
+              <label htmlFor="dateStart" className="form-label">
                 Date_Début
               </label>
-              <input
+              <Field
                 type="date"
                 className="form-control"
                 name="dateStart"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.dateStart}
               />
+              <ErrorMessage name="dateStart" component="div" className="text-danger" />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" className="form-label">
+              <label htmlFor="dateEnd" className="form-label">
                 Date_Fin
               </label>
-              <input
+              <Field
                 type="date"
                 className="form-control"
                 name="dateEnd"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.dateEnd}
               />
+              <ErrorMessage name="dateEnd" component="div" className="text-danger" />
             </div>
             <div className="mb-3">
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -180,7 +186,7 @@ const EditProject = () => {
                       min="1"
                       name={`tasks.${index}.estimatedDuration`}
                       className="form-control"
-                      placeholder="Durée estimée"
+                      placeholder="Durée estimée en heure"
                     />
                     <ErrorMessage name={`tasks.${index}.estimatedDuration`} component="span" className="text-danger" />
                   </div>
@@ -198,18 +204,8 @@ const EditProject = () => {
                 </div>
               ))}
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary py-8 fs-4 mb-4 rounded-2"
-              disabled={isSubmitting}
-              style={{
-                margin: "0 auto",
-                display: "block",
-                width: "200px",
-              }}
-            >
-              Valider
-            </button>
+            <Button type='submit' btntxt={<>{loading ? <Loading text='Modification en cours...' /> : 'Valider'}</>} btnColor='primary' />
+
           </form>
         )}
       </Formik>

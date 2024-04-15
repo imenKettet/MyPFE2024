@@ -154,15 +154,15 @@ const ListProjects = () => {
               <td>
                 <div>
                   <Link to={`/EditProject/${project._id}`}>
-                    <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
+                    <i className="cursor-pointer ti ti-pencil h5 text-success me-2"></i>
                   </Link>
 
                   <i
-                    className="cursor-pointer ti ti-trash h3 text-danger me-2"
+                    className="cursor-pointer ti ti-trash h5 text-danger me-2"
                     onClick={() => confirmDelete(project._id)}
                   ></i>
                   <i
-                    className="cursor-pointer ti ti-alert-circle h3 "
+                    className="cursor-pointer ti ti-alert-circle h5 "
                     onClick={() => showProjectDetails(project)}
                   ></i>
                 </div>

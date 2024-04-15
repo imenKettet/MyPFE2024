@@ -67,7 +67,7 @@ $theme-colors: (
   "light-indigo": $light-indigo,
   "dark-light": $dark-light,
   "light-gray": $light-gray,
-) !default;
+  ) !default;
 
 // Spacer
 $spacer: 1rem !default;
@@ -82,7 +82,7 @@ $spacers: (
   7: 30px,
   8: 10px,
   9: 20px,
-) !default;
+  ) !default;
 
 // Common
 $min-contrast-ratio: 1.7 !default;
@@ -113,7 +113,8 @@ $btn-font-size: 14 !default;
 $btn-border-radius-lg: 9px !default;
 
 // Font Family
-$font-family-sans-serif: "Plus Jakarta Sans", sans-serif !default;
+$font-family-sans-serif: "Plus Jakarta Sans",
+  sans-serif !default;
 
 // Font Sizes
 $font-sizes: (
@@ -124,7 +125,7 @@ $font-sizes: (
   5: 18px,
   6: 20px,
   8: 30px,
-) !default;
+  ) !default;
 $font-size-base: 0.875rem !default;
 
 // Line Heght

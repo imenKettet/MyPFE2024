@@ -9,7 +9,7 @@ import PageContainer from "../../reusedComponents/PageContainer";
 const AffectationProjectToTeam = () => {
   const [projects, setProjects] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedProject, setSelectedProject] = useState(null);
   const [selectedTeams, setSelectedTeams] = useState([]);
 
   const fetchProject = async () => {
@@ -53,6 +53,13 @@ const AffectationProjectToTeam = () => {
         }}
         onSubmit={async (values) => {
           try {
+            if (selectedProject === null) {
+              toast.error('Veuillez sélectionner un projet!')
+              return
+            } else if (!selectedTeams || selectedTeams.length === 0) {
+              toast.error('Veuillez sélectionner au moins une équipe!')
+              return
+            }
             const response = await projectService.affectProjectToTeam({
               project: selectedProject.value,
               teams: selectedTeams,

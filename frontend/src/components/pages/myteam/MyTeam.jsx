@@ -41,9 +41,9 @@ const MyTeam = () => {
             <th scope="col">#</th>
             <th scope="col">Nom</th>
             <th scope="col">Prénom</th>
+            <th scope="col">Téléphone</th>
             <th scope="col">Email</th>
-            <th scope="col">Affect task</th>
-            <th scope="col">Actions</th>
+            {localStorage.getItem('role') !== 'employe' && <th scope="col">Affect task</th>}
           </tr>
         </thead>
         <tbody>
@@ -53,14 +53,15 @@ const MyTeam = () => {
             <td>{profile.firstName}</td>
             <td>{profile.phone}</td>
             <td>{profile.email}</td>
-            <td>
+            {localStorage.getItem('role') !== 'employe' && <td>
               <Link
                 to={'/affect-tasks/' + profile._id}
                 state={profile}
                 className='btn btn-light'
               >Affect <i className="ti ti-corner-right-up"></i>
               </Link></td>
-            <td></td>
+            }
+
           </tr>
           {employees.map((user, index) => (
             <tr key={user._id}>
@@ -69,18 +70,14 @@ const MyTeam = () => {
               <td>{user.firstName}</td>
               <td>{user.phone}</td>
               <td>{user.email}</td>
-              <td>
+              {localStorage.getItem('role') !== 'employe' && <td>
                 <Link
                   to={'/affect-tasks/' + user._id}
                   state={user}
                   className='btn btn-light'
                 >Affect <i className="ti ti-corner-right-up"></i>
-                </Link></td>
-              <td>
-                <div>
-
-                </div>
-              </td>
+                </Link>
+              </td>}
             </tr>
           ))}
         </tbody>
