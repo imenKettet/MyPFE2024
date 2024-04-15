@@ -105,6 +105,8 @@ exports.deleteUser = async (req, res) => {
     if (user.role === 'employe') {
       await Team.findByIdAndUpdate(user.team, { $pull: { employees: req.params.id } }, { new: true });
     }
+    // to add delete absences and affected tasks when deleting an employee or chef
+
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: " L'utilisateur a été supprimé " });
   } catch (error) {
