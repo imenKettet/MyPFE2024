@@ -101,12 +101,11 @@ exports.deleteUser = async (req, res) => {
           await Project.findByIdAndUpdate(project, { $pull: { teams: team._id } }, { new: true })
         })
       )
-      await User.findByIdAndDelete(req.params.id);
     }
-    if (user.role === 'employee') {
+    if (user.role === 'employe') {
       await Team.findByIdAndUpdate(user.team, { $pull: { employees: req.params.id } }, { new: true });
-      await User.findByIdAndDelete(req.params.id);
     }
+    await User.findByIdAndDelete(req.params.id);
     res.json({ message: " L'utilisateur a été supprimé " });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
