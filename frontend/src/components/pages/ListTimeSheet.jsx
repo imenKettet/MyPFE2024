@@ -47,6 +47,24 @@ const ListTimeSheet = () => {
     });
   };
 
+  const formattedDurations = projects.map(project =>
+    project.tasks.map(task =>
+      days.map((day, dayIndex) => {
+        const dayTasks = filterTasksForCurrentWeek(task);
+        const tasksForDay = dayTasks.filter(entry => new Date(entry.dateWorked).getDay() === dayIndex + 1);
+        const totalDuration = tasksForDay.reduce((acc, curr) => {
+          const startTime = new Date(`1970-01-01T${curr.startTime}`);
+          const endTime = new Date(`1970-01-01T${curr.endTime}`);
+          const duration = endTime - startTime;
+          return acc + duration;
+        }, 0);
+        // Convert milliseconds to hours
+        const totalHours = totalDuration / (1000 * 60 * 60);
+        return totalHours; // Return total hours directly
+      })
+    )
+  );
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -65,45 +83,47 @@ const ListTimeSheet = () => {
         <button className="btn btn-light">{week.start.toDateString()} - {week.end.toDateString()}</button>
         <button className="btn btn-light" onClick={handleNextWeek}><i className="ti ti-chevron-right"></i></button>
       </div>
-      <table className="table mt-3">
-        <thead>
-          <tr className="border bg-light">
-            <th>Projet:</th>
-            <th>Tâche:</th>
-            {days.map((day, index) => (
-              <th className="border" key={index}>{day}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project, index) => (
-            <React.Fragment key={index}>
-              {project.tasks.map((task, taskIndex) => (
-                <tr key={taskIndex}>
-                  {/* Display project name only once for each project */}
-                  {taskIndex === 0 && (
-                    <td rowSpan={project.tasks.length} className="border">{project.nameProject}</td>
-                  )}
-                  <td>{task.nameTask}</td>
-                  {days.map((day, dayIndex) => {
-                    const dayTasks = filterTasksForCurrentWeek(task);
-                    const tasksForDay = dayTasks.filter(entry => new Date(entry.dateWorked).getDay() === dayIndex + 1);
-                    return (
-                      <td className="border" key={dayIndex}>
-                        {tasksForDay.map((task, idx) => (
-                          <div key={idx}>
-                            {`${task.startTime} - ${task.endTime}`}
-                          </div>
-                        ))}
-                      </td>
-                    );
-                  })}
-                </tr>
+      <div style={{ overflowX: 'scroll' }}>
+        <table className="table mt-3">
+          <thead>
+            <tr className="border bg-light">
+              <th className="border text-dark bg-light-warning">Projet</th>
+              <th className="border text-dark bg-light-warning">Tâche</th>
+              {days.map((day, index) => (
+                <th className="border text-dark bg-light-warning" key={index}>{day}</th>
               ))}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
+              <th className="border text-dark bg-light-warning">Durée (heures)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map((project, index) => (
+              <React.Fragment key={index}>
+                {project.tasks.map((task, taskIndex) => (
+                  <tr key={taskIndex}>
+                    {/* Display project name only once for each project */}
+                    {taskIndex === 0 && (
+                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning">{project.nameProject}</td>
+                    )}
+                    <td className="border bg-light">{task.nameTask}</td>
+                    {days.map((day, dayIndex) => (
+                      <td className="border" key={dayIndex}>
+                        {/* Render tasks for each day */}
+                        {formattedDurations[index][taskIndex][dayIndex].toFixed(2)} {/* Format total hours with 2 decimal places */}
+                      </td>
+                    ))}
+                    {/* Display total duration for the week */}
+                    <td className="border">
+                      {/* Calculate and display total hours for the week */}
+                      {formattedDurations[index][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>;
+
     </PageContainer>
   );
 }
