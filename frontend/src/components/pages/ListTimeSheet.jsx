@@ -3,6 +3,8 @@ import PageContainer from "../reusedComponents/PageContainer";
 import { taskService } from "../../services/task";
 import { CoockieContext } from "../../features/contexts";
 import { chefService } from "../../services/chef";
+import { userService } from "../../services/user";
+import { projectService } from "../../services/project";
 
 const ListTimeSheet = () => {
   const [projects, setProjects] = useState([]);
@@ -86,8 +88,20 @@ const ListTimeSheet = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await chefService.getOne(Context.id);
-        setProjects(response.data.projects);
+        const role = localStorage.getItem('role')
+        if (role === 'chef') {
+          const response = await chefService.getOne(Context.id);
+          setProjects(response.data.projects);
+
+        }
+        if (role === 'employe') {
+          const response = await userService.getOne(Context.id);
+          setProjects(response.data.team.projects);
+        }
+        if (role === 'admin') {
+          const response = await projectService.getall();
+          setProjects(response.data);
+        }
       } catch (error) {
         console.error("Erreur lors de la récupération des projets:", error);
       }
@@ -124,13 +138,13 @@ const ListTimeSheet = () => {
                     )}
                     <td className="border bg-light">{task.nameTask}</td>
                     {days.map((day, dayIndex) => (
-                      <td className="border" key={dayIndex}>
+                      <td className={"border" + (formattedDurations[index][taskIndex][dayIndex].toFixed(2) !== '0.00' && ' bg-light')} key={dayIndex}>
                         {/* Render tasks for each day */}
                         {formattedDurations[index][taskIndex][dayIndex].toFixed(2)} {/* Format total hours with 2 decimal places */}
                       </td>
                     ))}
                     {/* Display total duration for the week */}
-                    <td className="border">
+                    <td className="border bg-light">
                       {/* Calculate and display total hours for the week */}
                       {formattedDurations[index][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
                     </td>
@@ -140,17 +154,17 @@ const ListTimeSheet = () => {
             ))}
             {/* Row for total hours per day */}
             <tr>
-              <td className="border text-dark bg-light-warning">Total heures par jour</td>
+              <td className="border text-dark bg-light-warning">Total heures/jour</td>
               <td>N/A</td>
               {totalHoursPerDay.map((totalHours, index) => (
-                <td className="border" key={index}>{totalHours.toFixed(2)}</td>
+                <td className={"border" + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
               ))}
               {/* Placeholder cell for the total weekly hours */}
-              <td className="border">{totalOfTotalDurations.toFixed(2)}</td>
+              <td className={"border bg-light"}>{totalOfTotalDurations.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
-      </div>;
+      </div>
 
     </PageContainer>
   );

@@ -24,8 +24,8 @@ const AddProject = () => {
   const validationSchema = Yup.object().shape({
     nameProject: Yup.string().required('Nom du projet est obligatoire'),
     client: Yup.string().required('Nom du client est obligatoire'),
-    dateStart: Yup.string().required('Date début obligatoire'),
-    dateEnd: Yup.string()
+    dateStart: Yup.date().required('Date début obligatoire'),
+    dateEnd: Yup.date()
       .required('Date fin obligatoire')
       .when('dateStart', (dateStart, schema) => {
         return schema.min(dateStart, 'La date de fin doit être après la date de début');
