@@ -65,6 +65,24 @@ const ListTimeSheet = () => {
     )
   );
 
+  const totalHoursPerDay = days.map((day, dayIndex) => {
+    const totalHoursForDay = projects.flatMap(project =>
+      project.tasks.flatMap(task => {
+        const dayTasks = filterTasksForCurrentWeek(task);
+        const tasksForDay = dayTasks.filter(entry => new Date(entry.dateWorked).getDay() === dayIndex + 1);
+        const totalDurationForDay = tasksForDay.reduce((acc, curr) => {
+          const startTime = new Date(`1970-01-01T${curr.startTime}`);
+          const endTime = new Date(`1970-01-01T${curr.endTime}`);
+          const duration = endTime - startTime;
+          return acc + duration;
+        }, 0);
+        return totalDurationForDay / (1000 * 60 * 60); // Convert milliseconds to hours
+      })
+    );
+    return totalHoursForDay.reduce((acc, curr) => acc + curr, 0); // Calculate sum of hours for the day
+  });
+  const totalOfTotalDurations = formattedDurations.flat().flat().reduce((acc, duration) => acc + parseFloat(duration), 0);
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -120,6 +138,16 @@ const ListTimeSheet = () => {
                 ))}
               </React.Fragment>
             ))}
+            {/* Row for total hours per day */}
+            <tr>
+              <td className="border text-dark bg-light-warning">Total heures par jour</td>
+              <td>N/A</td>
+              {totalHoursPerDay.map((totalHours, index) => (
+                <td className="border" key={index}>{totalHours.toFixed(2)}</td>
+              ))}
+              {/* Placeholder cell for the total weekly hours */}
+              <td className="border">{totalOfTotalDurations.toFixed(2)}</td>
+            </tr>
           </tbody>
         </table>
       </div>;
