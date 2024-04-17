@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { absenceService } from "../../../services/absence";
 import PageContainer from "../../reusedComponents/PageContainer";
+import { Link } from "react-router-dom";
 
 const ListAbsences = () => {
   const [Absences, setAbsences] = useState([]);
@@ -85,7 +86,7 @@ const ListAbsences = () => {
               <td>{new Date(absence.date).toLocaleDateString()}</td>
               <td>
                 <div>
-                  <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
+                  <Link to={'/editAbsence/' + absence._id} ><i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i></Link>
                   <i
                     className="cursor-pointer ti ti-trash h3 text-danger me-2"
                     onClick={() => confirmDelete(absence._id)}

@@ -12,6 +12,7 @@ const addProject = lazy(() => import("./components/pages/project/AddProject"));
 const addUser = lazy(() => import("./components/pages/user/AddUser"));
 const addTeam = lazy(() => import("./components/pages/team/AddTeam"));
 const addAbsence = lazy(() => import("./components/pages/absence/AddAbsence"));
+const UpdateAbsence = lazy(() => import("./components/pages/absence/UpdateAbsence"));
 const editProject = lazy(() => import("./components/pages/project/EditProject"));
 const editUser = lazy(() => import("./components/pages/user/EditUser"));
 const editTeam = lazy(() => import("./components/pages/team/EditTeam"));
@@ -84,6 +85,13 @@ const routes = [
     path: "/addAbsence",
     element: addAbsence,
     name: "addAbsence",
+    exact: true,
+  },
+
+  {
+    path: "/editAbsence/:id",
+    element: UpdateAbsence,
+    name: "UpdateAbsence",
     exact: true,
   },
 
