@@ -10,7 +10,8 @@ const taskSchema = new Schema(
     project: { type: Schema.Types.ObjectId, ref: "Project" },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     worked: [{
-      workTime: Number,
+      startTime: String,
+      endTime: String,
       dateWorked: String
     }]
   },

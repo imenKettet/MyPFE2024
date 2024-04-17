@@ -16,7 +16,6 @@ exports.getAllTasks = async (req, res) => {
     const tasks = await Task.find();
     res.json(tasks);
   } catch (error) {
-    error;
     res.status(500).json({ message: error.message || "error server" });
   }
 };
@@ -44,6 +43,25 @@ exports.deleteTask = async (req, res) => {
   try {
     await Project.findByIdAndDelete(req.params.id);
     res.json(" La tache  a été supprimé ");
+  } catch (error) {
+    res.status(500).json({ message: error.message || "error server" });
+  }
+};
+
+
+exports.getMyTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.params.id });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: error.message || "error server" });
+  }
+};
+
+exports.fillTask = async (req, res) => {
+  try {
+    await Task.findByIdAndUpdate(req.params.id, { $push: { worked: req.body } }, { new: true });
+    res.json({ message: 'Tâche remplis!' });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
   }

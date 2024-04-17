@@ -17,6 +17,7 @@ const editUser = lazy(() => import("./components/pages/user/EditUser"));
 const editTeam = lazy(() => import("./components/pages/team/EditTeam"));
 const myTasks = lazy(() => import("./components/pages/myteam/MyTasks"));
 const MyTeam = lazy(() => import("./components/pages/myteam/MyTeam"));
+const FillingMyTask = lazy(() => import("./components/pages/myteam/FillingMyTask"));
 const myProjects = lazy(() => import("./components/pages/myteam/MyProjects"));
 const Profile = lazy(() => import("./components/pages/profile/MyProfile"));
 const myAbsences = lazy(() => import("./components/pages/absence/MyAbsences"));
@@ -130,6 +131,13 @@ const routes = [
     path: "/affect-tasks/:id",
     element: AffectTasks,
     name: "Affect Tasks",
+    exact: true,
+  },
+
+  {
+    path: "/myTasks/:id",
+    element: FillingMyTask,
+    name: "Filling my lask",
     exact: true,
   },
 

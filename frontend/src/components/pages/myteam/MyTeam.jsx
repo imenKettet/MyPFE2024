@@ -44,6 +44,7 @@ const MyTeam = () => {
             <th scope="col">Téléphone</th>
             <th scope="col">Email</th>
             {localStorage.getItem('role') !== 'employe' && <th scope="col">Affect task</th>}
+            <th>Détail</th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +62,11 @@ const MyTeam = () => {
               >Affect <i className="ti ti-corner-right-up"></i>
               </Link></td>
             }
+            <td>
+              <i
+                className="cursor-pointer ti ti-alert-circle h5 "
+              ></i>
+            </td>
 
           </tr>
           {employees.map((user, index) => (
@@ -78,6 +84,11 @@ const MyTeam = () => {
                 >Affect <i className="ti ti-corner-right-up"></i>
                 </Link>
               </td>}
+              <td>
+                <i
+                  className="cursor-pointer ti ti-alert-circle h5 "
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>

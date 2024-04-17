@@ -24,7 +24,6 @@ exports.getAllTeam = async (req, res) => {
       .populate("projects");
     res.json(teams);
   } catch (error) {
-    error;
     res.status(500).json({ message: error.message || "error server" });
   }
 };

@@ -4,11 +4,9 @@ const User = require("../models/user");
 exports.createAbsence = async (req, res) => {
   try {
     const newAbsence = await Absence.create(req.body);
-    const absenceId = newAbsence._id;
-    const userId = req.body.employe;
     await User.findByIdAndUpdate(
-      userId,
-      { $push: { absences: absenceId } },
+      req.body.employe,
+      { $push: { absences: newAbsence._id } },
       { new: true }
     );
     res.json({ message: "Fiche d'absence créée avec succès !" });
@@ -23,7 +21,6 @@ exports.getAllAbsences = async (req, res) => {
     const absences = await Absence.find().populate("employe");
     res.json(absences);
   } catch (error) {
-    error;
     res.status(500).json({ message: error.message || "error server" });
   }
 };
@@ -41,7 +38,7 @@ exports.getOneAbsence = async (req, res) => {
 exports.updateAbsence = async (req, res) => {
   try {
     await Absence.findByIdAndUpdate(req.params.id, req.body);
-    res.json("la Fiche d'absence a été modifié");
+    res.json({ message: "la Fiche d'absence a été modifié" });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
   }

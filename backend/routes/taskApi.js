@@ -5,6 +5,8 @@ const {
   getOneTask,
   updateTask,
   deleteTask,
+  getMyTasks,
+  fillTask,
 } = require("../controllers/task.contoller");
 const passport = require("passport");
 
@@ -25,10 +27,21 @@ router.get(
   passport.authenticate("bearer", { session: false }),
   getOneTask
 );
+router.get(
+  "/my-tasks/:id",
+  passport.authenticate("bearer", { session: false }),
+  getMyTasks
+);
 router.put(
   "/:id",
   passport.authenticate("bearer", { session: false }),
   updateTask
+);
+
+router.put(
+  "/fill-task/:id",
+  passport.authenticate("bearer", { session: false }),
+  fillTask
 );
 router.delete(
   "/:id",

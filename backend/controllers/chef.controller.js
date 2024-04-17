@@ -4,7 +4,7 @@ const Task = require('../models/task')
 
 exports.findTeamByChef = async (req, res) => {
     try {
-        const team = await Team.findOne({ chef: req.user._id }).populate('employees').populate({ path: 'projects', populate: 'tasks' })
+        const team = await Team.findOne({ chef: req.user._id }).populate({ path: 'employees', populate: 'tasks' }).populate({ path: 'projects', populate: 'tasks' })
         res.json({ employees: team.employees, projects: team.projects })
     } catch (error) {
         console.log(error);

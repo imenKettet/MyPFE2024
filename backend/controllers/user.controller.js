@@ -55,7 +55,6 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find();
     res.json(users);
   } catch (error) {
-    error;
     res.status(500).json({ message: error.message || "error server" });
   }
 };
