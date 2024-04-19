@@ -1,7 +1,7 @@
 import React from 'react'
 import ButtonPage from './LinkButton';
 
-const PageContainer = ({ children, title, path, btnColor, btntxt }) => {
+const PageContainer = ({ click, children, title, path, btnColor, btntxt }) => {
     return (
         <div className="container-fluid card">
             <div className="card-header d-flex justify-content-between">
@@ -9,7 +9,7 @@ const PageContainer = ({ children, title, path, btnColor, btntxt }) => {
                 <h4>
                     <b>{title}</b>
                 </h4>
-                {path ? <ButtonPage path={path} btnColor={btnColor} btntxt={btntxt} /> : <div></div>}
+                {path || click ? <ButtonPage click={click} path={path} btnColor={btnColor} btntxt={btntxt} /> : <div></div>}
             </div>
             <div className="card-body">
                 {children}

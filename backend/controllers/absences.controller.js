@@ -1,4 +1,5 @@
 const Absence = require("../models/absence_sheet");
+const Notification = require("../models/notifications");
 const User = require("../models/user");
 //Add Absence_sheet
 exports.createAbsence = async (req, res) => {
@@ -9,6 +10,13 @@ exports.createAbsence = async (req, res) => {
       { $push: { absences: newAbsence._id } },
       { new: true }
     );
+    const employee = await User.findById(req.body.employe)
+    await Notification.create({
+      employee: req.body.employe,
+      absence: newAbsence._id,
+      chef: req.user._id,
+      title: `Absence de ${employee.firstName} ${employee.lastName}`
+    })
     res.json({ message: "Fiche d'absence créée avec succès !" });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

@@ -8,6 +8,7 @@ const listUsers = lazy(() => import("./components/pages/user/ListUser"));
 const listTeams = lazy(() => import("./components/pages/team/ListTeams"));
 const listAbsences = lazy(() => import("./components/pages/absence/ListAbsences"));
 const listTimeSheet = lazy(() => import("./components/pages/ListTimeSheet"));
+const Notifications = lazy(() => import("./components/pages/Notifications"));
 const addProject = lazy(() => import("./components/pages/project/AddProject"));
 const addUser = lazy(() => import("./components/pages/user/AddUser"));
 const addTeam = lazy(() => import("./components/pages/team/AddTeam"));
@@ -61,6 +62,12 @@ const routes = [
     path: "/listTimeSheet",
     element: listTimeSheet,
     name: "listTimeSheet",
+    exact: true,
+  },
+  {
+    path: "/notifications",
+    element: Notifications,
+    name: "notifications",
     exact: true,
   },
   {

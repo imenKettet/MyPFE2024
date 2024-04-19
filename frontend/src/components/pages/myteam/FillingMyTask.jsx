@@ -13,29 +13,31 @@ const FillingMyTask = () => {
     const { id } = useParams()
     const [loading, setLoading] = useState(false)
     const validationSchema = Yup.object().shape({
-        startTime: Yup.string().required('Start time is required'),
+        startTime: Yup.string().required('L\'heure de début est requise'),
         endTime: Yup.string()
-            .required('End time is required')
+            .required('L\'heure de fin est requise')
             .when('startTime', (startTime, schema) => (
                 startTime &&
                 schema.test({
                     test: function (endTime) {
-                        if (!endTime) return true; // Allow empty value for end time
+                        if (!endTime) return true;
                         const start = new Date(`2000-01-01T${startTime}`);
                         const end = new Date(`2000-01-01T${endTime}`);
                         return end > start;
                     },
-                    message: 'End time must be greater than start time'
+                    message: 'L\'heure de fin doit être supérieure à l\'heure de début'
                 })
             )),
         dateWorked: Yup.string()
-            .required('Date worked is required')
+            .required('La date du travail est requise'),
+        Status: Yup.string().required('Le statut est requis')
     });
 
     const initialValues = {
         startTime: '',
         endTime: '',
-        dateWorked: ''
+        dateWorked: '',
+        Status: 'En cours'
     };
     const handleSubmit = async (values) => {
         try {
@@ -73,6 +75,14 @@ const FillingMyTask = () => {
                             <label htmlFor="dateWorked">Date du travail</label>
                             <Field className="form-control" type="date" name="dateWorked" />
                             <ErrorMessage name="dateWorked" className='text-danger' component="div" />
+                        </div>
+                        <div>
+                            <label htmlFor="Status">Statut</label>
+                            <Field as="select" name="Status" className="form-control">
+                                <option value="En cours">En cours</option>
+                                <option value="Terminé">Terminé</option>
+                            </Field>
+                            <ErrorMessage name="Status" className='text-danger' component="div" />
                         </div>
                         <Button type='submit' btntxt={<>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>} btnColor='primary' />
                         {JSON.stringify(values)}

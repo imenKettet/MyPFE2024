@@ -15,8 +15,8 @@ const AddProject = () => {
   const initialValues = {
     nameProject: "",
     client: "",
-    dateStart: "",
-    dateEnd: "",
+    dateStart: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
+    dateEnd: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
     tasks: [{ nameTask: "", estimatedDuration: "" }]
   };
 

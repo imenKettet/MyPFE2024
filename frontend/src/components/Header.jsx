@@ -1,15 +1,17 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { deleteCookie } from "../utils/functions";
+import { CoockieContext } from "../features/contexts";
+import { notificationService } from "../services/notification";
 
 const Header = ({ showSidebarFN }) => {
   const navigate = useNavigate();
   const logout = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/auth/logout");
+      const response = await axios.post(process.env.REACT_APP_BASE_URL + "/auth/logout");
       toast.success(response.data.message);
       navigate('/login')
       deleteCookie('token')
@@ -17,6 +19,20 @@ const Header = ({ showSidebarFN }) => {
       console.log(error);
     }
   };
+
+  const [notifications, setNotifications] = useState([]);
+  const Context = useContext(CoockieContext);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await notificationService.getAll();
+        setNotifications(response.data)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProjects()
+  }, [Context.id]);
   return (
     <header className="app-header">
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -30,18 +46,21 @@ const Header = ({ showSidebarFN }) => {
               <i className="ti ti-menu-2"></i>
             </div>
           </li>
-          <li className="nav-item">
-            <div className="nav-link nav-icon-hover">
-              <i className="ti ti-bell-ringing"></i>
-              <div className="notification bg-primary rounded-circle"></div>
-            </div>
-          </li>
+          {localStorage.getItem('role') === 'admin' && (
+            <li className="nav-item p-0">
+              <Link to='/notifications' className="nav-link nav-icon-hover position-relative h-50">
+                <i className="ti ti-bell-ringing"></i>
+                <span className="position-absolute start-100  translate-middle p-1 badge rounded-pill bg-danger">{notifications.filter((el) => !el.viewed).length}</span>
+              </Link>
+            </li>
+          )}
         </ul>
         <div
           className="navbar-collapse justify-content-end px-0"
           id="navbarNav"
         >
           <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+            <li>{`{${localStorage.getItem('role').toUpperCase()}}`}</li>
             <li className="nav-item dropdown">
               <div
                 className="nav-link nav-icon-hover"

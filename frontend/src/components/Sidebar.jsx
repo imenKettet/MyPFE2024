@@ -116,7 +116,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </Link>
             </li>
           )}
-          {role === "admin" && (
+          {["admin", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
                 className={`sidebar-link ${isLinkActive("/listAbsences")}`}
@@ -126,7 +126,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
                 <span>
                   <i className="ti ti-float-left"></i>
                 </span>
-                <span className="hide-menu"> liste des absences</span>
+                <span className="hide-menu"> Liste des absences</span>
               </Link>
             </li>
           )}
@@ -168,7 +168,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
                 aria-expanded="false"
               >
                 <span>
-                  <i className="ti ti-article"></i>
+                  <i className="ti ti-users"></i>
                 </span>
                 <span className="hide-menu"> Mon équipe </span>
               </Link>
@@ -192,12 +192,12 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
           {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
-                className={`sidebar-link ${isLinkActive("/listTimeSheet")}`}
-                to="/listTimeSheet"
+                className={`sidebar-link ${isLinkActive("")}`}
+                to=""
                 aria-expanded="false"
               >
                 <span>
-                  <i className="ti ti-calendar"></i>
+                  <i className="ti ti-list"></i>
                 </span>
                 <span className="hide-menu"> Mes Feuilles de temps </span>
               </Link>
@@ -218,17 +218,18 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </Link>
             </li>
           )}
-          {role === "chef" && (
+
+          {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
-                className={`sidebar-link ${isLinkActive("")}`}
-                to=""
+                className={`sidebar-link ${isLinkActive("/listTimeSheet")}`}
+                to="/listTimeSheet"
                 aria-expanded="false"
               >
                 <span>
-                  <i className="ti ti-check"></i>
+                  <i className="ti ti-calendar"></i>
                 </span>
-                <span className="hide-menu">Valider les Feuilles de temps</span>
+                <span className="hide-menu">Feuilles de temps d'équipe</span>
               </Link>
             </li>
           )}

@@ -60,7 +60,7 @@ exports.getMyTasks = async (req, res) => {
 
 exports.fillTask = async (req, res) => {
   try {
-    await Task.findByIdAndUpdate(req.params.id, { $push: { worked: req.body } }, { new: true });
+    await Task.findByIdAndUpdate(req.params.id, { $push: { worked: req.body }, $set: { Status: req.body.Status } }, { new: true });
     res.json({ message: 'Tâche remplis!' });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
