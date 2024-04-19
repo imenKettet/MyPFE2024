@@ -51,7 +51,7 @@ exports.deleteTask = async (req, res) => {
 
 exports.getMyTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.params.id });
+    const tasks = await Task.find({ user: req.params.id }).populate('user').populate('project');
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

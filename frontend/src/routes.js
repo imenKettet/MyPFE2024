@@ -25,7 +25,7 @@ const Profile = lazy(() => import("./components/pages/profile/MyProfile"));
 const myAbsences = lazy(() => import("./components/pages/absence/MyAbsences"));
 const AffectationProjectToTeam = lazy(() => import("./components/pages/affectation/AffectationProjectToTeam"));
 const AffectTasks = lazy(() => import("./components/pages/affectation/AffectTasks"));
-
+const MyTimeSheetList = lazy(() => import("./components/pages/MyListTimeSheet"));
 const routes = [
   {
     path: "/", //path spécifie l'URL correspondante
@@ -62,6 +62,12 @@ const routes = [
     path: "/listTimeSheet",
     element: listTimeSheet,
     name: "listTimeSheet",
+    exact: true,
+  },
+  {
+    path: "/myTimeSheetList",
+    element: MyTimeSheetList,
+    name: "myTimeSheetList",
     exact: true,
   },
   {
