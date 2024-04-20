@@ -207,21 +207,18 @@ const ListTimeSheet = () => {
         <button className="btn btn-light" onClick={handleNextWeek}><i className="ti ti-chevron-right"></i></button>
       </div>
       <div style={{ overflowX: 'scroll' }}>
-        <table className="table mt-3">
+        <table className="table mt-3 text-center">
           <thead>
             <tr className="border bg-light">
               <th className="border text-dark bg-light-warning fs-2">Projet</th>
               <th className="border text-dark bg-light-warning fs-2">Tâche</th>
               {days.map((day, index) => (
-                <React.Fragment key={index}>
-                  <th className="border text-dark bg-light-warning fs-2">
-                    <div className="d-flex flex-column">
-                      <span>{day}</span>
-                      <span className="fs-1 text-danger">{new Date(week.start.getTime() + index * 24 * 60 * 60 * 1000).toLocaleDateString("en-GB")}</span>
-                    </div>
-
-                  </th>
-                </React.Fragment>
+                <th className="border text-dark bg-light-warning fs-2" key={index}>
+                  <div className="d-flex flex-column align-items-center">
+                    <span>{day}</span>
+                    <span className="fs-1 text-danger">{new Date(week.start.getTime() + index * 24 * 60 * 60 * 1000).toLocaleDateString("en-GB")}</span>
+                  </div>
+                </th>
               ))}
               <th className="border text-dark bg-light-warning fs-2">Durée (heures)</th>
             </tr>
@@ -233,12 +230,14 @@ const ListTimeSheet = () => {
                   <tr key={`${projectIndex}-${taskIndex}`}>
                     {/* Display project name only once for each project */}
                     {taskIndex === 0 && (
-                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2">
-                        {project.nameProject}
+                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2 text-center align-middle">
+                        <div className="d-flex flex-column align-items-center">
+                          {project.nameProject} <span className="text-success h6">({project.teams[projectIndex].teamName})</span>
+                        </div>
                       </td>
                     )}
                     <td className="border bg-light fs-2">
-                      <div className="d-flex flex-column">
+                      <div className="d-flex flex-column align-items-center">
                         <span>{task.nameTask}</span>
                         <span className="text-danger">({task.user?.firstName ? task.user?.firstName : 'Non affecté'})</span>
                       </div>
@@ -248,7 +247,7 @@ const ListTimeSheet = () => {
                       return (
                         <td
                           key={`${projectIndex}-${taskIndex}-${dayIndex}`}
-                          className={"border fs-2 " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
+                          className={"border fs-2 align-middle " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
                           onClick={() => handleDurationClick(task._id, dayIndex, day)}
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
@@ -259,7 +258,7 @@ const ListTimeSheet = () => {
                       );
                     })}
                     {/* Display total duration for the week */}
-                    <td className="border bg-light fs-2">
+                    <td className="border bg-light fs-2 align-middle">
                       {/* Calculate and display total hours for the week */}
                       {formattedDurations[projectIndex][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
                     </td>
@@ -270,15 +269,16 @@ const ListTimeSheet = () => {
             {/* Row for total hours per day */}
             <tr>
               <td className="border text-dark bg-light-warning fs-2">Total heures/jour</td>
-              <td className=" fs-2">N/A</td>
+              <td className=" align-middle fs-2">N/A</td>
               {totalHoursPerDay.map((totalHours, index) => (
-                <td className={"border fs-2 " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
+                <td className={"border fs-2 align-middle " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
               ))}
               {/* Placeholder cell for the total weekly hours */}
-              <td className={"border bg-light fs-2"}>{totalOfTotalDurations.toFixed(2)}</td>
+              <td className={"border bg-light fs-2 align-middle"}>{totalOfTotalDurations.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
+
         {/* Bootstrap Modal */}
         <div className={`modal fade`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog">
