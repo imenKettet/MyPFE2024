@@ -14,7 +14,7 @@ import Loading from "../reusedComponents/Loading";
 const ListTimeSheet = () => {
   const [projects, setProjects] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState('');
-  // const [showModal, setShowModal] = useState(false);
+  const [weekModified, setWeekModified] = useState(false);
   const [dateWorkedData, setDateWorkedData] = useState({
     startTime: '',
     endTime: '',
@@ -75,24 +75,20 @@ const ListTimeSheet = () => {
 
   const handleDurationClick = async (taskId, dayIndex, day) => {
     setSelectedTaskId(taskId);
-    // setShowModal(true);
     if (day === 'Lundi') {
       const newStartDate = new Date(week.start);
-      newStartDate.setDate(newStartDate.getDate() + 7); // Move to the next week
       const formattedDate = getFormattedDate(day, newStartDate);
       const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`)
+      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`);
       setDateWorkedData(response.data);
       setSelectedDate({ year, month, day: dayOfMonth });
     } else {
       const formattedDate = getFormattedDate(day, week.start);
       const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`)
+      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`);
       setDateWorkedData(response.data);
       setSelectedDate({ year, month, day: dayOfMonth });
-      console.log(response.data);
     }
-
   };
   const handleSubmit = async (values, { resetForm }) => {
     try {
@@ -116,8 +112,9 @@ const ListTimeSheet = () => {
     const newStartDate = new Date(week.start);
     newStartDate.setDate(newStartDate.getDate() - 7);
     const newEndDate = new Date(newStartDate);
-    newEndDate.setDate(newEndDate.getDate() + 6);
+    newEndDate.setDate(newEndDate.getDate() + 7);
     setWeek({ start: newStartDate, end: newEndDate });
+    setWeekModified(true);
   };
 
   // Function to handle next week button click
@@ -125,9 +122,12 @@ const ListTimeSheet = () => {
     const newStartDate = new Date(week.start);
     newStartDate.setDate(newStartDate.getDate() + 7);
     const newEndDate = new Date(newStartDate);
-    newEndDate.setDate(newEndDate.getDate() + 6);
+    newEndDate.setDate(newEndDate.getDate() + 7);
     setWeek({ start: newStartDate, end: newEndDate });
+    setWeekModified(true);
   };
+
+  const formattedEndDate = weekModified ? week.end.toDateString() : (new Date(week.end.getTime() - 86400000).toDateString());
 
   // Function to filter tasks for the current week
   const filterTasksForCurrentWeek = (task) => {
@@ -203,19 +203,27 @@ const ListTimeSheet = () => {
     <PageContainer title='Feuille de temps'>
       <div className="d-flex gap-2">
         <button className="btn btn-light" onClick={handlePreviousWeek}><i className="ti ti-chevron-left"></i></button>
-        <button className="btn btn-light">{week.start.toDateString()} - {week.end.toDateString()}</button>
+        <button className="btn btn-light">{week.start.toDateString()} - {weekModified ? (new Date(week.end.getTime() - 86400000).toDateString()) : week.end.toDateString()}</button>
         <button className="btn btn-light" onClick={handleNextWeek}><i className="ti ti-chevron-right"></i></button>
       </div>
       <div style={{ overflowX: 'scroll' }}>
         <table className="table mt-3">
           <thead>
             <tr className="border bg-light">
-              <th className="border text-dark bg-light-warning">Projet</th>
-              <th className="border text-dark bg-light-warning">Tâche</th>
+              <th className="border text-dark bg-light-warning  fs-2">Projet</th>
+              <th className="border text-dark bg-light-warning  fs-2">Tâche</th>
               {days.map((day, index) => (
-                <th className="border text-dark bg-light-warning" key={index}>{day}</th>
+                <React.Fragment key={index}>
+                  <th className="border text-dark bg-light-warning fs-2">
+                    <div className="d-flex flex-column">
+                      <span>{day}</span>
+                      <span className="fs-1 text-danger">{new Date(week.start.getTime() + index * 24 * 60 * 60 * 1000).toLocaleDateString("en-GB")}</span>
+                    </div>
+
+                  </th>
+                </React.Fragment>
               ))}
-              <th className="border text-dark bg-light-warning">Durée (heures)</th>
+              <th className="border text-dark bg-light-warning  fs-2">Durée (heures)</th>
             </tr>
           </thead>
           <tbody>
@@ -225,17 +233,17 @@ const ListTimeSheet = () => {
                   <tr key={`${projectIndex}-${taskIndex}`}>
                     {/* Display project name only once for each project */}
                     {taskIndex === 0 && (
-                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning">
+                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning  fs-2">
                         {project.nameProject}
                       </td>
                     )}
-                    <td className="border bg-light">{task.nameTask}</td>
+                    <td className="border bg-light  fs-2">{task.nameTask}</td>
                     {days.map((day, dayIndex) => {
                       const totalHoursForDay = formattedDurations[projectIndex][taskIndex][dayIndex];
                       return (
                         <td
                           key={`${projectIndex}-${taskIndex}-${dayIndex}`}
-                          className={"border" + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
+                          className={"border  fs-2 " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
                           onClick={() => handleDurationClick(task._id, dayIndex, day)}
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
@@ -246,7 +254,7 @@ const ListTimeSheet = () => {
                       );
                     })}
                     {/* Display total duration for the week */}
-                    <td className="border bg-light">
+                    <td className="border bg-light  fs-2">
                       {/* Calculate and display total hours for the week */}
                       {formattedDurations[projectIndex][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
                     </td>
@@ -256,13 +264,13 @@ const ListTimeSheet = () => {
             ))}
             {/* Row for total hours per day */}
             <tr>
-              <td className="border text-dark bg-light-warning">Total heures/jour</td>
-              <td>N/A</td>
+              <td className="border text-dark bg-light-warning  fs-2">Total heures/jour</td>
+              <td className=" fs-2">N/A</td>
               {totalHoursPerDay.map((totalHours, index) => (
-                <td className={"border" + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
+                <td className={"border  fs-2 " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
               ))}
               {/* Placeholder cell for the total weekly hours */}
-              <td className={"border bg-light"}>{totalOfTotalDurations.toFixed(2)}</td>
+              <td className={"border bg-light  fs-2"}>{totalOfTotalDurations.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
