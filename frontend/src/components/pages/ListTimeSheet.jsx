@@ -116,7 +116,7 @@ const ListTimeSheet = () => {
     const newStartDate = new Date(week.start);
     newStartDate.setDate(newStartDate.getDate() - 7);
     const newEndDate = new Date(newStartDate);
-    newEndDate.setDate(newEndDate.getDate() + 7);
+    newEndDate.setDate(newEndDate.getDate() + 6);
     setWeek({ start: newStartDate, end: newEndDate });
   };
 
@@ -125,7 +125,7 @@ const ListTimeSheet = () => {
     const newStartDate = new Date(week.start);
     newStartDate.setDate(newStartDate.getDate() + 7);
     const newEndDate = new Date(newStartDate);
-    newEndDate.setDate(newEndDate.getDate() + 7);
+    newEndDate.setDate(newEndDate.getDate() + 6);
     setWeek({ start: newStartDate, end: newEndDate });
   };
 
