@@ -63,7 +63,6 @@ exports.updateProject = async (req, res) => {
         } else return null;
       })
       .filter((task) => task !== null);
-    console.log({ taskIds, newTasks, receivedTaskIds, tasksToDelete });
 
     await Task.deleteMany({ _id: { $in: tasksToDelete } });
     tasksToDelete.map(async (id) => {
@@ -74,7 +73,6 @@ exports.updateProject = async (req, res) => {
     if (newTasks.length > 0) {
       const insertedNewTasks = await Task.insertMany(newTasks);
       let newIds = insertedNewTasks.map((task) => task._id);
-      console.log({ insertedNewTasks });
       newIds.map(async (id) => {
         await Task.findByIdAndUpdate(
           id,

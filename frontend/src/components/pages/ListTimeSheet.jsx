@@ -14,7 +14,18 @@ import Loading from "../reusedComponents/Loading";
 const ListTimeSheet = () => {
   const [projects, setProjects] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
+  // const [showModal, setShowModal] = useState(false);
+  const [dateWorkedData, setDateWorkedData] = useState({
+    startTime: '',
+    endTime: '',
+    Status: '',
+    date: ''
+  });
+  const [selectedDate, setSelectedDate] = useState({
+    day: '',
+    month: '',
+    year: ''
+  });
   const Context = useContext(CoockieContext);
   const currentStartDate = new Date();
   const currentDayOfWeek = currentStartDate.getDay();
@@ -49,12 +60,6 @@ const ListTimeSheet = () => {
     Status: Yup.string().required('Le statut est requis')
   });
 
-  const initialValues = {
-    startTime: '',
-    endTime: '',
-    dateWorked: '',
-    Status: 'En cours'
-  };
   const getFormattedDate = (day, weekStartDate) => {
     const daysOfWeek = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
     const selectedDayIndex = daysOfWeek.indexOf(day);
@@ -63,24 +68,42 @@ const ListTimeSheet = () => {
     const daysToAdd = selectedDayIndex - currentDayOfWeek;
     currentDate.setDate(currentDate.getDate() + daysToAdd);
     const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const dayOfMonth = String(currentDate.getDate()).padStart(2, '0');
+    const month = Number(String(currentDate.getMonth() + 1).padStart(2, '0'));
+    const dayOfMonth = Number(String(currentDate.getDate()).padStart(2, '0'));
     return `${year}-${month}-${dayOfMonth}`;
   };
 
-  const handleDurationClick = (userId, projectId, taskId, day) => {
+  const handleDurationClick = async (taskId, dayIndex, day) => {
     setSelectedTaskId(taskId);
-    const selectedDate = getFormattedDate(day, week.start);
-    setSelectedDate(selectedDate);
+    // setShowModal(true);
+    if (day === 'Lundi') {
+      const newStartDate = new Date(week.start);
+      newStartDate.setDate(newStartDate.getDate() + 7); // Move to the next week
+      const formattedDate = getFormattedDate(day, newStartDate);
+      const [year, month, dayOfMonth] = formattedDate.split('-');
+      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`)
+      setDateWorkedData(response.data);
+      setSelectedDate({ year, month, day: dayOfMonth });
+    } else {
+      const formattedDate = getFormattedDate(day, week.start);
+      const [year, month, dayOfMonth] = formattedDate.split('-');
+      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`)
+      setDateWorkedData(response.data);
+      setSelectedDate({ year, month, day: dayOfMonth });
+      console.log(response.data);
+    }
+
   };
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { resetForm }) => {
     try {
       setLoading(true);
       if (selectedTaskId !== '') {
-        const response = await taskService.fillTask(selectedTaskId, { ...values, dateWorked: selectedDate })
+        const response = await taskService.fillTask(selectedTaskId, { ...values, dateWorked: `${selectedDate.year}-${selectedDate.month}-${selectedDate.day}` })
         toast.success(response.data.message);
       }
       fetchProjects()
+      resetForm();
+      // setShowModal(false);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -117,8 +140,8 @@ const ListTimeSheet = () => {
   const formattedDurations = projects.map(project =>
     project.tasks.map(task =>
       days.map((day, dayIndex) => {
-        const dayOfWeek = (dayIndex + 1) % 7; // Adjust indexing for Sunday
         const dayTasks = filterTasksForCurrentWeek(task);
+        const dayOfWeek = dayIndex === 6 ? 0 : dayIndex + 1; // Adjust index to match JavaScript's day indexing
         const tasksForDay = dayTasks.filter(entry => {
           const entryDate = new Date(entry.dateWorked);
           return entryDate.getDay() === dayOfWeek;
@@ -129,8 +152,8 @@ const ListTimeSheet = () => {
           const duration = endTime - startTime;
           return acc + duration;
         }, 0);
-        const totalHours = totalDuration / (1000 * 60 * 60);
-        return totalHours;
+        // Convert milliseconds to hours
+        return totalDuration / (1000 * 60 * 60);
       })
     )
   );
@@ -213,7 +236,7 @@ const ListTimeSheet = () => {
                         <td
                           key={`${projectIndex}-${taskIndex}-${dayIndex}`}
                           className={"border" + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
-                          onClick={() => handleDurationClick(task.user, project._id, task._id, day)}
+                          onClick={() => handleDurationClick(task._id, dayIndex, day)}
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                         >
@@ -244,21 +267,27 @@ const ListTimeSheet = () => {
           </tbody>
         </table>
         {/* Bootstrap Modal */}
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className={`modal fade`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="userIdModalLabel">{selectedDate}</h5>
+                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.day}-${selectedDate.month}-${selectedDate.year}`}</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">
                 <PageContainer title={"Remplir la tâche"} >
                   <Formik
-                    initialValues={initialValues}
+                    initialValues={{
+                      startTime: dateWorkedData.startTime || '',
+                      endTime: dateWorkedData.endTime || '',
+                      dateWorked: dateWorkedData.dateWorked || '',
+                      Status: dateWorkedData.Status || 'En cours'
+                    }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
+                    enableReinitialize
                   >
-                    {(values) => (
+                    {({ isValid, dirty, isSubmitting }) => (
                       <Form className='gap-3 d-flex flex-column'>
                         <div>
                           <label htmlFor="startTime">Heure de début</label>
@@ -272,21 +301,26 @@ const ListTimeSheet = () => {
                         </div>
                         <div>
                           <label htmlFor="Status">Statut</label>
-                          <Field as="select" name="Status" className="form-control">
+                          <Field as="select" name="Status" className="form-control" >
                             <option value="En cours">En cours</option>
                             <option value="Terminé">Terminé</option>
                           </Field>
                           <ErrorMessage name="Status" className='text-danger' component="div" />
                         </div>
-                        <Button type='submit' btntxt={<>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>} btnColor='primary' />
+                        <div className="d-flex justify-content-center">
+                          <button data-bs-dismiss={(isValid && dirty && !isSubmitting) ? 'modal' : null}
+                            type='submit'
+                            className="btn btn-primary d-block"
+                          >
+                            <>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>
+                          </button>
+                        </div>
+
                       </Form>
                     )}
                   </Formik>
 
                 </PageContainer>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

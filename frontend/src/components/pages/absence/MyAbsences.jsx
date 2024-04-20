@@ -12,6 +12,7 @@ const MyAbsence = () => {
       console.error("Erreur lors de la récupération des projets:", error);
     }
   };
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
   useEffect(() => {
     fetchAbsences();
@@ -34,7 +35,7 @@ const MyAbsence = () => {
               {absences.map((absence, index) => (
                 <tr key={absence._id}>
                   <td> {index + 1} </td>
-                  <td>{new Date(absence.date).toLocaleDateString()}</td>
+                  <td>{new Date(absence.date).toLocaleDateString('fr-FR', options)}</td>
                   <td>{absence.absenceType}</td>
                 </tr>
               ))}

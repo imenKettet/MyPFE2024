@@ -99,7 +99,6 @@ const ListTeams = () => {
 
   //fonction pour afficher les détails d'un equipe :
   const showTeamDetails = (team) => {
-    console.log(team);
     // Construire une chaîne HTML pour afficher les détails du l'equipe
     let TeamDetailsHTML = `
       <div>

@@ -7,6 +7,7 @@ const {
   deleteTask,
   getMyTasks,
   fillTask,
+  findDateWorked,
 } = require("../controllers/task.contoller");
 const passport = require("passport");
 
@@ -26,6 +27,11 @@ router.get(
   "/:id",
   passport.authenticate("bearer", { session: false }),
   getOneTask
+);
+router.get(
+  "/date-worked/:id/:date",
+  passport.authenticate("bearer", { session: false }),
+  findDateWorked
 );
 router.get(
   "/my-tasks/:id",

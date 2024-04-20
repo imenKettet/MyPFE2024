@@ -64,7 +64,6 @@ const AddTeam = () => {
             setLoading(true)
             values.chef = selectedChef.value;
             values.employees = selectedEmployees.map(emp => emp.value);
-            console.log(values);
             const response = await teamService.addOne(values);
             toast.success(response.data.message);
             Navigate("/listTeams");

@@ -48,9 +48,9 @@ const Header = ({ showSidebarFN }) => {
           </li>
           {localStorage.getItem('role') === 'admin' && (
             <li className="nav-item p-0">
-              <Link to='/notifications' className="nav-link nav-icon-hover position-relative h-50">
+              <Link to='/notifications' className="nav-link nav-icon-hover position-relative">
                 <i className="ti ti-bell-ringing"></i>
-                <span className="position-absolute start-100  translate-middle p-1 badge rounded-pill bg-danger">{notifications.filter((el) => !el.viewed).length}</span>
+                <span className="position-absolute  translate-middle p-1 badge rounded-pill bg-danger" style={{ left: '44px' }}>{notifications.filter((el) => !el.viewed).length}</span>
               </Link>
             </li>
           )}

@@ -15,6 +15,7 @@ const ListAbsences = () => {
       console.error("Erreur lors de la récupération des projets:", error);
     }
   };
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
   useEffect(() => {
     fetchAbsences();
@@ -83,7 +84,7 @@ const ListAbsences = () => {
               <td>{absence.employe.firstName}</td>
               <td>{absence.employe.lastName}</td>
               <td>{absence.absenceType}</td>
-              <td>{new Date(absence.date).toLocaleDateString()}</td>
+              <td>{new Date(absence.date).toLocaleDateString('fr-FR', options)}</td>
               <td>
                 <div>
                   <Link to={'/editAbsence/' + absence._id} ><i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i></Link>

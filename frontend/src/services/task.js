@@ -8,6 +8,10 @@ const getOne = async (id) => {
   return await http.get(`/task/${id}`);
 };
 
+const getDateWorked = async (id, date) => {
+  return await http.get(`/task/date-worked/${id}/${date}`);
+};
+
 const getMyTasks = async (id) => {
   return await http.get(`/task/my-tasks/${id}`);
 };
@@ -31,6 +35,7 @@ const addOne = async (data) => {
 export const taskService = {
   getall,
   getOne,
+  getDateWorked,
   updateOne,
   fillTask,
   deleteOne,
