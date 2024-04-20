@@ -24,7 +24,7 @@ exports.createProject = async (req, res) => {
 
 exports.getAllProject = async (req, res) => {
   try {
-    const projects = await Project.find().populate("tasks").populate("teams");
+    const projects = await Project.find().populate({ path: "tasks", populate: 'user' }).populate("teams");
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

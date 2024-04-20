@@ -210,8 +210,8 @@ const ListTimeSheet = () => {
         <table className="table mt-3">
           <thead>
             <tr className="border bg-light">
-              <th className="border text-dark bg-light-warning  fs-2">Projet</th>
-              <th className="border text-dark bg-light-warning  fs-2">Tâche</th>
+              <th className="border text-dark bg-light-warning fs-2">Projet</th>
+              <th className="border text-dark bg-light-warning fs-2">Tâche</th>
               {days.map((day, index) => (
                 <React.Fragment key={index}>
                   <th className="border text-dark bg-light-warning fs-2">
@@ -223,7 +223,7 @@ const ListTimeSheet = () => {
                   </th>
                 </React.Fragment>
               ))}
-              <th className="border text-dark bg-light-warning  fs-2">Durée (heures)</th>
+              <th className="border text-dark bg-light-warning fs-2">Durée (heures)</th>
             </tr>
           </thead>
           <tbody>
@@ -233,17 +233,22 @@ const ListTimeSheet = () => {
                   <tr key={`${projectIndex}-${taskIndex}`}>
                     {/* Display project name only once for each project */}
                     {taskIndex === 0 && (
-                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning  fs-2">
+                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2">
                         {project.nameProject}
                       </td>
                     )}
-                    <td className="border bg-light  fs-2">{task.nameTask}</td>
+                    <td className="border bg-light fs-2">
+                      <div className="d-flex flex-column">
+                        <span>{task.nameTask}</span>
+                        <span className="text-danger">({task.user?.firstName ? task.user?.firstName : 'Non affecté'})</span>
+                      </div>
+                    </td>
                     {days.map((day, dayIndex) => {
                       const totalHoursForDay = formattedDurations[projectIndex][taskIndex][dayIndex];
                       return (
                         <td
                           key={`${projectIndex}-${taskIndex}-${dayIndex}`}
-                          className={"border  fs-2 " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
+                          className={"border fs-2 " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
                           onClick={() => handleDurationClick(task._id, dayIndex, day)}
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
@@ -254,7 +259,7 @@ const ListTimeSheet = () => {
                       );
                     })}
                     {/* Display total duration for the week */}
-                    <td className="border bg-light  fs-2">
+                    <td className="border bg-light fs-2">
                       {/* Calculate and display total hours for the week */}
                       {formattedDurations[projectIndex][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
                     </td>
@@ -264,13 +269,13 @@ const ListTimeSheet = () => {
             ))}
             {/* Row for total hours per day */}
             <tr>
-              <td className="border text-dark bg-light-warning  fs-2">Total heures/jour</td>
+              <td className="border text-dark bg-light-warning fs-2">Total heures/jour</td>
               <td className=" fs-2">N/A</td>
               {totalHoursPerDay.map((totalHours, index) => (
-                <td className={"border  fs-2 " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
+                <td className={"border fs-2 " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
               ))}
               {/* Placeholder cell for the total weekly hours */}
-              <td className={"border bg-light  fs-2"}>{totalOfTotalDurations.toFixed(2)}</td>
+              <td className={"border bg-light fs-2"}>{totalOfTotalDurations.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
