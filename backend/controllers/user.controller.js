@@ -71,7 +71,7 @@ exports.getOneUser = async (req, res) => {
 };
 exports.getTeamByEmployee = async (req, res) => {
   try {
-    const employees = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: 'employees' }).populate('tasks')
+    const employees = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: { path: 'employees', populate: 'tasks' } }).populate('tasks')
     res.json(employees);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

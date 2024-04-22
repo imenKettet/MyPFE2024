@@ -109,7 +109,7 @@ const MyTeam = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          {localStorage.getItem('role') === 'chef' && <tr>
             <th><span className='h6'>Moi</span></th>
             <td>{profile.firstName}</td>
             <td>{profile.lastName}</td>
@@ -130,7 +130,7 @@ const MyTeam = () => {
               ></i>
             </td>
 
-          </tr>
+          </tr>}
           {employees.map((user, index) => (
             <tr key={user._id}>
               <th>{index + 1}</th>
