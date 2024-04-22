@@ -9,7 +9,9 @@ const getdetails = async () => {
 const getOne = async (id) => {
   return await http.get(`/user/${id}`);
 };
-
+const getTeamByEmployee = async (id) => {
+  return await http.get(`/user/get-team/${id}`);
+};
 const updateOne = async (id, data) => {
   return await http.put(`/user/${id}`, data);
 };
@@ -25,6 +27,7 @@ const addOne = async (data) => {
 export const userService = {
   getall,
   getOne,
+  getTeamByEmployee,
   updateOne,
   deleteOne,
   addOne,

@@ -40,16 +40,20 @@ const MyTeam = () => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await chefService.getOne(Context.id);
-      setEmployees(response.data.employees);
+      if (localStorage.getItem('role') === 'chef') {
+        const response = await chefService.getOne(Context.id);
+        setEmployees(response.data.employees);
+      }
+      if (localStorage.getItem('role') === 'employe') {
+        const response = await userService.getTeamByEmployee(Context.id);
+        setEmployees(response.data.team.employees);
+      }
     } catch (error) {
       console.log(error);
     }
   };
   const openModal = async (employee) => {
     setEmployeeDetails(employee)
-
-
     setIsOpen(true);
   }
   const closeModal = () => {
@@ -77,7 +81,7 @@ const MyTeam = () => {
     };
     // eslint-disable-next-line
   }, []);
-  // eslint-disable-next-line  
+
   useEffect(() => {
     const fetchChef = async () => {
       try {
@@ -88,6 +92,7 @@ const MyTeam = () => {
       }
     };
     fetchChef()
+    // eslint-disable-next-line  
   }, [Context.id]);
   return (
     <PageContainer title='Liste des employées'  >

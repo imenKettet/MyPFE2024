@@ -5,6 +5,7 @@ const {
   deleteUser,
   getAllUsers,
   getOneUser,
+  getTeamByEmployee,
   detailsUser,
 } = require("../controllers/user.controller");
 const passport = require("passport");
@@ -30,6 +31,12 @@ router.get(
   "/:id",
   passport.authenticate("bearer", { session: false }),
   getOneUser
+);
+
+router.get(
+  "/get-team/:id",
+  passport.authenticate("bearer", { session: false }),
+  getTeamByEmployee
 );
 router.put(
   "/:id",
