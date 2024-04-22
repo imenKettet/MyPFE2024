@@ -1,7 +1,6 @@
 const Project = require("../models/project");
 const Team = require("../models/team");
 const Task = require("../models/task");
-const User = require("../models/user");
 
 //Add Project with associated tasks
 exports.createProject = async (req, res) => {

@@ -59,6 +59,7 @@ const EditTeam = () => {
   };
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   // Fonction pour afficher la confirmation avant d'enregistrer les modifications

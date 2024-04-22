@@ -13,6 +13,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
       setRole(localStorage.getItem("role"));
     };
     handleRole();
+    // eslint-disable-next-line
   }, []);
   return (
     <aside className="left-sidebar">

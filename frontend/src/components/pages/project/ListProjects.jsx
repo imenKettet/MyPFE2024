@@ -7,7 +7,6 @@ import PageContainer from "../../reusedComponents/PageContainer";
 
 const ListProjects = () => {
   const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(null);
   const fetchProjects = async () => {
     try {
       const response = await projectService.getall();
@@ -19,6 +18,7 @@ const ListProjects = () => {
 
   useEffect(() => {
     fetchProjects();
+    // eslint-disable-next-line
   }, []);
 
   // Fonction pour afficher la boîte de dialogue de confirmation de suppression
@@ -63,7 +63,6 @@ const ListProjects = () => {
   };
   //fonction pour afficher les détails d'un projet :
   const showProjectDetails = (project) => {
-    setSelectedProject(project);
     // Construire une chaîne HTML pour afficher les détails du projet
     let projectDetailsHTML = `
       <div>

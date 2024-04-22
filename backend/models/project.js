@@ -7,6 +7,7 @@ const projectSchema = new Schema(
     client: String,
     dateStart: String,
     dateEnd: String,
+    status: { type: String, default: 'En attente' },
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
     teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
   },

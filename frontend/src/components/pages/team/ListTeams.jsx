@@ -19,6 +19,7 @@ const ListTeams = () => {
 
   useEffect(() => {
     fetchTeams();
+    // eslint-disable-next-line  
   }, []);
 
   // Inline styles for the card

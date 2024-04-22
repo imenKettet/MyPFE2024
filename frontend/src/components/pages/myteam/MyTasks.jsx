@@ -18,6 +18,7 @@ const MyTasks = () => {
     };
     useEffect(() => {
         fetchMyTasks();
+        // eslint-disable-next-line
     }, []);
     return (
         <PageContainer title='Mes tâches'  >

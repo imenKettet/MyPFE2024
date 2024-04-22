@@ -16,6 +16,7 @@ const MyAbsence = () => {
 
   useEffect(() => {
     fetchAbsences();
+    // eslint-disable-next-line
   }, []);
 
   return (

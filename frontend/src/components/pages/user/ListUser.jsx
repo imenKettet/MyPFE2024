@@ -19,6 +19,7 @@ const ListUsers = () => {
   };
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   // Fonction pour afficher la boîte de dialogue de confirmation de suppression

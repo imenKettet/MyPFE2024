@@ -47,6 +47,7 @@ const UpdateAbsence = () => {
     useEffect(() => {
         fetchAbsenceData();
         fetchUsers();
+        // eslint-disable-next-line
     }, []);
 
     // Define Yup schema for validation

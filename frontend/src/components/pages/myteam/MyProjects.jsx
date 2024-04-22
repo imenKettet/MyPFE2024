@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import { chefService } from "../../../services/chef";
 import { CoockieContext } from "../../../features/contexts";
-import Modal from 'react-modal';
 import PageContainer from "../../reusedComponents/PageContainer";
+import Modal from 'react-modal';
 Modal.setAppElement("*");
 
 const modalStyles = {
@@ -63,6 +63,7 @@ const Myprojects = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    // eslint-disable-next-line
   }, []);
   useEffect(() => {
     const fetchProjects = async () => {
@@ -86,6 +87,7 @@ const Myprojects = () => {
             <th scope="col">Date_Début</th>
             <th scope="col">Date_Fin</th>
             <th scope="col">Client</th>
+            <th scope="col">Statue</th>
             <th scope="col">Détails</th>
           </tr>
         </thead>
@@ -97,6 +99,9 @@ const Myprojects = () => {
               <td>{new Date(project.dateStart).toLocaleDateString()}</td>
               <td>{new Date(project.dateEnd).toLocaleDateString()}</td>
               <td>{project.client}</td>
+              <td>
+                <span className={"badge " + (project.status === 'En attente' ? 'text-bg-secondary' : project.status === 'En cours' ? 'text-bg-info' : 'text-bg-success')}>{project.status}</span></td>
+
               <td><button className="btn btn-info"
                 onClick={() => openModal(project)}
               ><i className="ti ti-info-circle"></i></button></td>
@@ -144,7 +149,7 @@ const Myprojects = () => {
                   <td>{task.nameTask}</td>
                   <td>{task.estimatedDuration}</td>
                   <td>
-                    <span className={"badge  " + (task.Status === 'En attente' ? 'text-bg-secondary' : task.Status === 'En cours' ? 'text-bg-info' : 'text-bg-dark')}>{task.Status}</span></td>
+                    <span className={"badge  " + (task.Status === 'En attente' ? 'text-bg-secondary' : task.Status === 'En cours' ? 'text-bg-info' : 'text-bg-success')}>{task.Status}</span></td>
                 </tr>
               )
             })}

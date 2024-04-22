@@ -40,6 +40,7 @@ const AddTeam = () => {
   };
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   return (

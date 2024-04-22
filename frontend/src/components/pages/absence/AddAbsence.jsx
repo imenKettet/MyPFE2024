@@ -35,6 +35,7 @@ const AddAbsence = () => {
   };
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, []);
 
   return (

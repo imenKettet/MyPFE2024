@@ -37,10 +37,12 @@ const AffectationProjectToTeam = () => {
   };
   useEffect(() => {
     fetchProject();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     fetchteams();
+    // eslint-disable-next-line
   }, []);
 
   return (
