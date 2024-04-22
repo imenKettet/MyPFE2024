@@ -117,20 +117,6 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </Link>
             </li>
           )}
-          {["admin", "chef"].includes(role) && (
-            <li className="sidebar-item">
-              <Link
-                className={`sidebar-link ${isLinkActive("/listAbsences")}`}
-                to="/listAbsences"
-                aria-expanded="false"
-              >
-                <span>
-                  <i className="ti ti-float-left"></i>
-                </span>
-                <span className="hide-menu"> Liste des absences</span>
-              </Link>
-            </li>
-          )}
 
           {role === "admin" && (
             <li className="sidebar-item">
@@ -220,7 +206,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
             </li>
           )}
 
-          {["employe", "chef"].includes(role) && (
+          {["chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
                 className={`sidebar-link ${isLinkActive("/listTimeSheet")}`}
@@ -234,6 +220,21 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </Link>
             </li>
           )}
+          {["admin", "chef"].includes(role) && (
+            <li className="sidebar-item">
+              <Link
+                className={`sidebar-link ${isLinkActive("/listAbsences")}`}
+                to="/listAbsences"
+                aria-expanded="false"
+              >
+                <span>
+                  <i className="ti ti-float-left"></i>
+                </span>
+                <span className="hide-menu"> Liste des absences</span>
+              </Link>
+            </li>
+          )}
+
           {/* <li className="sidebar-item">
             <Link
               className={`sidebar-link ${isLinkActive("/tabler-icons")}`}

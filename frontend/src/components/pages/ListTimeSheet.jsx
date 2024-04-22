@@ -8,7 +8,6 @@ import { projectService } from "../../services/project";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import * as Yup from 'yup';
 import toast from "react-hot-toast";
-import Button from "../reusedComponents/Button";
 import Loading from "../reusedComponents/Loading";
 
 const ListTimeSheet = () => {
@@ -127,7 +126,6 @@ const ListTimeSheet = () => {
     setWeekModified(true);
   };
 
-  const formattedEndDate = weekModified ? week.end.toDateString() : (new Date(week.end.getTime() - 86400000).toDateString());
 
   // Function to filter tasks for the current week
   const filterTasksForCurrentWeek = (task) => {
@@ -181,7 +179,6 @@ const ListTimeSheet = () => {
       if (role === 'chef') {
         const response = await chefService.getOne(Context.id);
         setProjects(response.data.projects);
-
       }
       if (role === 'employe') {
         const response = await userService.getOne(Context.id);
@@ -196,8 +193,8 @@ const ListTimeSheet = () => {
     }
   };
   useEffect(() => {
-
     fetchProjects()
+    // eslint-disable-next-line  
   }, [Context.id]);
   return (
     <PageContainer title='Feuille de temps'>
@@ -232,7 +229,7 @@ const ListTimeSheet = () => {
                     {taskIndex === 0 && (
                       <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2 text-center align-middle">
                         <div className="d-flex flex-column align-items-center">
-                          {project.nameProject} <span className="text-success h6">({project.teams[projectIndex].teamName})</span>
+                          {project.nameProject} <span className="text-success h6">{localStorage.getItem('role') === 'admin' && (project.teams[projectIndex].teamName)}</span>
                         </div>
                       </td>
                     )}
@@ -316,7 +313,7 @@ const ListTimeSheet = () => {
                           <label htmlFor="Status">Statut</label>
                           <Field as="select" name="Status" className="form-control" >
                             <option value="En cours">En cours</option>
-                            <option value="Terminé">Terminé</option>
+                            <option value="Términé">Terminé</option>
                           </Field>
                           <ErrorMessage name="Status" className='text-danger' component="div" />
                         </div>

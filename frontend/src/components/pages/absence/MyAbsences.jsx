@@ -30,6 +30,7 @@ const MyAbsence = () => {
                 <th scope="col">Num</th>
                 <th scope="col">date</th>
                 <th scope="col">Type d'absence</th>
+                <th scope="col">Durée</th>
               </tr>
             </thead>
             <tbody>
@@ -38,6 +39,7 @@ const MyAbsence = () => {
                   <td> {index + 1} </td>
                   <td>{new Date(absence.date).toLocaleDateString('fr-FR', options)}</td>
                   <td>{absence.absenceType}</td>
+                  <td>{absence.duration}</td>
                 </tr>
               ))}
             </tbody>

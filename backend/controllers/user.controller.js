@@ -62,7 +62,7 @@ exports.getAllUsers = async (req, res) => {
 //get one User from database by id
 exports.getOneUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: { path: 'projects', populate: 'tasks' } })
+    const user = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: { path: 'projects', populate: 'tasks' } }).populate('tasks')
 
     res.json(user);
   } catch (error) {

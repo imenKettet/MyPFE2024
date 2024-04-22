@@ -64,25 +64,26 @@ exports.fillTask = async (req, res) => {
     let verifyTasks = true
     const taskFound = await Task.findById(req.params.id).populate({ path: 'project', populate: 'tasks' })
     if (taskFound.Status === 'En attente') {
-      await Project.findByIdAndUpdate(taskFound.project._id, { status: 'En cours' }, { new: true })
+      await Project.findByIdAndUpdate(taskFound.project._id, { $set: { status: 'En cours' } }, { new: true })
     }
     const index = taskFound.worked.findIndex((el) => el.dateWorked === req.body.dateWorked)
     if (index !== -1) {
       await Task.findByIdAndUpdate(req.params.id, { $pull: { worked: taskFound.worked[index] } }, { new: true });
     }
     await Task.findByIdAndUpdate(req.params.id, { $push: { worked: req.body }, $set: { Status: req.body.Status } }, { new: true });
+    await Task.findByIdAndUpdate(req.params.id, { $set: { Status: req.body.Status } }, { new: true });
     if (taskFound.Status === 'En attente') {
-      await Project.findByIdAndUpdate(taskFound.project._id, { status: 'En cours' }, { new: true })
+      await Project.findByIdAndUpdate(taskFound.project._id, { $set: { status: 'En cours' } }, { new: true })
     }
     await Promise.all(
       await taskFound.project.tasks.map((task) => {
-        if (task.Status === 'En cours') {
+        if (task.Status === 'En cours' || task.Status === 'En attente') {
           verifyTasks = false
         }
       })
     )
     if (verifyTasks) {
-      await Project.findByIdAndUpdate(taskFound.project._id, { status: 'Términé' }, { new: true })
+      await Project.findByIdAndUpdate(taskFound.project._id, { $set: { status: 'Terminé' } }, { new: true })
     }
     res.json({ message: 'Tâche remplis!' });
   } catch (error) {

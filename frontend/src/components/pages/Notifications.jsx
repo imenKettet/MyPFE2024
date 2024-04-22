@@ -25,17 +25,18 @@ const Notifications = () => {
 
     const totalPages = Math.ceil(notifications.length / notificationsPerPage);
 
-    const indexOfLastNotification = currentPage * notificationsPerPage;
-    const indexOfFirstNotification = indexOfLastNotification - notificationsPerPage;
+    const indexOfLastNotification = currentPage * notificationsPerPage; // 10 , 20 , 30 
+    const indexOfFirstNotification = indexOfLastNotification - notificationsPerPage; // 10 -10 = 0
     const currentNotifications = notifications.slice(indexOfFirstNotification, indexOfLastNotification);
 
     // Function to handle pagination
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     const readAllNotifications = async () => {
         const response = await notificationService.readAllNotifications()
         if (!response.error) {
             toast.success(response.data.message)
-            fetchProjects()
+            fetchNotifications()
         } else {
             console.log('Erreur : ', response.error)
         }
@@ -44,13 +45,13 @@ const Notifications = () => {
     const readOneNotification = async (id) => {
         const response = await notificationService.readOneNotification(id)
         if (!response.error) {
-            fetchProjects()
+            fetchNotifications()
             navigate('/listAbsences')
         } else {
             console.log('Erreur : ', response.error)
         }
     }
-    const fetchProjects = async () => {
+    const fetchNotifications = async () => {
         try {
             const response = await notificationService.getAll();
             setNotifications(response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
@@ -60,7 +61,7 @@ const Notifications = () => {
     };
 
     useEffect(() => {
-        fetchProjects()
+        fetchNotifications()
     }, [Context.id]);
     return (
         <PageContainer click={readAllNotifications} title='Mes notifications' btnColor={'link'} btntxt={'Lire tout'} >

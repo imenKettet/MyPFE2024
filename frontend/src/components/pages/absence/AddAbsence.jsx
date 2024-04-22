@@ -152,6 +152,7 @@ const AddAbsence = () => {
                       className="form-control"
                       name="duration"
                       min={1}
+                      max={7}
                     />
                     <ErrorMessage
                       name="duration"

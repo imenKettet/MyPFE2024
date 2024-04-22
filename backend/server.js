@@ -41,6 +41,7 @@ const taskApi = require("./routes/taskApi");
 const absenceApi = require("./routes/absencesApi");
 const chefApi = require("./routes/chefApi");
 const notificationApi = require("./routes/notificationApi");
+const dashboardApi = require("./routes/dashboardApi");
 
 app.use("/auth", authApi);
 app.use("/api/user", userApi);
@@ -50,6 +51,7 @@ app.use("/api/task", taskApi);
 app.use("/api/absence", absenceApi);
 app.use("/api/chef", chefApi);
 app.use("/api/notification", notificationApi);
+app.use("/api/dashboard", dashboardApi);
 
 app.listen(4000, () => {
   console.log("server is running");

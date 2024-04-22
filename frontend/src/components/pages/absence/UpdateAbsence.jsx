@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Formik, ErrorMessage } from "formik";
+import { Formik, ErrorMessage, Field } from "formik";
 import Select from "react-select";
 import toast from "react-hot-toast";
 import { absenceService } from "../../../services/absence";
@@ -68,11 +68,21 @@ const UpdateAbsence = () => {
                         date: absenceData.date,
                         employe: selectedEmploye,
                         absenceType: absenceData.absenceType,
+                        duration: absenceData.duration,
                     }}
                     validationSchema={validationSchema} // Pass the validation schema
                     onSubmit={async (values) => {
                         try {
                             setLoading(true);
+                            if (selectedEmploye === null) {
+                                toast.error("Veuillez sélectionner un employé!");
+                                setLoading(false);
+                                return;
+                            }
+                            values.absenceType === "Toute la journée" &&
+                                (values.duration = 8);
+                            values.absenceType === "Demi journée" &&
+                                (values.duration = 4);
                             values.employe = selectedEmploye.value;
                             await absenceService.updateOne(id, values);
                             toast.success("Absence mise à jour avec succès");
@@ -97,9 +107,6 @@ const UpdateAbsence = () => {
                     }) => (
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
-                                <h4 className=" text-center fw-bolder">
-                                    Modifier une fiche d'absence
-                                </h4>
                                 <label htmlFor="date" className="form-label">
                                     Date
                                 </label>
@@ -150,15 +157,37 @@ const UpdateAbsence = () => {
                                     onBlur={handleBlur}
                                     value={values.absenceType}
                                 >
-                                    <option value="journée">Toute la journée</option>
-                                    <option value="demiJournée">Demi-Journée</option>
-                                    <option value="autorisation">Autorisation</option>
+                                    <option value="Toute la journée"> Toute la journée</option>
+                                    <option value="Demi journée"> Demi-Journée </option>
+                                    <option value="Autorisation"> Autorisation </option>
                                 </select>
                                 <ErrorMessage
                                     name="absenceType"
                                     component="div"
                                     className="text-danger"
                                 />
+                                {values.absenceType === "Autorisation" && (
+                                    <>
+                                        <div className="mb-3">
+                                            <label htmlFor="duration" className="form-label">
+                                                Durée
+                                            </label>
+                                            <Field
+                                                id="duration"
+                                                type="number"
+                                                className="form-control"
+                                                name="duration"
+                                                min={1}
+                                                max={7}
+                                            />
+                                            <ErrorMessage
+                                                name="duration"
+                                                component="div"
+                                                className="text-danger"
+                                            />
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             <Button
                                 type="submit"

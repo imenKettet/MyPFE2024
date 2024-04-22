@@ -162,9 +162,9 @@ const MyTeam = () => {
         {employeeDetails && <div className="m-5">
           <div className="d-flex h5 gap-3">
             <div className="d-flex flex-column gap-3">
-              <strong>Nom du projet:</strong>
-              <strong>Date début:</strong>
-              <strong>Date fin:</strong>
+              <strong>Prénom:</strong>
+              <strong>Nom:</strong>
+              <strong>Télphone:</strong>
               <strong>E-mail:</strong>
             </div>
 

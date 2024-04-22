@@ -75,6 +75,7 @@ const ListAbsences = () => {
             <th scope="col">Nom</th>
             <th scope="col">Prénom</th>
             <th scope="col">Type d'absence</th>
+            <th scope="col">Durée </th>
             <th scope="col">Date </th>
             <th scope="col">Actions</th>
           </tr>
@@ -85,6 +86,7 @@ const ListAbsences = () => {
               <td>{absence.employe.firstName}</td>
               <td>{absence.employe.lastName}</td>
               <td>{absence.absenceType}</td>
+              <td>{absence.duration}</td>
               <td>{new Date(absence.date).toLocaleDateString('fr-FR', options)}</td>
               <td>
                 <div>

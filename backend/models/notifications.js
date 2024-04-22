@@ -8,6 +8,7 @@ const notificationSchema = new Schema(
         employee: { type: Schema.Types.ObjectId, ref: "User" },
         absence: { type: Schema.Types.ObjectId, ref: "Absence" },
         viewed: { type: Boolean, default: false }
+        // createdAt: { type: Date, default: Date.now(), expires: 3600 }, 7d
     },
     {
         timestamps: true,

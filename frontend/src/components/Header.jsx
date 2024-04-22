@@ -23,7 +23,7 @@ const Header = ({ showSidebarFN }) => {
   const [notifications, setNotifications] = useState([]);
   const Context = useContext(CoockieContext);
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchNotifications = async () => {
       try {
         const response = await notificationService.getAll();
         setNotifications(response.data)
@@ -31,7 +31,7 @@ const Header = ({ showSidebarFN }) => {
         console.log(error);
       }
     };
-    fetchProjects()
+    fetchNotifications()
   }, [Context.id]);
   return (
     <header className="app-header">
@@ -50,7 +50,9 @@ const Header = ({ showSidebarFN }) => {
             <li className="nav-item p-0">
               <Link to='/notifications' className="nav-link nav-icon-hover position-relative">
                 <i className="ti ti-bell-ringing"></i>
-                <span className="position-absolute  translate-middle p-1 badge rounded-pill bg-danger" style={{ left: '44px' }}>{notifications.filter((el) => !el.viewed).length}</span>
+                <span className="position-absolute  translate-middle p-1 badge rounded-pill bg-danger" style={{ left: '44px' }}>
+                  {notifications.filter((notification) => !notification.viewed).length}
+                </span>
               </Link>
             </li>
           )}
@@ -87,12 +89,12 @@ const Header = ({ showSidebarFN }) => {
                       <p className="mb-0 fs-3"> Mon Profil</p>
                     </div>
                   </Link>
-                  <Link to={"/myTasks"}>
+                  {localStorage.getItem('role') !== 'admin' && <Link to={"/myTasks"}>
                     <div className="d-flex align-items-center gap-2 dropdown-item">
                       <i className="ti ti-list-check fs-6"></i>
                       <p className="mb-0 fs-3">Mes tâches</p>
                     </div>
-                  </Link>
+                  </Link>}
 
                   <button
                     onClick={logout}
