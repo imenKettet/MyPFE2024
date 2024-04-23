@@ -229,7 +229,7 @@ const ListTimeSheet = () => {
                     {taskIndex === 0 && (
                       <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2 text-center align-middle">
                         <div className="d-flex flex-column align-items-center">
-                          {project.nameProject} <span className="text-success h6">{localStorage.getItem('role') === 'admin' && (project.teams[projectIndex].teamName)}</span>
+                          {project.nameProject} <span className="text-success h6">{localStorage.getItem('role') === 'admin' && (project.teams[projectIndex]?.teamName ? project.teams[projectIndex].teamName : 'Non affecté')}</span>
                         </div>
                       </td>
                     )}
