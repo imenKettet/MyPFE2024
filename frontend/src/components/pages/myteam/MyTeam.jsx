@@ -33,6 +33,7 @@ const smallScreenStyles = {
 const MyTeam = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [employees, setEmployees] = useState([]);
+  const [chef, setChef] = useState({});
   const [responsiveStyles, setResponsiveStyles] = useState(modalStyles);
   const [employeeDetails, setEmployeeDetails] = useState();
   const Context = useContext(CoockieContext)
@@ -46,6 +47,7 @@ const MyTeam = () => {
       }
       if (localStorage.getItem('role') === 'employe') {
         const response = await userService.getTeamByEmployee(Context.id);
+        setChef(response.data.team.chef);
         setEmployees(response.data.team.employees);
       }
     } catch (error) {
@@ -109,7 +111,7 @@ const MyTeam = () => {
           </tr>
         </thead>
         <tbody>
-          {localStorage.getItem('role') === 'chef' && <tr>
+          {localStorage.getItem('role') === 'chef' ? <tr>
             <th><span className='h6'>Moi</span></th>
             <td>{profile.firstName}</td>
             <td>{profile.lastName}</td>
@@ -130,7 +132,29 @@ const MyTeam = () => {
               ></i>
             </td>
 
-          </tr>}
+          </tr> :
+            <tr>
+              <th><span className='h6'>Chef</span></th>
+              <td>{chef.firstName}</td>
+              <td>{chef.lastName}</td>
+              <td>{chef.phone}</td>
+              <td>{chef.email}</td>
+              {localStorage.getItem('role') !== 'employe' && <td>
+                <Link
+                  to={'/affect-tasks/' + chef._id}
+                  state={chef}
+                  className='btn btn-light'
+                >Affect <i className="ti ti-corner-right-up"></i>
+                </Link></td>
+              }
+              <td>
+                <i
+                  className="cursor-pointer ti ti-alert-circle h5 "
+                  onClick={() => openModal(chef)}
+                ></i>
+              </td>
+
+            </tr>}
           {employees.map((user, index) => (
             <tr key={user._id}>
               <th>{index + 1}</th>
