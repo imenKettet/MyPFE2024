@@ -67,13 +67,14 @@ const ListUsers = () => {
     setSearchTerm(event.target.value);
   };
 
-  // const filteredUsers = users.filter((user) => {
-  //   return (
-  //     user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  // });
+  const filteredUsers = users.filter((user) => {
+    return (
+      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
   return (
     <PageContainer title='Liste des employées' path='/AddUser' btnColor="primary" btntxt='Ajouter' >
 
@@ -104,7 +105,7 @@ const ListUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {filteredUsers.map((user, index) => (
             <tr key={user._id}>
               <td> {index + 1} </td>
               <td>{user.lastName}</td>
