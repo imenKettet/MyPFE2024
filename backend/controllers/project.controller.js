@@ -88,6 +88,17 @@ exports.updateProject = async (req, res) => {
         );
       });
     }
+    await Project.findByIdAndUpdate(
+      req.params.id,
+
+      {
+        nameProject: req.body.nameProject,
+        client: req.body.client,
+        dateStart: req.body.dateStart,
+        dateEnd: req.body.dateEnd
+      },
+      { new: true }
+    );
 
     res.json({ message: " Le projet a été modifié" });
   } catch (error) {

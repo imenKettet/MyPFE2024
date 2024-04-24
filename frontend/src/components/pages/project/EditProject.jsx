@@ -81,8 +81,8 @@ const EditProject = () => {
             setLoading(true)
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
-              let project = { ...values };
-              const response = await projectService.updateOne(id, project);
+              let projectData = { ...values };
+              const response = await projectService.updateOne(id, projectData);
               toast.success(response.data.message);
               Navigate("/ListProjects");
               setLoading(false)
