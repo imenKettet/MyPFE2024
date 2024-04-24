@@ -56,14 +56,14 @@ const Login = () => {
                         "http://localhost:4000/auth",
                         values
                       );
-                      toast.success(response.data.message);
-                      setCookie("token", response.data.token, { maxAge: oneDayInSeconds });
-                      const userRole = localStorage.setItem("role", response.data.role);
-                      if (userRole === 'employe') {
-                        Navigate("/myTasks");
+                      if (response.data.role === 'employe') {
+                        Navigate("/my-team");
                       } else {
                         Navigate("/");
                       }
+                      toast.success(response.data.message);
+                      setCookie("token", response.data.token, { maxAge: oneDayInSeconds });
+                      localStorage.setItem("role", response.data.role);
                     } catch (error) {
                       console.log(error);
                       if (error.response.status === 400) {
