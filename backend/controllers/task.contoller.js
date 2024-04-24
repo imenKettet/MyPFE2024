@@ -94,8 +94,11 @@ exports.fillTask = async (req, res) => {
 
 exports.findDateWorked = async (req, res) => {
   try {
+    console.log(req.params);
     const task = await Task.findById(req.params.id);
+    console.log(task);
     const dateWorkedData = task.worked.find((el) => el.dateWorked === req.params.date)
+    console.log(dateWorkedData);
     res.json(dateWorkedData);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

@@ -78,13 +78,13 @@ const ListTimeSheet = () => {
       const newStartDate = new Date(week.start);
       const formattedDate = getFormattedDate(day, newStartDate);
       const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`);
+      const response = await taskService.getDateWorked(taskId, `${year}-${month.length === 2 ? month : '0' + month}-${dayOfMonth}`);
       setDateWorkedData(response.data);
       setSelectedDate({ year, month, day: dayOfMonth });
     } else {
       const formattedDate = getFormattedDate(day, week.start);
       const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month}-${dayOfMonth}`);
+      const response = await taskService.getDateWorked(taskId, `${year}-${month.length === 2 ? month : '0' + month}-${dayOfMonth}`);
       setDateWorkedData(response.data);
       setSelectedDate({ year, month, day: dayOfMonth });
     }
@@ -93,7 +93,7 @@ const ListTimeSheet = () => {
     try {
       setLoading(true);
       if (selectedTaskId !== '') {
-        const response = await taskService.fillTask(selectedTaskId, { ...values, dateWorked: `${selectedDate.year}-${selectedDate.month}-${selectedDate.day}` })
+        const response = await taskService.fillTask(selectedTaskId, { ...values, dateWorked: `${selectedDate.year}-${selectedDate.month.length === 2 ? selectedDate.month : '0' + selectedDate.month}-${selectedDate.day}` })
         toast.success(response.data.message);
       }
       fetchProjects()
