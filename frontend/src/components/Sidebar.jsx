@@ -37,7 +37,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
             <i className="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span className="hide-menu">Home</span>
           </li>
-          <li className="sidebar-item">
+          {["admin", "chef"].includes(role) && <li className="sidebar-item">
             <Link
               className={`sidebar-link ${isLinkActive("/")}`}
               to="/"
@@ -48,7 +48,7 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </span>
               <span className="hide-menu">Dashboard</span>
             </Link>
-          </li>
+          </li>}
           {role === "admin" && (
             <li className="nav-small-cap">
               <i className="ti ti-dots nav-small-cap-icon fs-4"></i>

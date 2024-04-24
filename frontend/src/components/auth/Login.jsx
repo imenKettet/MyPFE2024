@@ -58,8 +58,12 @@ const Login = () => {
                       );
                       toast.success(response.data.message);
                       setCookie("token", response.data.token, { maxAge: oneDayInSeconds });
-                      localStorage.setItem("role", response.data.role);
-                      Navigate("/");
+                      const userRole = localStorage.setItem("role", response.data.role);
+                      if (userRole === 'employe') {
+                        Navigate("/myTasks");
+                      } else {
+                        Navigate("/");
+                      }
                     } catch (error) {
                       console.log(error);
                       if (error.response.status === 400) {

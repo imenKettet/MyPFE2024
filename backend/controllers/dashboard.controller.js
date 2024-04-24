@@ -16,9 +16,38 @@ exports.dashboard = async (req, res) => {
         const projectsInProgress = await Project.countDocuments({ status: 'En cours' });
         const projectsFinished = await Project.countDocuments({ status: 'Terminé' });
         const tasks = await Task.countDocuments();
-        const tasksNotStrated = await Task.countDocuments({ Status: 'En attente' });
+        const tasksNotStarted = await Task.countDocuments({ Status: 'En attente' });
         const tasksInProgress = await Task.countDocuments({ Status: 'En cours' });
         const tasksFinished = await Task.countDocuments({ Status: 'Terminé' });
+        const projectsWithTotalWorkedTime = await Project.find({ status: 'Terminé' }).populate('tasks');
+
+        // Calculate total worked time for each project
+        const projectsWithWorkedTime = projectsWithTotalWorkedTime.map(project => {
+            const tasksWithTime = project.tasks.map(task => {
+                let totalWorkedTime = 0;
+                if (task.Status === 'Terminé') {
+                    task.worked.forEach(work => {
+                        const [startHour, startMinute] = work.startTime.split(':').map(Number);
+                        const [endHour, endMinute] = work.endTime.split(':').map(Number);
+                        const startTimeInMinutes = startHour * 60 + startMinute;
+                        const endTimeInMinutes = endHour * 60 + endMinute;
+                        totalWorkedTime += endTimeInMinutes - startTimeInMinutes;
+                    });
+                }
+                return {
+                    nameTask: task.nameTask,
+                    timeSpent: totalWorkedTime / 60, // Convert minutes to hours
+                    estimatedTime: task.estimatedDuration
+                };
+            });
+            return {
+                _id: project._id,
+                nameProject: project.nameProject,
+                tasks: tasksWithTime
+            };
+        });
+        console.log(projectsWithWorkedTime);
+
         res.json({
             users,
             usersWithTeam,
@@ -31,10 +60,10 @@ exports.dashboard = async (req, res) => {
             projectsInProgress,
             projectsFinished,
             tasks,
-            tasksNotStrated,
+            tasksNotStarted,
             tasksInProgress,
             tasksFinished,
-
+            projectsWithWorkedTime
         })
     } catch (error) {
         res.status(500).json({ message: error.message || "error server" });

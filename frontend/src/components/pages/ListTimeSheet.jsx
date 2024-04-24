@@ -98,7 +98,6 @@ const ListTimeSheet = () => {
       }
       fetchProjects()
       resetForm();
-      // setShowModal(false);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -313,7 +312,7 @@ const ListTimeSheet = () => {
                           <label htmlFor="Status">Statut</label>
                           <Field as="select" name="Status" className="form-control" >
                             <option value="En cours">En cours</option>
-                            <option value="Términé">Terminé</option>
+                            <option value="Terminé">Terminé</option>
                           </Field>
                           <ErrorMessage name="Status" className='text-danger' component="div" />
                         </div>
