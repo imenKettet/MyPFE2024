@@ -68,6 +68,7 @@ const router = createBrowserRouter([
 ]);
 function App() {
   const token = decodeToken(getCookie('token')) || {}
+  console.log(token);
 
   return (
     <div>

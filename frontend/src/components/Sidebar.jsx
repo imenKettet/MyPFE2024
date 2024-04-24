@@ -179,8 +179,8 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
           {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
-                className={`sidebar-link ${isLinkActive("myTimeSheetList")}`}
-                to="myTimeSheetList"
+                className={`sidebar-link ${isLinkActive("/myTimeSheetList")}`}
+                to="/myTimeSheetList"
                 aria-expanded="false"
               >
                 <span>

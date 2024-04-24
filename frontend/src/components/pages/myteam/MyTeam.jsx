@@ -37,7 +37,7 @@ const MyTeam = () => {
   const [responsiveStyles, setResponsiveStyles] = useState(modalStyles);
   const [employeeDetails, setEmployeeDetails] = useState();
   const Context = useContext(CoockieContext)
-  const [profile, setProfile] = useState({})
+  const [user, setUser] = useState({})
 
   const fetchEmployees = async () => {
     try {
@@ -88,7 +88,7 @@ const MyTeam = () => {
     const fetchChef = async () => {
       try {
         const response = await userService.getOne(Context.id);
-        setProfile(response.data);
+        setUser(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des projets:", error);
       }
@@ -113,14 +113,14 @@ const MyTeam = () => {
         <tbody>
           {localStorage.getItem('role') === 'chef' ? <tr>
             <th><span className='h6'>Moi</span></th>
-            <td>{profile.firstName}</td>
-            <td>{profile.lastName}</td>
-            <td>{profile.phone}</td>
-            <td>{profile.email}</td>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
+            <td>{user.phone}</td>
+            <td>{user.email}</td>
             {localStorage.getItem('role') !== 'employe' && <td>
               <Link
-                to={'/affect-tasks/' + profile._id}
-                state={profile}
+                to={'/affect-tasks/' + user._id}
+                state={user}
                 className='btn btn-light'
               >Affect <i className="ti ti-corner-right-up"></i>
               </Link></td>
@@ -128,7 +128,7 @@ const MyTeam = () => {
             <td>
               <i
                 className="cursor-pointer ti ti-alert-circle h5 "
-                onClick={() => openModal(profile)}
+                onClick={() => openModal(user)}
               ></i>
             </td>
 
