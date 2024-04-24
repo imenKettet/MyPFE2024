@@ -54,12 +54,12 @@ const Dashboard = () => {
         markers: { size: 0 },
 
         dataLabels: {
-            enabled: false,
+            enabled: true,
         },
 
 
         legend: {
-            show: false,
+            show: true,
         },
 
 
@@ -74,7 +74,12 @@ const Dashboard = () => {
         },
 
         xaxis: {
-            categories: ['Users', 'Employees', 'Chefs', 'Teams', 'Projects', 'Tasks']
+            categories: ['Utilisateurs',
+                'Employés',
+                'Chefs',
+                'Équipes',
+                'Projets',
+                'Tâches']
         },
         yaxis: {
             show: true,
@@ -236,12 +241,12 @@ const Dashboard = () => {
         markers: { size: 0 },
 
         dataLabels: {
-            enabled: false,
+            enabled: true,
         },
 
 
         legend: {
-            show: false,
+            show: true,
         },
 
 
@@ -291,7 +296,7 @@ const Dashboard = () => {
                 }
             }
         ],
-        series: stats.teamsAndTheirProjects ? [{ data: stats.teamsAndTheirProjects.map(team => team.projects.length) }] : [{ data: stats.teamsAndTheirProjects.map(() => 0) }]
+        series: stats.teamsAndTheirProjects ? [{ name: 'Projets', data: stats.teamsAndTheirProjects.map(team => team.projects.length) }] : [{ data: stats.teamsAndTheirProjects.map(() => 0) }]
     }
     var optionsBarHorizontalEmployeesPerTeam = {
         chart: {
@@ -324,12 +329,12 @@ const Dashboard = () => {
         markers: { size: 0 },
 
         dataLabels: {
-            enabled: false,
+            enabled: true,
         },
 
 
         legend: {
-            show: false,
+            show: true,
         },
 
 
@@ -379,7 +384,7 @@ const Dashboard = () => {
                 }
             }
         ],
-        series: stats.teamsAndTheirProjects ? [{ data: stats.teamsAndTheirProjects.map(team => team.employees.length) }] : [{ data: stats.teamsAndTheirProjects.map(() => 0) }]
+        series: stats.teamsAndTheirProjects ? [{ name: 'Employés', data: stats.teamsAndTheirProjects.map(team => team.employees.length) }] : [{ data: stats.teamsAndTheirProjects.map(() => 0) }]
     }
 
     var donutOptionsProjects = {
@@ -518,6 +523,23 @@ const Dashboard = () => {
                     <div className="col-lg-6">
                         <div className="card overflow-hidden">
                             <div className="card-body p-4">
+                                <h5 className="card-title mb-9 fw-semibold">Temps passé sur les projets</h5>
+                                <div className="row align-items-center">
+                                    <select className='form-select' value={selectedProject} onChange={(e) => handleProjectSelect(e.target.value)}>
+                                        {stats.projectsWithWorkedTime.map(project => (
+                                            <option key={project._id} value={project._id}>{project.nameProject}</option>
+                                        ))}
+                                    </select>
+                                    {selectedProject && (
+                                        <Chart options={optionsBarVerticalTasksTime} series={optionsBarVerticalTasksTime.series} type="bar" width="100%" />
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-lg-6">
+                        <div className="card overflow-hidden">
+                            <div className="card-body p-4">
                                 <h5 className="card-title mb-9 fw-semibold">Projets</h5>
                                 <div className="row align-items-center">
                                     {stats && <Chart
@@ -575,23 +597,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-lg-6">
-                        <div className="card overflow-hidden">
-                            <div className="card-body p-4">
-                                <h5 className="card-title mb-9 fw-semibold">Temps passé sur les projets</h5>
-                                <div className="row align-items-center">
-                                    <select className='form-select' value={selectedProject} onChange={(e) => handleProjectSelect(e.target.value)}>
-                                        {stats.projectsWithWorkedTime.map(project => (
-                                            <option key={project._id} value={project._id}>{project.nameProject}</option>
-                                        ))}
-                                    </select>
-                                    {selectedProject && (
-                                        <Chart options={optionsBarVerticalTasksTime} series={optionsBarVerticalTasksTime.series} type="bar" width="100%" />
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>}
         </div>
     )

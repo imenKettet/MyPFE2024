@@ -280,7 +280,7 @@ const ListTimeSheet = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.day}-${selectedDate.month}-${selectedDate.year}`}</h5>
+                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.year}-${selectedDate.month.length === 2 ? selectedDate.month : '0' + selectedDate.month}-${selectedDate.day}`}</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">
