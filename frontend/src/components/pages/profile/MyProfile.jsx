@@ -62,6 +62,9 @@ const MyProfile = () => {
             setLoading(true)
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
+              if (!values.password) {
+                values.password = profile.password;
+              }
               const response = await userService.updateOne(Context.id, values);
               toast.success(response.data.message);
               setLoading(false)
