@@ -40,21 +40,24 @@ const EditUser = () => {
     <PageContainer title='Modifier un employée' path='/list-users' btnColor="dark" btntxt='Retour' >
 
       <Formik
-        initialValues={
-          user || {
-            firstName: "",
-            lastName: "",
-            phone: "",
-            adress: "",
-            email: "",
-            role: "",
-          }
-        }
+        initialValues={{
+          firstName: user?.firstName || "",
+          lastName: user?.lastName || "",
+          phone: user?.phone || "",
+          adress: user?.adress || "",
+          email: user?.email || "",
+          role: user?.role || "",
+          password: "",
+        }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string().required('Prénom requis'),
           lastName: Yup.string().required('Nom requis'),
           email: Yup.string().email('Adresse e-mail invalide').required('E-mail requis'),
-          password: Yup.string().min(6, 'Le mot de passe doit comporter au moins 6 caractères').required('Mot de passe requis'),
+          password: Yup.string().when('$passwordNotEmpty', (passwordNotEmpty, schema) => {
+            return passwordNotEmpty && passwordNotEmpty.length >= 1 && passwordNotEmpty.length <= 5
+              ? schema.min(6, 'Le mot de passe doit comporter au moins 6 caractère')
+              : schema;
+          }),
           phone: Yup.string().required('Téléphone requis'),
           adress: Yup.string().required('Adresse requise'),
           role: Yup.string().required('Rôle requis'),
@@ -133,7 +136,6 @@ const EditUser = () => {
               <ErrorMessage name="role" component="div" className="text-danger" />
             </div>
             <Button type='submit' btntxt={<>{loading ? <Loading text='Modification en cours...' /> : 'Valider'}</>} btnColor='primary' />
-
           </form>
         )}
       </Formik>
