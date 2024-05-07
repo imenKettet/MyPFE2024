@@ -67,6 +67,9 @@ const EditUser = () => {
             setLoading(true)
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
+              if (!values.password) {
+                values.password = user.password;
+              }
               const response = await userService.updateOne(id, values);
               toast.success(response.data.message);
               Navigate("/list-users");
