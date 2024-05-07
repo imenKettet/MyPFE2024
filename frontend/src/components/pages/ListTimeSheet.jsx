@@ -6,29 +6,34 @@ import { chefService } from "../../services/chef";
 import { userService } from "../../services/user";
 import { projectService } from "../../services/project";
 import { ErrorMessage, Field, Formik, Form } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import toast from "react-hot-toast";
 import Loading from "../reusedComponents/Loading";
 
 const ListTimeSheet = () => {
   const [projects, setProjects] = useState([]);
-  const [selectedTaskId, setSelectedTaskId] = useState('');
+  const [selectedTaskId, setSelectedTaskId] = useState("");
   const [weekModified, setWeekModified] = useState(false);
   const [dateWorkedData, setDateWorkedData] = useState({
-    startTime: '',
-    endTime: '',
-    Status: '',
-    date: ''
+    startTime: "",
+    endTime: "",
+    Status: "",
+    date: "",
   });
   const [selectedDate, setSelectedDate] = useState({
-    day: '',
-    month: '',
-    year: ''
+    day: "",
+    month: "",
+    year: "",
   });
   const Context = useContext(CoockieContext);
   const currentStartDate = new Date();
   const currentDayOfWeek = currentStartDate.getDay();
-  const daysToAdd = currentDayOfWeek === 1 ? 0 : currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek;
+  const daysToAdd =
+    currentDayOfWeek === 1
+      ? 0
+      : currentDayOfWeek === 0
+      ? -6
+      : 1 - currentDayOfWeek;
   const dateStart = new Date(currentStartDate);
   dateStart.setDate(dateStart.getDate() + daysToAdd);
   const dateEnd = new Date(dateStart);
@@ -36,67 +41,105 @@ const ListTimeSheet = () => {
 
   const [week, setWeek] = useState({
     start: dateStart,
-    end: dateEnd
+    end: dateEnd,
   });
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const validationSchema = Yup.object().shape({
-    startTime: Yup.string().required('L\'heure de début est requise'),
+    startTime: Yup.string().required("L'heure de début est requise"),
     endTime: Yup.string()
-      .required('L\'heure de fin est requise')
-      .when('startTime', (startTime, schema) => (
-        startTime &&
-        schema.test({
-          test: function (endTime) {
-            if (!endTime) return true;
-            const start = new Date(`2000-01-01T${startTime}`);
-            const end = new Date(`2000-01-01T${endTime}`);
-            return end > start;
-          },
-          message: 'L\'heure de fin doit être supérieure à l\'heure de début'
-        })
-      )),
-    Status: Yup.string().required('Le statut est requis')
+      .required("L'heure de fin est requise")
+      .when(
+        "startTime",
+        (startTime, schema) =>
+          startTime &&
+          schema.test({
+            test: function (endTime) {
+              if (!endTime) return true;
+              const start = new Date(`2000-01-01T${startTime}`);
+              const end = new Date(`2000-01-01T${endTime}`);
+              return end > start;
+            },
+            message: "L'heure de fin doit être supérieure à l'heure de début",
+          })
+      ),
+    Status: Yup.string().required("Le statut est requis"),
   });
-
+  // Fonction pour obtenir la date formatée
   const getFormattedDate = (day, weekStartDate) => {
-    const daysOfWeek = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    const daysOfWeek = [
+      "Lundi",
+      "Mardi",
+      "Mercredi",
+      "Jeudi",
+      "Vendredi",
+      "Samedi",
+      "Dimanche",
+    ];
     const selectedDayIndex = daysOfWeek.indexOf(day);
     const currentDate = new Date(weekStartDate);
     const currentDayOfWeek = currentDate.getDay() - 1;
     const daysToAdd = selectedDayIndex - currentDayOfWeek;
     currentDate.setDate(currentDate.getDate() + daysToAdd);
     const year = currentDate.getFullYear();
-    const month = Number(String(currentDate.getMonth() + 1).padStart(2, '0'));
-    const dayOfMonth = Number(String(currentDate.getDate()).padStart(2, '0'));
+    const month = Number(String(currentDate.getMonth() + 1).padStart(2, "0"));
+    const dayOfMonth = Number(String(currentDate.getDate()).padStart(2, "0"));
     return `${year}-${month}-${dayOfMonth}`;
   };
-
+  // Fonction pour gérer le clic sur la durée
   const handleDurationClick = async (taskId, dayIndex, day) => {
+    // Sélectionne l'identifiant de la tâche lorsqu'un clic est effectué
     setSelectedTaskId(taskId);
-    if (day === 'Lundi') {
+    // Vérifie si le jour est "Lundi"
+    if (day === "Lundi") {
+      // Si c'est "Lundi", crée une nouvelle date à partir de la date de début de la semaine actuelle
       const newStartDate = new Date(week.start);
+      // Formatte la date sélectionnée
       const formattedDate = getFormattedDate(day, newStartDate);
-      const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month.length === 2 ? month : '0' + month}-${dayOfMonth}`);
+      // Divise la date formatée en année, mois et jour
+      const [year, month, dayOfMonth] = formattedDate.split("-");
+      // Récupère les données de travail pour la tâche et la date spécifiées
+      const response = await taskService.getDateWorked(
+        taskId,
+        `${year}-${month.length === 2 ? month : "0" + month}-${dayOfMonth}`
+      );
+      // Met à jour les données de travail de la date sélectionnée
       setDateWorkedData(response.data);
+      // Met à jour la date sélectionnée
       setSelectedDate({ year, month, day: dayOfMonth });
     } else {
+      // Si ce n'est pas "Lundi"
+      // Formatte la date sélectionnée en utilisant la date de début de la semaine actuelle
       const formattedDate = getFormattedDate(day, week.start);
-      const [year, month, dayOfMonth] = formattedDate.split('-');
-      const response = await taskService.getDateWorked(taskId, `${year}-${month.length === 2 ? month : '0' + month}-${dayOfMonth}`);
+      // Divise la date formatée en année, mois et jour
+      const [year, month, dayOfMonth] = formattedDate.split("-");
+      // Récupère les données de travail pour la tâche et la date spécifiées
+      const response = await taskService.getDateWorked(
+        taskId,
+        `${year}-${month.length === 2 ? month : "0" + month}-${dayOfMonth}`
+      );
+      // Met à jour les données de travail de la date sélectionnée
       setDateWorkedData(response.data);
+      // Met à jour la date sélectionnée
       setSelectedDate({ year, month, day: dayOfMonth });
     }
   };
+  // Fonction pour soumettre le formulaire
   const handleSubmit = async (values, { resetForm }) => {
     try {
       setLoading(true);
-      if (selectedTaskId !== '') {
-        const response = await taskService.fillTask(selectedTaskId, { ...values, dateWorked: `${selectedDate.year}-${selectedDate.month.length === 2 ? selectedDate.month : '0' + selectedDate.month}-${selectedDate.day}` })
+      if (selectedTaskId !== "") {
+        const response = await taskService.fillTask(selectedTaskId, {
+          ...values,
+          dateWorked: `${selectedDate.year}-${
+            selectedDate.month.length === 2
+              ? selectedDate.month
+              : "0" + selectedDate.month
+          }-${selectedDate.day}`,
+        });
         toast.success(response.data.message);
       }
-      fetchProjects()
+      fetchProjects();
       resetForm();
       setLoading(false);
     } catch (error) {
@@ -104,8 +147,16 @@ const ListTimeSheet = () => {
       console.log(error);
     }
   };
-  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche',];
-
+  const days = [
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi",
+    "Samedi",
+    "Dimanche",
+  ];
+  // Fonction pour la semaine précédente
   const handlePreviousWeek = () => {
     const newStartDate = new Date(week.start);
     newStartDate.setDate(newStartDate.getDate() - 7);
@@ -125,21 +176,20 @@ const ListTimeSheet = () => {
     setWeekModified(true);
   };
 
-
   // Function to filter tasks for the current week
   const filterTasksForCurrentWeek = (task) => {
-    return task.worked.filter(entry => {
+    return task.worked.filter((entry) => {
       const entryDate = new Date(entry.dateWorked);
       return entryDate >= week.start && entryDate <= week.end;
     });
   };
 
-  const formattedDurations = projects.map(project =>
-    project.tasks.map(task =>
+  const formattedDurations = projects.map((project) =>
+    project.tasks.map((task) =>
       days.map((day, dayIndex) => {
         const dayTasks = filterTasksForCurrentWeek(task);
         const dayOfWeek = dayIndex === 6 ? 0 : dayIndex + 1; // Adjust index to match JavaScript's day indexing
-        const tasksForDay = dayTasks.filter(entry => {
+        const tasksForDay = dayTasks.filter((entry) => {
           const entryDate = new Date(entry.dateWorked);
           return entryDate.getDay() === dayOfWeek;
         });
@@ -156,10 +206,12 @@ const ListTimeSheet = () => {
   );
 
   const totalHoursPerDay = days.map((day, dayIndex) => {
-    const totalHoursForDay = projects.flatMap(project =>
-      project.tasks.flatMap(task => {
+    const totalHoursForDay = projects.flatMap((project) =>
+      project.tasks.flatMap((task) => {
         const dayTasks = filterTasksForCurrentWeek(task);
-        const tasksForDay = dayTasks.filter(entry => new Date(entry.dateWorked).getDay() === dayIndex + 1);
+        const tasksForDay = dayTasks.filter(
+          (entry) => new Date(entry.dateWorked).getDay() === dayIndex + 1
+        );
         const totalDurationForDay = tasksForDay.reduce((acc, curr) => {
           const startTime = new Date(`1970-01-01T${curr.startTime}`);
           const endTime = new Date(`1970-01-01T${curr.endTime}`);
@@ -171,19 +223,22 @@ const ListTimeSheet = () => {
     );
     return totalHoursForDay.reduce((acc, curr) => acc + curr, 0); // Calculate sum of hours for the day
   });
-  const totalOfTotalDurations = formattedDurations.flat().flat().reduce((acc, duration) => acc + parseFloat(duration), 0);
+  const totalOfTotalDurations = formattedDurations
+    .flat()
+    .flat()
+    .reduce((acc, duration) => acc + parseFloat(duration), 0);
   const fetchProjects = async () => {
     try {
-      const role = localStorage.getItem('role')
-      if (role === 'chef') {
+      const role = localStorage.getItem("role");
+      if (role === "chef") {
         const response = await chefService.getOne(Context.id);
         setProjects(response.data.projects);
       }
-      if (role === 'employe') {
+      if (role === "employe") {
         const response = await userService.getOne(Context.id);
         setProjects(response.data.team.projects);
       }
-      if (role === 'admin') {
+      if (role === "admin") {
         const response = await projectService.getall();
         setProjects(response.data);
       }
@@ -192,31 +247,49 @@ const ListTimeSheet = () => {
     }
   };
   useEffect(() => {
-    fetchProjects()
-    // eslint-disable-next-line  
+    fetchProjects();
+    // eslint-disable-next-line
   }, [Context.id]);
   return (
-    <PageContainer title='Feuille de temps'>
+    <PageContainer title="Feuille de temps">
       <div className="d-flex gap-2">
-        <button className="btn btn-light" onClick={handlePreviousWeek}><i className="ti ti-chevron-left"></i></button>
-        <button className="btn btn-light">{week.start.toDateString()} - {weekModified ? (new Date(week.end.getTime() - 86400000).toDateString()) : week.end.toDateString()}</button>
-        <button className="btn btn-light" onClick={handleNextWeek}><i className="ti ti-chevron-right"></i></button>
+        <button className="btn btn-light" onClick={handlePreviousWeek}>
+          <i className="ti ti-chevron-left"></i>
+        </button>
+        <button className="btn btn-light">
+          {week.start.toDateString()} -{" "}
+          {weekModified
+            ? new Date(week.end.getTime() - 86400000).toDateString()
+            : week.end.toDateString()}
+        </button>
+        <button className="btn btn-light" onClick={handleNextWeek}>
+          <i className="ti ti-chevron-right"></i>
+        </button>
       </div>
-      <div style={{ overflowX: 'scroll' }}>
+      <div style={{ overflowX: "scroll" }}>
         <table className="table mt-3 text-center">
           <thead>
             <tr className="border bg-light">
               <th className="border text-dark bg-light-warning fs-2">Projet</th>
               <th className="border text-dark bg-light-warning fs-2">Tâche</th>
               {days.map((day, index) => (
-                <th className="border text-dark bg-light-warning fs-2" key={index}>
+                <th
+                  className="border text-dark bg-light-warning fs-2"
+                  key={index}
+                >
                   <div className="d-flex flex-column align-items-center">
                     <span>{day}</span>
-                    <span className="fs-1 text-danger">{new Date(week.start.getTime() + index * 24 * 60 * 60 * 1000).toLocaleDateString("en-GB")}</span>
+                    <span className="fs-1 text-danger">
+                      {new Date(
+                        week.start.getTime() + index * 24 * 60 * 60 * 1000
+                      ).toLocaleDateString("en-GB")}
+                    </span>
                   </div>
                 </th>
               ))}
-              <th className="border text-dark bg-light-warning fs-2">Durée (heures)</th>
+              <th className="border text-dark bg-light-warning fs-2">
+                Durée (heures)
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -226,37 +299,74 @@ const ListTimeSheet = () => {
                   <tr key={`${projectIndex}-${taskIndex}`}>
                     {/* Display project name only once for each project */}
                     {taskIndex === 0 && (
-                      <td rowSpan={project.tasks.length} className="border text-dark bg-light-warning fs-2 text-center align-middle">
+                      <td
+                        rowSpan={project.tasks.length}
+                        className="border text-dark bg-light-warning fs-2 text-center align-middle"
+                      >
                         <div className="d-flex flex-column align-items-center">
-                          {project.nameProject} <span className="text-success h6">{localStorage.getItem('role') === 'admin' && (project.teams[0]?.teamName ? project.teams[0].teamName : 'Non affecté')}</span>
+                          {project.nameProject}{" "}
+                          <span className="text-success h6">
+                            {localStorage.getItem("role") === "admin" && (
+                              <>
+                                {project.teams.map((team, teamIndex) => (
+                                  <React.Fragment key={teamIndex}>
+                                    {team.teamName}
+                                    {/* Add a comma and space if it's not the last team */}
+                                    {teamIndex !== project.teams.length - 1 &&
+                                      ", "}
+                                  </React.Fragment>
+                                ))}
+                                {project.teams.length === 0 && "Non affecté"}
+                              </>
+                            )}
+                          </span>
                         </div>
                       </td>
                     )}
                     <td className="border bg-light fs-2">
                       <div className="d-flex flex-column align-items-center">
                         <span>{task.nameTask}</span>
-                        <span className="text-danger">({task.user?.firstName ? task.user?.firstName : 'Non affecté'})</span>
+                        <span className="text-danger">
+                          (
+                          {task.user?.firstName
+                            ? task.user?.firstName
+                            : "Non affecté"}
+                          )
+                        </span>
                       </div>
                     </td>
                     {days.map((day, dayIndex) => {
-                      const totalHoursForDay = formattedDurations[projectIndex][taskIndex][dayIndex];
+                      const totalHoursForDay =
+                        formattedDurations[projectIndex][taskIndex][dayIndex];
                       return (
                         <td
                           key={`${projectIndex}-${taskIndex}-${dayIndex}`}
-                          className={"border fs-2 align-middle " + (totalHoursForDay.toFixed(2) !== '0.00' && ' bg-light')}
-                          onClick={() => handleDurationClick(task._id, dayIndex, day)}
+                          className={
+                            "border fs-2 align-middle " +
+                            (totalHoursForDay.toFixed(2) !== "0.00" &&
+                              " bg-light")
+                          }
+                          onClick={() =>
+                            handleDurationClick(task._id, dayIndex, day)
+                          }
                           data-bs-toggle="modal"
                           data-bs-target="#exampleModal"
                         >
                           {/* Render tasks for each day */}
-                          {totalHoursForDay.toFixed(2)} {/* Format total hours with 2 decimal places */}
+                          {totalHoursForDay.toFixed(2)}{" "}
+                          {/* Format total hours with 2 decimal places */}
                         </td>
                       );
                     })}
                     {/* Display total duration for the week */}
                     <td className="border bg-light fs-2 align-middle">
                       {/* Calculate and display total hours for the week */}
-                      {formattedDurations[projectIndex][taskIndex].reduce((acc, totalHours) => acc + parseFloat(totalHours), 0).toFixed(2)}
+                      {formattedDurations[projectIndex][taskIndex]
+                        .reduce(
+                          (acc, totalHours) => acc + parseFloat(totalHours),
+                          0
+                        )
+                        .toFixed(2)}
                     </td>
                   </tr>
                 ))}
@@ -264,80 +374,139 @@ const ListTimeSheet = () => {
             ))}
             {/* Row for total hours per day */}
             <tr>
-              <td className="border text-dark bg-light-warning fs-2">Total heures/jour</td>
+              <td className="border text-dark bg-light-warning fs-2">
+                Total heures/jour
+              </td>
               <td className=" align-middle fs-2">N/A</td>
               {totalHoursPerDay.map((totalHours, index) => (
-                <td className={"border fs-2 align-middle " + (totalHours.toFixed(2) !== '0.00' && ' bg-light')} key={index}>{totalHours.toFixed(2)}</td>
+                <td
+                  className={
+                    "border fs-2 align-middle " +
+                    (totalHours.toFixed(2) !== "0.00" && " bg-light")
+                  }
+                  key={index}
+                >
+                  {totalHours.toFixed(2)}
+                </td>
               ))}
               {/* Placeholder cell for the total weekly hours */}
-              <td className={"border bg-light fs-2 align-middle"}>{totalOfTotalDurations.toFixed(2)}</td>
+              <td className={"border bg-light fs-2 align-middle"}>
+                {totalOfTotalDurations.toFixed(2)}
+              </td>
             </tr>
           </tbody>
         </table>
 
         {/* Bootstrap Modal */}
-        <div className={`modal fade`} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div
+          className={`modal fade`}
+          id="exampleModal"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.year}-${selectedDate.month.length === 2 ? selectedDate.month : '0' + selectedDate.month}-${selectedDate.day}`}</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 className="modal-title" id="userIdModalLabel">{`${
+                  selectedDate.year
+                }-${
+                  selectedDate.month.length === 2
+                    ? selectedDate.month
+                    : "0" + selectedDate.month
+                }-${selectedDate.day}`}</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div className="modal-body">
-                <PageContainer title={"Remplir la tâche"} >
+                <PageContainer title={"Remplir la tâche"}>
                   <Formik
                     initialValues={{
-                      startTime: dateWorkedData.startTime || '',
-                      endTime: dateWorkedData.endTime || '',
-                      dateWorked: dateWorkedData.dateWorked || '',
-                      Status: dateWorkedData.Status || 'En cours'
+                      startTime: dateWorkedData.startTime || "",
+                      endTime: dateWorkedData.endTime || "",
+                      dateWorked: dateWorkedData.dateWorked || "",
+                      Status: dateWorkedData.Status || "En cours",
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                     enableReinitialize
                   >
                     {({ isValid, dirty, isSubmitting }) => (
-                      <Form className='gap-3 d-flex flex-column'>
+                      <Form className="gap-3 d-flex flex-column">
                         <div>
                           <label htmlFor="startTime">Heure de début</label>
-                          <Field className="form-control" type="time" name="startTime" />
-                          <ErrorMessage name="startTime" className='text-danger' component="div" />
+                          <Field
+                            className="form-control"
+                            type="time"
+                            name="startTime"
+                          />
+                          <ErrorMessage
+                            name="startTime"
+                            className="text-danger"
+                            component="div"
+                          />
                         </div>
                         <div>
                           <label htmlFor="endTime">Heure de fin</label>
-                          <Field className="form-control" type="time" name="endTime" />
-                          <ErrorMessage name="endTime" className='text-danger' component="div" />
+                          <Field
+                            className="form-control"
+                            type="time"
+                            name="endTime"
+                          />
+                          <ErrorMessage
+                            name="endTime"
+                            className="text-danger"
+                            component="div"
+                          />
                         </div>
                         <div>
                           <label htmlFor="Status">Statut</label>
-                          <Field as="select" name="Status" className="form-control" >
+                          <Field
+                            as="select"
+                            name="Status"
+                            className="form-control"
+                          >
                             <option value="En cours">En cours</option>
                             <option value="Terminé">Terminé</option>
                           </Field>
-                          <ErrorMessage name="Status" className='text-danger' component="div" />
+                          <ErrorMessage
+                            name="Status"
+                            className="text-danger"
+                            component="div"
+                          />
                         </div>
                         <div className="d-flex justify-content-center">
-                          <button data-bs-dismiss={(isValid && dirty && !isSubmitting) ? 'modal' : null}
-                            type='submit'
+                          <button
+                            data-bs-dismiss={
+                              isValid && dirty && !isSubmitting ? "modal" : null
+                            }
+                            type="submit"
                             className="btn btn-primary d-block"
                           >
-                            <>{loading ? <Loading text='Enregistrement en cours...' /> : 'Enregistrer'}</>
+                            <>
+                              {loading ? (
+                                <Loading text="Enregistrement en cours..." />
+                              ) : (
+                                "Enregistrer"
+                              )}
+                            </>
                           </button>
                         </div>
-
                       </Form>
                     )}
                   </Formik>
-
                 </PageContainer>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </PageContainer>
   );
-}
+};
 
 export default ListTimeSheet;

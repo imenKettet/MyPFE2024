@@ -12,10 +12,10 @@ const ListAbsences = () => {
       const response = await absenceService.getall();
       setAbsences(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des projets:", error);
+      console.error("Erreur lors de la récupération des absences:", error);
     }
   };
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const options = { year: "numeric", month: "long", day: "numeric" };
 
   useEffect(() => {
     fetchAbsences();
@@ -49,25 +49,25 @@ const ListAbsences = () => {
       // Afficher une notification de suppression réussie
       Swal.fire({
         title: "Supprimé !",
-        text: "Votre projet a été supprimé.",
+        text: "l'absence a été supprimé.",
         icon: "success",
       });
     } catch (error) {
-      console.error("Erreur lors de la suppression du projet:", error);
+      console.error("Erreur lors de la suppression du l'absence:", error);
       // Afficher une notification en cas d'erreur
       Swal.fire({
         title: "Erreur",
-        text: "Une erreur s'est produite lors de la suppression du projet.",
+        text: "Une erreur s'est produite lors de la suppression de l'absence.",
         icon: "error",
       });
     }
   };
   return (
     <PageContainer
-      title='Liste des absences'
+      title="Liste des absences"
       path="/AddAbsence"
       btnColor="primary"
-      btntxt='Ajouter'
+      btntxt="Ajouter"
     >
       <table className="table">
         <thead>
@@ -87,10 +87,14 @@ const ListAbsences = () => {
               <td>{absence.employe.lastName}</td>
               <td>{absence.absenceType}</td>
               <td>{absence.duration}</td>
-              <td>{new Date(absence.date).toLocaleDateString('fr-FR', options)}</td>
+              <td>
+                {new Date(absence.date).toLocaleDateString("fr-FR", options)}
+              </td>
               <td>
                 <div>
-                  <Link to={'/editAbsence/' + absence._id} ><i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i></Link>
+                  <Link to={"/editAbsence/" + absence._id}>
+                    <i className="cursor-pointer ti ti-pencil h3 text-success me-2"></i>
+                  </Link>
                   <i
                     className="cursor-pointer ti ti-trash h3 text-danger me-2"
                     onClick={() => confirmDelete(absence._id)}

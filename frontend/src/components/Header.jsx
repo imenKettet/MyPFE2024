@@ -11,10 +11,12 @@ const Header = ({ showSidebarFN }) => {
   const navigate = useNavigate();
   const logout = async () => {
     try {
-      const response = await axios.post(process.env.REACT_APP_BASE_URL + "/auth/logout");
+      const response = await axios.post(
+        process.env.REACT_APP_BASE_URL + "/auth/logout"
+      );
       toast.success(response.data.message);
-      navigate('/login')
-      deleteCookie('token')
+      navigate("/login");
+      deleteCookie("token");
     } catch (error) {
       console.log(error);
     }
@@ -26,12 +28,12 @@ const Header = ({ showSidebarFN }) => {
     const fetchNotifications = async () => {
       try {
         const response = await notificationService.getAll();
-        setNotifications(response.data)
+        setNotifications(response.data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchNotifications()
+    fetchNotifications();
   }, [Context.id]);
   return (
     <header className="app-header">
@@ -46,12 +48,21 @@ const Header = ({ showSidebarFN }) => {
               <i className="ti ti-menu-2"></i>
             </div>
           </li>
-          {localStorage.getItem('role') === 'admin' && (
+          {localStorage.getItem("role") === "admin" && (
             <li className="nav-item p-0">
-              <Link to='/notifications' className="nav-link nav-icon-hover position-relative">
+              <Link
+                to="/notifications"
+                className="nav-link nav-icon-hover position-relative"
+              >
                 <i className="ti ti-bell-ringing"></i>
-                <span className="position-absolute  translate-middle p-1 badge rounded-pill bg-danger" style={{ left: '44px' }}>
-                  {notifications.filter((notification) => !notification.viewed).length}
+                <span
+                  className="position-absolute  translate-middle p-1 badge rounded-pill bg-danger"
+                  style={{ left: "44px" }}
+                >
+                  {
+                    notifications.filter((notification) => !notification.viewed)
+                      .length
+                  }
                 </span>
               </Link>
             </li>
@@ -62,7 +73,7 @@ const Header = ({ showSidebarFN }) => {
           id="navbarNav"
         >
           <ul className="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-            <li>{`{${localStorage.getItem('role').toUpperCase()}}`}</li>
+            <li>{`${localStorage.getItem("role").toUpperCase()}`}</li>
             <li className="nav-item dropdown">
               <div
                 className="nav-link nav-icon-hover"
@@ -86,15 +97,17 @@ const Header = ({ showSidebarFN }) => {
                   <Link to={"/profile"}>
                     <div className="d-flex align-items-center gap-2 dropdown-item">
                       <i className="ti ti-user fs-6"></i>
-                      <p className="mb-0 fs-3"> Mon Profil</p>
+                      <p className="mb-0 fs-3"> Mon Profile</p>
                     </div>
                   </Link>
-                  {localStorage.getItem('role') !== 'admin' && <Link to={"/myTasks"}>
-                    <div className="d-flex align-items-center gap-2 dropdown-item">
-                      <i className="ti ti-list-check fs-6"></i>
-                      <p className="mb-0 fs-3">Mes tâches</p>
-                    </div>
-                  </Link>}
+                  {localStorage.getItem("role") !== "admin" && (
+                    <Link to={"/myTasks"}>
+                      <div className="d-flex align-items-center gap-2 dropdown-item">
+                        <i className="ti ti-list-check fs-6"></i>
+                        <p className="mb-0 fs-3">Mes tâches</p>
+                      </div>
+                    </Link>
+                  )}
 
                   <button
                     onClick={logout}

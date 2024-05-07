@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 const oneDayInSeconds = 24 * 60 * 60;
 
 const Login = () => {
@@ -56,13 +56,18 @@ const Login = () => {
                         "http://localhost:4000/auth",
                         values
                       );
-                      if (response.data.role === 'employe') {
+                      if (
+                        response.data.role === "employe" ||
+                        response.data.role === "chef"
+                      ) {
                         Navigate("/my-team");
                       } else {
                         Navigate("/");
                       }
                       toast.success(response.data.message);
-                      setCookie("token", response.data.token, { maxAge: oneDayInSeconds });
+                      setCookie("token", response.data.token, {
+                        maxAge: oneDayInSeconds,
+                      });
                       localStorage.setItem("role", response.data.role);
                     } catch (error) {
                       console.log(error);
@@ -175,9 +180,7 @@ const Login = () => {
                     </form>
                   )}
                 </Formik>
-                <div className="d-none">
-                  {JSON.stringify(cookies)}
-                </div>
+                <div className="d-none">{JSON.stringify(cookies)}</div>
               </div>
             </div>
           </div>

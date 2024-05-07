@@ -37,18 +37,20 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
             <i className="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span className="hide-menu">Home</span>
           </li>
-          {["admin", "chef"].includes(role) && <li className="sidebar-item">
-            <Link
-              className={`sidebar-link ${isLinkActive("/")}`}
-              to="/"
-              aria-expanded="false"
-            >
-              <span>
-                <i className="ti ti-layout-dashboard"></i>
-              </span>
-              <span className="hide-menu">Dashboard</span>
-            </Link>
-          </li>}
+          {["admin"].includes(role) && (
+            <li className="sidebar-item">
+              <Link
+                className={`sidebar-link ${isLinkActive("/")}`}
+                to="/"
+                aria-expanded="false"
+              >
+                <span>
+                  <i className="ti ti-layout-dashboard"></i>
+                </span>
+                <span className="hide-menu">Dashboard</span>
+              </Link>
+            </li>
+          )}
           {role === "admin" && (
             <li className="nav-small-cap">
               <i className="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -132,21 +134,6 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
               </Link>
             </li>
           )}
-          {role === "chef" && (
-            <li className="sidebar-item">
-              <Link
-                className={`sidebar-link ${isLinkActive("/myProjects")}`}
-                to="/myProjects"
-                aria-expanded="false"
-              >
-                <span>
-                  <i className="ti ti-article"></i>
-                </span>
-                <span className="hide-menu"> Mes projets </span>
-              </Link>
-            </li>
-
-          )}
           {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
@@ -160,8 +147,22 @@ const Sidebar = ({ showSidebarFN, isSidebarOpen }) => {
                 <span className="hide-menu"> Mon équipe </span>
               </Link>
             </li>
-
           )}
+          {role === "chef" && (
+            <li className="sidebar-item">
+              <Link
+                className={`sidebar-link ${isLinkActive("/myProjects")}`}
+                to="/myProjects"
+                aria-expanded="false"
+              >
+                <span>
+                  <i className="ti ti-article"></i>
+                </span>
+                <span className="hide-menu"> Mes projets </span>
+              </Link>
+            </li>
+          )}
+
           {["employe", "chef"].includes(role) && (
             <li className="sidebar-item">
               <Link
