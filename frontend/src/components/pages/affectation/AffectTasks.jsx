@@ -41,7 +41,7 @@ const AffectTasks = () => {
         toast.error("Veuillez choisir un projet");
         return;
       } else if (!selectedTasks || selectedTasks.length === 0) {
-        toast.error("Vous n'avez pas selectionné de taches");
+        toast.error("Veuillez sélectionner au moins une tache");
         return;
       }
       setLoading(true);

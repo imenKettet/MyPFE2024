@@ -234,10 +234,6 @@ const ListTimeSheet = () => {
         const response = await chefService.getOne(Context.id);
         setProjects(response.data.projects);
       }
-      if (role === "employe") {
-        const response = await userService.getOne(Context.id);
-        setProjects(response.data.team.projects);
-      }
       if (role === "admin") {
         const response = await projectService.getall();
         setProjects(response.data);
@@ -251,7 +247,7 @@ const ListTimeSheet = () => {
     // eslint-disable-next-line
   }, [Context.id]);
   return (
-    <PageContainer title="Feuille de temps">
+    <PageContainer title=" Les Feuille de temps">
       <div className="d-flex gap-2">
         <button className="btn btn-light" onClick={handlePreviousWeek}>
           <i className="ti ti-chevron-left"></i>
@@ -423,7 +419,7 @@ const ListTimeSheet = () => {
                 ></button>
               </div>
               <div className="modal-body">
-                <PageContainer title={"Remplir la tâche"}>
+                <PageContainer title={"Modifier la tâche"}>
                   <Formik
                     initialValues={{
                       startTime: dateWorkedData.startTime || "",

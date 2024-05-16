@@ -46,8 +46,12 @@ const AffectationProjectToTeam = () => {
   }, []);
 
   return (
-    <PageContainer title='Affecter un projet à une équipe' path='/listProjects' btnColor="dark" btntxt='Retour' >
-
+    <PageContainer
+      title="Affecter un projet à une équipe"
+      path="/listProjects"
+      btnColor="dark"
+      btntxt="Retour"
+    >
       <Formik
         initialValues={{
           project: "",
@@ -56,11 +60,11 @@ const AffectationProjectToTeam = () => {
         onSubmit={async (values) => {
           try {
             if (selectedProject === null) {
-              toast.error('Veuillez sélectionner un projet!')
-              return
+              toast.error("Veuillez sélectionner un projet!");
+              return;
             } else if (!selectedTeams || selectedTeams.length === 0) {
-              toast.error('Veuillez sélectionner au moins une équipe!')
-              return
+              toast.error("Veuillez sélectionner au moins une équipe!");
+              return;
             }
             const response = await projectService.affectProjectToTeam({
               project: selectedProject.value,

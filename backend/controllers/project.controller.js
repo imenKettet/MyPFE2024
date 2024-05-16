@@ -23,7 +23,9 @@ exports.createProject = async (req, res) => {
 
 exports.getAllProject = async (req, res) => {
   try {
-    const projects = await Project.find().populate({ path: "tasks", populate: 'user' }).populate("teams");
+    const projects = await Project.find()
+      .populate({ path: "tasks", populate: "user" })
+      .populate("teams");
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
@@ -95,7 +97,7 @@ exports.updateProject = async (req, res) => {
         nameProject: req.body.nameProject,
         client: req.body.client,
         dateStart: req.body.dateStart,
-        dateEnd: req.body.dateEnd
+        dateEnd: req.body.dateEnd,
       },
       { new: true }
     );

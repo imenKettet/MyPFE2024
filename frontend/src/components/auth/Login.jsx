@@ -145,7 +145,7 @@ const Login = () => {
                         </div>
                       </div>
                       <div className="d-flex align-items-center justify-content-between mb-4">
-                        <div className="form-check">
+                        {/* <div className="form-check">
                           <input
                             className="form-check-input primary"
                             type="checkbox"
@@ -158,7 +158,7 @@ const Login = () => {
                           >
                             Mémoriser
                           </label>
-                        </div>
+                        </div> */}
                         <Link
                           className="text-dark fw-bold "
                           to="/ForgotPassword"

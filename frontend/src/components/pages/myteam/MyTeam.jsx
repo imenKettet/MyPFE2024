@@ -97,7 +97,7 @@ const MyTeam = () => {
     // eslint-disable-next-line
   }, [Context.id]);
   return (
-    <PageContainer title="Liste des employées">
+    <PageContainer title="Mon équipe">
       <table className="table">
         <thead>
           <tr>

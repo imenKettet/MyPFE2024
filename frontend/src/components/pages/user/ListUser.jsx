@@ -76,14 +76,18 @@ const ListUsers = () => {
     );
   });
   return (
-    <PageContainer title='Liste des employées' path='/AddUser' btnColor="primary" btntxt='Ajouter' >
-
+    <PageContainer
+      title="Liste des employés"
+      path="/AddUser"
+      btnColor="primary"
+      btntxt="Ajouter"
+    >
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="input-group mb-0 me-5 ms-5">
           <input
             type="text"
             className="form-control"
-            placeholder="Rechercher par nom, prénom ou email"
+            placeholder="Rechercher par nom, prénom,role ou email"
             value={searchTerm}
             onChange={handleSearch}
           />

@@ -2,8 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Swal from "sweetalert2";
 import { projectService } from "../../../services/project";
 import PageContainer from "../../reusedComponents/PageContainer";
@@ -13,33 +13,42 @@ import Loading from "../../reusedComponents/Loading";
 const EditProject = () => {
   const Navigate = useNavigate();
   const { id } = useParams();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [project, setproject] = useState();
+  const [projectStatus, setProjectStatus] = useState("");
   const initialValues = {
     nameProject: "",
     client: "",
     dateStart: "",
     dateEnd: "",
-    tasks: [{ nameTask: "", estimatedDuration: "" }]
+    tasks: [{ nameTask: "", estimatedDuration: "" }],
   };
   const validationSchema = Yup.object().shape({
-    nameProject: Yup.string().required('Nom du projet est obligatoire'),
-    client: Yup.string().required('Nom du client est obligatoire'),
-    dateStart: Yup.date().required('Date début obligatoire'),
+    nameProject: Yup.string().required("Nom du projet est obligatoire"),
+    client: Yup.string().required("Nom du client est obligatoire"),
+    dateStart: Yup.date().required("Date début obligatoire"),
     dateEnd: Yup.date()
-      .required('Date fin obligatoire')
-      .when('dateStart', (dateStart, schema) => {
-        return schema.min(dateStart, 'La date de fin doit être après la date de début');
+      .required("Date fin obligatoire")
+      .when("dateStart", (dateStart, schema) => {
+        return schema.min(
+          dateStart,
+          "La date de fin doit être après la date de début"
+        );
       }),
     tasks: Yup.array().of(
       Yup.object().shape({
-        nameTask: Yup.string().required('Nom tache obligatoire'),
-        estimatedDuration: Yup.string().required('Date durée estimation obligatoire')
+        nameTask: Yup.string().required("Nom tache obligatoire"),
+        estimatedDuration: Yup.string().required(
+          "Date durée estimation obligatoire"
+        ),
       })
-    )
+    ),
   });
   const addTask = (values, setValues) => {
-    setValues({ ...values, tasks: [...values.tasks, { nameTask: "", estimatedDuration: "" }] });
+    setValues({
+      ...values,
+      tasks: [...values.tasks, { nameTask: "", estimatedDuration: "" }],
+    });
   };
   const deleteTask = (index, values, setValues) => {
     const newTasks = [...values.tasks];
@@ -52,6 +61,7 @@ const EditProject = () => {
       try {
         const response = await projectService.getOne(id);
         setproject(response.data);
+        setProjectStatus(response.data.status);
       } catch (error) {
         console.log(error);
       }
@@ -69,29 +79,31 @@ const EditProject = () => {
     });
   };
   return (
-    <PageContainer title='Modifier un projet' path='/listProjects' btnColor="dark" btntxt='Retour' >
-
+    <PageContainer
+      title="Modifier un projet"
+      path="/listProjects"
+      btnColor="dark"
+      btntxt="Retour"
+    >
       <Formik
-        initialValues={
-          project || initialValues
-        }
+        initialValues={project || initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
-            setLoading(true)
+            setLoading(true);
             const shouldSave = await confirmSaveChanges();
             if (shouldSave.isConfirmed) {
               let projectData = { ...values };
               const response = await projectService.updateOne(id, projectData);
               toast.success(response.data.message);
               Navigate("/ListProjects");
-              setLoading(false)
+              setLoading(false);
             } else if (shouldSave.isDenied) {
               Navigate("/ListProjects");
-              setLoading(false)
+              setLoading(false);
             }
           } catch (error) {
-            setLoading(false)
+            setLoading(false);
             console.log(error);
             if (error.response.status === 400) {
               toast.error(error.response.data.message);
@@ -108,7 +120,7 @@ const EditProject = () => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setValues
+          setValues,
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
@@ -116,58 +128,65 @@ const EditProject = () => {
               <label htmlFor="nameProject" className="form-label">
                 Nom du projet
               </label>
-              <Field
-                type="text"
-                className="form-control"
+              <Field type="text" className="form-control" name="nameProject" />
+              <ErrorMessage
                 name="nameProject"
+                component="div"
+                className="text-danger"
               />
-              <ErrorMessage name="nameProject" component="div" className="text-danger" />
             </div>
 
             <div className="mb-3">
               <label htmlFor="client" className="form-label">
                 Client
               </label>
-              <Field
-                type="text"
-                className="form-control"
+              <Field type="text" className="form-control" name="client" />
+              <ErrorMessage
                 name="client"
+                component="div"
+                className="text-danger"
               />
-              <ErrorMessage name="client" component="div" className="text-danger" />
             </div>
 
             <div className="mb-3">
               <label htmlFor="dateStart" className="form-label">
                 Date_Début
               </label>
-              <Field
-                type="date"
-                className="form-control"
+              <Field type="date" className="form-control" name="dateStart" />
+              <ErrorMessage
                 name="dateStart"
+                component="div"
+                className="text-danger"
               />
-              <ErrorMessage name="dateStart" component="div" className="text-danger" />
             </div>
 
             <div className="mb-3">
               <label htmlFor="dateEnd" className="form-label">
                 Date_Fin
               </label>
-              <Field
-                type="date"
-                className="form-control"
+              <Field type="date" className="form-control" name="dateEnd" />
+              <ErrorMessage
                 name="dateEnd"
+                component="div"
+                className="text-danger"
               />
-              <ErrorMessage name="dateEnd" component="div" className="text-danger" />
             </div>
             <div className="mb-3">
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <label htmlFor="tasks" className="form-label me-3">
-                    Tâches :
-                  </label>
-                  {/* Bouton pour ajouter une nouvelle tâche */}
-                  <button type="button" className="btn btn-primary" onClick={() => addTask(values, setValues)}>Ajouter un tâche</button>
-                </div>
+                <label htmlFor="tasks" className="form-label me-3">
+                  Tâches :
+                </label>
+                {/* Bouton pour ajouter une nouvelle tâche */}
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => addTask(values, setValues)}
+                  disabled={
+                    projectStatus === "Terminé" || projectStatus === "En cours"
+                  }
+                >
+                  Ajouter un tâche
+                </button>
               </div>
 
               {values.tasks.map((task, index) => (
@@ -179,7 +198,12 @@ const EditProject = () => {
                       className="form-control"
                       placeholder="Nom de la tâche"
                     />
-                    <ErrorMessage name={`tasks.${index}.nameTask`} component="span" className="text-danger" /></div>
+                    <ErrorMessage
+                      name={`tasks.${index}.nameTask`}
+                      component="span"
+                      className="text-danger"
+                    />
+                  </div>
                   <div className="col-4 me-2">
                     <Field
                       type="number"
@@ -188,7 +212,11 @@ const EditProject = () => {
                       className="form-control"
                       placeholder="Durée estimée en heure"
                     />
-                    <ErrorMessage name={`tasks.${index}.estimatedDuration`} component="span" className="text-danger" />
+                    <ErrorMessage
+                      name={`tasks.${index}.estimatedDuration`}
+                      component="span"
+                      className="text-danger"
+                    />
                   </div>
                   <div>
                     {values.tasks.length !== 1 && (
@@ -204,8 +232,19 @@ const EditProject = () => {
                 </div>
               ))}
             </div>
-            <Button type='submit' btntxt={<>{loading ? <Loading text='Modification en cours...' /> : 'Valider'}</>} btnColor='primary' />
-
+            <Button
+              type="submit"
+              btntxt={
+                <>
+                  {loading ? (
+                    <Loading text="Modification en cours..." />
+                  ) : (
+                    "Valider"
+                  )}
+                </>
+              }
+              btnColor="primary"
+            />
           </form>
         )}
       </Formik>
