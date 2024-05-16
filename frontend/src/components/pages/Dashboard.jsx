@@ -138,23 +138,23 @@ const Dashboard = () => {
   };
   const maxTimeSpent = selectedProject
     ? Math.max(
-        ...stats.projectsWithWorkedTime
-          .find((project) => project._id === selectedProject)
-          .tasks.map((task) => task.timeSpent)
-      )
+      ...stats.projectsWithWorkedTime
+        .find((project) => project._id === selectedProject)
+        .tasks.map((task) => task.timeSpent)
+    )
     : 0;
   const maxEstimatedTime = selectedProject
     ? Math.max(
-        ...stats.projectsWithWorkedTime
-          .find((project) => project._id === selectedProject)
-          .tasks.map((task) => task.estimatedTime)
-      )
+      ...stats.projectsWithWorkedTime
+        .find((project) => project._id === selectedProject)
+        .tasks.map((task) => task.estimatedTime)
+    )
     : 0;
   const maxYAxis = Math.max(maxTimeSpent, maxEstimatedTime) || 1000;
   const selectedProjectData = selectedProject
     ? stats.projectsWithWorkedTime.find(
-        (project) => project._id === selectedProject
-      )
+      (project) => project._id === selectedProject
+    )
     : null;
 
   var optionsBarVerticalTasksTime = {
@@ -201,8 +201,8 @@ const Dashboard = () => {
     xaxis: {
       categories: selectedProject
         ? stats.projectsWithWorkedTime
-            .find((project) => project._id === selectedProject)
-            .tasks.map((task) => task.nameTask)
+          .find((project) => project._id === selectedProject)
+          .tasks.map((task) => task.nameTask)
         : [],
     },
     yaxis: {
@@ -239,15 +239,15 @@ const Dashboard = () => {
     ],
     series: selectedProject
       ? [
-          {
-            name: "Temps passé (heures)",
-            data: selectedProjectData.tasks.map((task) => task.timeSpent),
-          },
-          {
-            name: "Temps estimé (heures)",
-            data: selectedProjectData.tasks.map((task) => task.estimatedTime),
-          },
-        ]
+        {
+          name: "Temps passé (heures)",
+          data: selectedProjectData.tasks.map((task) => task.timeSpent),
+        },
+        {
+          name: "Temps estimé (heures)",
+          data: selectedProjectData.tasks.map((task) => task.estimatedTime),
+        },
+      ]
       : [],
   };
   var optionsBarHorizontalProjectsPerTeam = {
@@ -331,13 +331,13 @@ const Dashboard = () => {
     ],
     series: stats.teamsAndTheirProjects
       ? [
-          {
-            name: "Projets",
-            data: stats.teamsAndTheirProjects.map(
-              (team) => team.projects.length
-            ),
-          },
-        ]
+        {
+          name: "Projets",
+          data: stats.teamsAndTheirProjects.map(
+            (team) => team.projects.length
+          ),
+        },
+      ]
       : [{ data: stats.teamsAndTheirProjects.map(() => 0) }],
   };
   var optionsBarHorizontalEmployeesPerTeam = {
@@ -421,13 +421,13 @@ const Dashboard = () => {
     ],
     series: stats.teamsAndTheirProjects
       ? [
-          {
-            name: "Employés",
-            data: stats.teamsAndTheirProjects.map(
-              (team) => team.employees.length
-            ),
-          },
-        ]
+        {
+          name: "Employés",
+          data: stats.teamsAndTheirProjects.map(
+            (team) => team.employees.length
+          ),
+        },
+      ]
       : [{ data: stats.teamsAndTheirProjects.map(() => 0) }],
   };
 
@@ -465,10 +465,10 @@ const Dashboard = () => {
     labels: ["En attente", "En cours", "Terminé"],
     series: stats
       ? [
-          stats.projectsNotStarted,
-          stats.projectsInProgress,
-          stats.projectsFinished,
-        ]
+        stats.projectsNotStarted,
+        stats.projectsInProgress,
+        stats.projectsFinished,
+      ]
       : [0, 0, 0],
   };
 
@@ -511,17 +511,17 @@ const Dashboard = () => {
 
   var series = stats
     ? [
-        {
-          data: [
-            stats.users || 0,
-            stats.employees || 0,
-            stats.chefs || 0,
-            stats.teams || 0,
-            stats.projects || 0,
-            stats.tasks || 0,
-          ],
-        },
-      ]
+      {
+        data: [
+          stats.users || 0,
+          stats.employees || 0,
+          stats.chefs || 0,
+          stats.teams || 0,
+          stats.projects || 0,
+          stats.tasks || 0,
+        ],
+      },
+    ]
     : [{ data: [0, 0, 0, 0, 0, 0] }];
   useEffect(() => {
     const fetchStats = async () => {
@@ -545,39 +545,17 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="row">
-          {/* <div className="col-lg-12">
-            <div className="card overflow-hidden p-1 ">
-              <div className="card-body p-1"> */}
-          {/* <h5 className="card-title mb-9 fw-semibold">Nombre total</h5> */}
-          <div class="row">
-            {/* <div class="col-lg-4 mb-1 ">
-                    <StatCard
-                      title=" Nombre des utilisateurs"
-                      value={stats.users}
-                    />
-                  </div> */}
-
-            <div class="col-lg-4 mb-1  ">
+          <div className="row">
+            <div className="col-lg-4 mb-1  ">
               <StatCard title=" Nombre des employés" value={stats.employees} />
             </div>
-
-            {/* <div class="col-lg-4 mb-1 ">
-                    <StatCard title=" Nombre des chefs" value={stats.chefs} />
-                  </div> */}
-            <div class="col-lg-4 mb-1  ">
+            <div className="col-lg-4 mb-1  ">
               <StatCard title=" Nombre des équipes" value={stats.teams} />
             </div>
-            <div class="col-lg-4 mb-1 ">
+            <div className="col-lg-4 mb-1 ">
               <StatCard title="Nombre des projets" value={stats.projects} />
             </div>
           </div>
-
-          {/* <div class="col-lg-4 mb-1 ">
-                    <StatCard title=" Nombre des Taches" value={stats.tasks} />
-                  </div> */}
-          {/* </div>
-            </div>
-          </div> */}
           <div className="col-lg-4">
             <div className="card overflow-hidden p-1">
               <div className="card-body p-1">
@@ -687,27 +665,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-{
-  /* <div className="col-lg-6 d-flex align-items-strech">
-            <div className="card w-100">
-              <div className="card-body">
-                <div className="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                  <div className="mb-3 mb-sm-0">
-                    <h5 className="card-title fw-semibold">
-                      Statistiques verticales
-                    </h5>
-                  </div>
-                </div>
-                {stats && (
-                  <Chart
-                    options={optionsBarVertical}
-                    series={series}
-                    type="bar"
-                    width="100%"
-                  />
-                )}
-              </div>
-            </div>
-          </div> */
-}

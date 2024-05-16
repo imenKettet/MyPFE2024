@@ -4,19 +4,25 @@ const User = require("../models/user");
 //Add Absence_sheet
 exports.createAbsence = async (req, res) => {
   try {
-    const newAbsence = await Absence.create(req.body);
-    await User.findByIdAndUpdate(
-      req.body.employe,
-      { $push: { absences: newAbsence._id } },
-      { new: true }
-    );
-    const employee = await User.findById(req.body.employe)
-    await Notification.create({
-      employee: req.body.employe,
-      absence: newAbsence._id,
-      chef: req.user._id,
-      title: `Absence de ${employee.firstName} ${employee.lastName}`
-    })
+    const dateAbsence = req.body.date
+    const found = await Absence.countDocuments({ date: dateAbsence, employe: req.body.employe })
+    if (found > 0) {
+      return res.status(400).json({ message: "Cette date est déjà remplis!" })
+    } else {
+      const newAbsence = await Absence.create(req.body);
+      await User.findByIdAndUpdate(
+        req.body.employe,
+        { $push: { absences: newAbsence._id } },
+        { new: true }
+      );
+      const employee = await User.findById(req.body.employe)
+      await Notification.create({
+        employee: req.body.employe,
+        absence: newAbsence._id,
+        chef: req.user._id,
+        title: `Absence de ${employee.firstName} ${employee.lastName}`
+      })
+    }
     res.json({ message: "Fiche d'absence créée avec succès !" });
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });

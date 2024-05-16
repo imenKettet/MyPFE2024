@@ -60,7 +60,6 @@ exports.dashboard = async (req, res) => {
         };
       }
     );
-    console.log(projectsWithWorkedTime);
 
     res.json({
       users,
