@@ -44,98 +44,98 @@ const Dashboard = () => {
   const handleProjectSelect = (projectId) => {
     setSelectedProject(projectId);
   };
-  var optionsBarVertical = {
-    chart: {
-      type: "bar",
-      height: 345,
-      offsetX: -15,
-      toolbar: { show: true },
-      foreColor: "#000",
-      fontFamily: "inherit",
-      sparkline: { enabled: false },
-    },
-    colors: ["#FF8C00", "#00688B", "#006400", "#4B0082", "#B8860B", "#8B0000"],
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: "45%",
-        borderRadius: [6],
-        borderRadiusApplication: "end",
-        borderRadiusWhenStacked: "all",
-        distributed: true,
-      },
-    },
-    markers: { size: 0 },
+  // var optionsBarVertical = {
+  //   chart: {
+  //     type: "bar",
+  //     height: 345,
+  //     offsetX: -15,
+  //     toolbar: { show: true },
+  //     foreColor: "#000",
+  //     fontFamily: "inherit",
+  //     sparkline: { enabled: false },
+  //   },
+  //   colors: ["#FF8C00", "#00688B", "#006400", "#4B0082", "#B8860B", "#8B0000"],
+  //   plotOptions: {
+  //     bar: {
+  //       horizontal: false,
+  //       columnWidth: "45%",
+  //       borderRadius: [6],
+  //       borderRadiusApplication: "end",
+  //       borderRadiusWhenStacked: "all",
+  //       distributed: true,
+  //     },
+  //   },
+  //   markers: { size: 0 },
 
-    dataLabels: {
-      enabled: true,
-    },
+  //   dataLabels: {
+  //     enabled: true,
+  //   },
 
-    legend: {
-      show: true,
-    },
+  //   legend: {
+  //     show: true,
+  //   },
 
-    grid: {
-      borderColor: "rgba(0,0,0,0.1)",
-      strokeDashArray: 3,
-      xaxis: {
-        lines: {
-          show: false,
-        },
-      },
-    },
+  //   grid: {
+  //     borderColor: "rgba(0,0,0,0.1)",
+  //     strokeDashArray: 3,
+  //     xaxis: {
+  //       lines: {
+  //         show: false,
+  //       },
+  //     },
+  //   },
 
-    xaxis: {
-      categories: [
-        "Utilisateurs",
-        "Employés",
-        "Chefs",
-        "Équipes",
-        "Projets",
-        "Tâches",
-      ],
-    },
-    yaxis: {
-      show: true,
-      min: 0,
-      max:
-        Math.max(
-          stats.users,
-          stats.employees,
-          stats.chefs,
-          stats.teams,
-          stats.projects,
-          stats.tasks
-        ) || 1000, // You can adjust the default maximum value as needed
-      tickAmount: 4,
-      labels: {
-        style: {
-          cssClass: "grey--text lighten-2--text fill-color",
-        },
-      },
-    },
-    stroke: {
-      show: true,
-      width: 0,
-      lineCap: "butt",
-      colors: ["transparent"],
-    },
+  //   xaxis: {
+  //     categories: [
+  //       "Utilisateurs",
+  //       "Employés",
+  //       "Chefs",
+  //       "Équipes",
+  //       "Projets",
+  //       "Tâches",
+  //     ],
+  //   },
+  //   yaxis: {
+  //     show: true,
+  //     min: 0,
+  //     max:
+  //       Math.max(
+  //         stats.users,
+  //         stats.employees,
+  //         stats.chefs,
+  //         stats.teams,
+  //         stats.projects,
+  //         stats.tasks
+  //       ) || 1000, // You can adjust the default maximum value as needed
+  //     tickAmount: 4,
+  //     labels: {
+  //       style: {
+  //         cssClass: "grey--text lighten-2--text fill-color",
+  //       },
+  //     },
+  //   },
+  //   stroke: {
+  //     show: true,
+  //     width: 0,
+  //     lineCap: "butt",
+  //     colors: ["transparent"],
+  //   },
 
-    tooltip: { theme: "light" },
+  //   tooltip: { theme: "light" },
 
-    responsive: [
-      {
-        breakpoint: 600,
-        options: {
-          plotOptions: {
-            bar: {
-              borderRadius: 3,
-            },
-          },
-        },
-      },
-    ],
-  };
+  //   responsive: [
+  //     {
+  //       breakpoint: 600,
+  //       options: {
+  //         plotOptions: {
+  //           bar: {
+  //             borderRadius: 3,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ],
+  // };
   const maxTimeSpent = selectedProject
     ? Math.max(
       ...stats.projectsWithWorkedTime
@@ -508,21 +508,6 @@ const Dashboard = () => {
       ? [stats.tasksNotStarted, stats.tasksInProgress, stats.tasksFinished]
       : [0, 0, 0],
   };
-
-  var series = stats
-    ? [
-      {
-        data: [
-          stats.users || 0,
-          stats.employees || 0,
-          stats.chefs || 0,
-          stats.teams || 0,
-          stats.projects || 0,
-          stats.tasks || 0,
-        ],
-      },
-    ]
-    : [{ data: [0, 0, 0, 0, 0, 0] }];
   useEffect(() => {
     const fetchStats = async () => {
       const response = await dashboardService.stats();
@@ -532,6 +517,7 @@ const Dashboard = () => {
       }
     };
     fetchStats();
+    // eslint-disable-next-line
   }, []);
 
   return (

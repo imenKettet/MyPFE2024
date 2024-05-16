@@ -20,13 +20,14 @@ const EditUser = () => {
       try {
         const response = await userService.getOne(id);
         setUser(response.data); /// Mise à jour de userdata avec les données de l'utilisateur récupérées depuis l'API
-        
+
       } catch (error) {
         console.error("Error fetching userdata data:", error);
       }
     };
 
     fetchUser();
+    // eslint-disable-next-line
   }, [id]);
 
   const confirmSaveChanges = () => {
@@ -68,9 +69,9 @@ const EditUser = () => {
                 passwordNotEmpty.length >= 1 &&
                 passwordNotEmpty.length <= 5
                 ? schema.min(
-                    6,
-                    "Le mot de passe doit comporter au moins 6 caractère"
-                  )
+                  6,
+                  "Le mot de passe doit comporter au moins 6 caractère"
+                )
                 : schema;
             }
           ),

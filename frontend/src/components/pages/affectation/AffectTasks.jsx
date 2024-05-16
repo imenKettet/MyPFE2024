@@ -68,6 +68,7 @@ const AffectTasks = () => {
       }
     };
     taskList();
+    // eslint-disable-next-line
   }, [id]);
 
   useEffect(() => {
@@ -115,11 +116,11 @@ const AffectTasks = () => {
             options={
               project?.tasks
                 ? project.tasks
-                    .filter((task) => !task.user)
-                    .map((task) => ({
-                      value: task._id,
-                      label: task.nameTask,
-                    }))
+                  .filter((task) => !task.user)
+                  .map((task) => ({
+                    value: task._id,
+                    label: task.nameTask,
+                  }))
                 : []
             }
             value={selectedTasks}

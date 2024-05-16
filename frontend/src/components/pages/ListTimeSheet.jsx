@@ -3,7 +3,6 @@ import PageContainer from "../reusedComponents/PageContainer";
 import { taskService } from "../../services/task";
 import { CoockieContext } from "../../features/contexts";
 import { chefService } from "../../services/chef";
-import { userService } from "../../services/user";
 import { projectService } from "../../services/project";
 import { ErrorMessage, Field, Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -32,8 +31,8 @@ const ListTimeSheet = () => {
     currentDayOfWeek === 1
       ? 0
       : currentDayOfWeek === 0
-      ? -6
-      : 1 - currentDayOfWeek;
+        ? -6
+        : 1 - currentDayOfWeek;
   const dateStart = new Date(currentStartDate);
   dateStart.setDate(dateStart.getDate() + daysToAdd);
   const dateEnd = new Date(dateStart);
@@ -131,11 +130,10 @@ const ListTimeSheet = () => {
       if (selectedTaskId !== "") {
         const response = await taskService.fillTask(selectedTaskId, {
           ...values,
-          dateWorked: `${selectedDate.year}-${
-            selectedDate.month.length === 2
+          dateWorked: `${selectedDate.year}-${selectedDate.month.length === 2
               ? selectedDate.month
               : "0" + selectedDate.month
-          }-${selectedDate.day}`,
+            }-${selectedDate.day}`,
         });
         toast.success(response.data.message);
       }
@@ -404,13 +402,11 @@ const ListTimeSheet = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="userIdModalLabel">{`${
-                  selectedDate.year
-                }-${
-                  selectedDate.month.length === 2
+                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.year
+                  }-${selectedDate.month.length === 2
                     ? selectedDate.month
                     : "0" + selectedDate.month
-                }-${selectedDate.day}`}</h5>
+                  }-${selectedDate.day}`}</h5>
                 <button
                   type="button"
                   className="btn-close"

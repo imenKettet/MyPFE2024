@@ -132,6 +132,12 @@ exports.deleteProject = async (req, res) => {
 
 exports.affectProjectToTeam = async (req, res) => {
   try {
+    const project = await Project.findById(req.body.project);
+    const assignedTeams = project.teams.filter(team => req.body.teams.some(selectedTeam => selectedTeam.value === team.toString()));
+    if (assignedTeams.length > 0) {
+      const affectedTeamLabels = assignedTeams.map(team => req.body.teams.find(selectedTeam => selectedTeam.value === team.toString()).label).join(", ");
+      return res.status(400).json({ message: `Le projet est déjà attribué à l'équipe(s) : ${affectedTeamLabels}` });
+    }
     await Promise.all(
       req.body.teams.map(async (team) => {
         await Project.findByIdAndUpdate(
@@ -150,6 +156,7 @@ exports.affectProjectToTeam = async (req, res) => {
         );
       })
     );
+    console.log(req.body);
 
     res.json({ message: "Affecté avec succés" });
   } catch (error) {
