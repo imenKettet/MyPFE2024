@@ -60,7 +60,7 @@ exports.dashboard = async (req, res) => {
         };
       }
     );
-
+    const projectsInProgressData = await Project.find({ status: "En cours" }).populate('tasks');
     res.json({
       users,
       usersWithTeam,
@@ -71,6 +71,7 @@ exports.dashboard = async (req, res) => {
       projects,
       projectsNotStarted,
       projectsInProgress,
+      projectsInProgressData,
       projectsFinished,
       tasks,
       tasksNotStarted,

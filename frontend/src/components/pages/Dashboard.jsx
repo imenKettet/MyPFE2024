@@ -13,6 +13,7 @@ const Dashboard = () => {
     projects: 0,
     projectsNotStarted: 0,
     projectsInProgress: 0,
+    projectsInProgressData: [],
     projectsFinished: 0,
     tasks: 0,
     tasksNotStarted: 0,
@@ -20,6 +21,7 @@ const Dashboard = () => {
     tasksFinished: 0,
     projectsWithWorkedTime: [],
   });
+  const [selectedProjectsInProgress, setSelectedProjectsInProgress] = useState("");
   // Composant de carte générique
   const StatCard = ({ title, value }) => {
     // Inline styles for the card
@@ -41,6 +43,9 @@ const Dashboard = () => {
     );
   };
   const [selectedProject, setSelectedProject] = useState("");
+  const handleProjectChange = (e) => {
+    setSelectedProjectsInProgress(e.target.value);
+  };
   const handleProjectSelect = (projectId) => {
     setSelectedProject(projectId);
   };
@@ -154,6 +159,11 @@ const Dashboard = () => {
   const selectedProjectData = selectedProject
     ? stats.projectsWithWorkedTime.find(
       (project) => project._id === selectedProject
+    )
+    : null;
+  const selectedProjectInProgressData = selectedProjectsInProgress
+    ? stats.projectsInProgressData.find(
+      (project) => project._id === selectedProjectsInProgress
     )
     : null;
 
@@ -504,8 +514,10 @@ const Dashboard = () => {
     },
     colors: ["#FFC55A", "#F97300", "#0C0C0C"],
     labels: ["En attente", "En cours", "Terminé"],
-    series: stats
-      ? [stats.tasksNotStarted, stats.tasksInProgress, stats.tasksFinished]
+    series: selectedProjectsInProgress
+      ? [selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'En attente').length,
+      selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'En cours').length,
+      selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'Terminé').length]
       : [0, 0, 0],
   };
   useEffect(() => {
@@ -514,6 +526,9 @@ const Dashboard = () => {
       setStats(response.data);
       if (response.data.projectsWithWorkedTime.length > 0) {
         setSelectedProject(response.data.projectsWithWorkedTime[0]._id);
+      }
+      if (response.data.projectsInProgressData.length > 0) {
+        setSelectedProjectsInProgress(response.data.projectsInProgressData[0]._id);
       }
     };
     fetchStats();
@@ -591,17 +606,30 @@ const Dashboard = () => {
           </div>
           <div className="col-lg-4">
             <div className="card overflow-hidden p-1">
-              <div className="card-body p-1">
+              <div className="card-body p-3">
                 <h5 className="card-title mb-9 fw-semibold">Tâches</h5>
                 <div className="row align-items-center">
-                  {stats && (
-                    <Chart
-                      options={donutOptionsTasks}
-                      series={donutOptionsTasks.series}
-                      type="pie"
-                      width="100%"
-                    />
-                  )}
+                  {stats.projectsInProgressData.length > 0 ?
+                    <>
+                      <select onChange={handleProjectChange} className="form-select" value={selectedProjectsInProgress}>
+                        {stats.projectsInProgressData.map((project) => (
+                          <option key={project._id} value={project._id}>
+                            {project.nameProject}
+                          </option>
+                        ))}
+                      </select>
+                      <Chart
+                        options={donutOptionsTasks}
+                        series={
+                          donutOptionsTasks.series
+                        }
+                        type="pie"
+                        width="100%"
+                      />
+                    </> :
+                    <>
+                      Pas de projet avec statut "En cours"
+                    </>}
                 </div>
               </div>
             </div>
