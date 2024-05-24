@@ -71,12 +71,17 @@ const Notifications = () => {
                         return (
                             <div key={index} onClick={() => readOneNotification(notification._id)} className={"list-group-item list-group-item-action cursor-pointer" + (!notification?.viewed && ' bg-light-warning')} aria-current="true">
                                 <div className="d-flex w-100 justify-content-between">
-                                    <h5 className="mb-1">{notification?.title}  le {notification?.absence?.date}</h5>
+                                    {notification?.absence?.date
+                                        ?
+                                        <h5 className="mb-1">{notification?.title}  le {notification?.absence?.date}</h5>
+                                        :
+                                        <h5 className="mb-1">{notification?.title}</h5>
+                                    }
                                     <small>{new Date(notification?.createdAt).toLocaleString('fr-Fr', options)}</small>
                                 </div>
-                                <p className="mb-1">Type d'absence: {notification?.absence?.absenceType.charAt(0).toUpperCase() + notification?.absence?.absenceType?.slice(1)}</p>
+                                {notification?.absence?.absenceType && <p className="mb-1">Type d'absence: {notification?.absence?.absenceType.charAt(0).toUpperCase() + notification?.absence?.absenceType?.slice(1)}</p>}
                                 <div>
-                                    <small>Créé par: {notification?.chef?.firstName}</small>
+                                    {notification?.chef?.firstName && <small>Créé par: {notification?.chef?.firstName}</small>}
                                 </div>
                                 {!notification?.viewed && <span className='rounded-pill notification top-50 bg-danger'></span>}
                             </div>
