@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const morgan = require("morgan");
 const session = require("express-session");
+const cron = require("node-cron");
+const Project = require("./models/project");
+const Notification = require("./models/notifications");
 
 require("./common/init_script");
 require("dotenv").config();
@@ -32,6 +35,29 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+const checkProjectsAndNotify = async () => {
+  const now = new Date();
+  try {
+    const projects = await Project.find({ dateEnd: { $lt: now.toISOString() } });
+
+    projects.forEach(async (project) => {
+      const notification = new Notification({
+        title: `Project ${project.nameProject} est en retard`,
+        absence: null,
+        viewed: false,
+      });
+
+      await notification.save();
+    });
+
+    console.log(`Notifications crée avec succés`);
+  } catch (error) {
+    console.error("Error creating notifications:", error);
+  }
+};
+
+cron.schedule("0 0 * * *", checkProjectsAndNotify);
 
 const userApi = require("./routes/userApi");
 const teamApi = require("./routes/teamApi");
