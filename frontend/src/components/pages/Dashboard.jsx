@@ -559,7 +559,7 @@ const Dashboard = () => {
         <div className="row">
           <div className="row">
             <div className="col-lg-4 mb-1  ">
-              <StatCard title=" Nombre des employés" value={stats.employees} />
+              <StatCard title=" Nombre des employés" value={stats.users} />
             </div>
             <div className="col-lg-4 mb-1  ">
               <StatCard title=" Nombre des équipes" value={stats.teams} />
