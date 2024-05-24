@@ -31,8 +31,8 @@ const ListTimeSheet = () => {
     currentDayOfWeek === 1
       ? 0
       : currentDayOfWeek === 0
-        ? -6
-        : 1 - currentDayOfWeek;
+      ? -6
+      : 1 - currentDayOfWeek;
   const dateStart = new Date(currentStartDate);
   dateStart.setDate(dateStart.getDate() + daysToAdd);
   const dateEnd = new Date(dateStart);
@@ -48,19 +48,12 @@ const ListTimeSheet = () => {
     startTime: Yup.string().required("L'heure de début est requise"),
     endTime: Yup.string()
       .required("L'heure de fin est requise")
-      .when(
-        "startTime",
-        (startTime, schema) =>
-          startTime &&
-          schema.test({
-            test: function (endTime) {
-              if (!endTime) return true;
-              const start = new Date(`2000-01-01T${startTime}`);
-              const end = new Date(`2000-01-01T${endTime}`);
-              return end > start;
-            },
-            message: "L'heure de fin doit être supérieure à l'heure de début",
-          })
+      .test(
+        "is-greater",
+        "L'heure de fin doit être supérieure à l'heure de début",
+        function (value) {
+          return value > this.parent.startTime;
+        }
       ),
     Status: Yup.string().required("Le statut est requis"),
   });
@@ -130,10 +123,11 @@ const ListTimeSheet = () => {
       if (selectedTaskId !== "") {
         const response = await taskService.fillTask(selectedTaskId, {
           ...values,
-          dateWorked: `${selectedDate.year}-${selectedDate.month.length === 2
+          dateWorked: `${selectedDate.year}-${
+            selectedDate.month.length === 2
               ? selectedDate.month
               : "0" + selectedDate.month
-            }-${selectedDate.day}`,
+          }-${selectedDate.day}`,
         });
         toast.success(response.data.message);
       }
@@ -245,7 +239,7 @@ const ListTimeSheet = () => {
     // eslint-disable-next-line
   }, [Context.id]);
   return (
-    <PageContainer title=" Les Feuille de temps">
+    <PageContainer title=" Les Feuilles de temps">
       <div className="d-flex gap-2">
         <button className="btn btn-light" onClick={handlePreviousWeek}>
           <i className="ti ti-chevron-left"></i>
@@ -402,11 +396,13 @@ const ListTimeSheet = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="userIdModalLabel">{`${selectedDate.year
-                  }-${selectedDate.month.length === 2
+                <h5 className="modal-title" id="userIdModalLabel">{`${
+                  selectedDate.year
+                }-${
+                  selectedDate.month.length === 2
                     ? selectedDate.month
                     : "0" + selectedDate.month
-                  }-${selectedDate.day}`}</h5>
+                }-${selectedDate.day}`}</h5>
                 <button
                   type="button"
                   className="btn-close"

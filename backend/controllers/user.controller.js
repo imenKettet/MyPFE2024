@@ -39,7 +39,7 @@ exports.createUser = async (req, res) => {
       html: `<b> Votre email et votre mot de passe sont prêts </b>
       <br/>
       <p>E-mail: <b> ${email} </b> <br> Mot de passe: <b> 123456 </b> </p>
-      Vous pouvez  modifier  votre mot de passe à tout moment dans votre profil.
+      Vous pouvez  modifier  votre mot de passe à tout moment dans votre profile.
       <a href='http://localhost:3000/login'> Se connecter </a>`,
     });
     res.json({ message: " Un email a été envoyé à l'utilisateur avec succès" });
@@ -62,7 +62,12 @@ exports.getAllUsers = async (req, res) => {
 //get one User from database by id
 exports.getOneUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: { path: 'projects', populate: 'tasks' } }).populate('tasks')
+    const user = await User.findById(req.params.id, { password: 0 })
+      .populate({
+        path: "team",
+        populate: { path: "projects", populate: "tasks" },
+      })
+      .populate("tasks");
 
     res.json(user);
   } catch (error) {
@@ -71,12 +76,17 @@ exports.getOneUser = async (req, res) => {
 };
 exports.getTeamByEmployee = async (req, res) => {
   try {
-    const employees = await User.findById(req.params.id, { password: 0 }).populate({ path: 'team', populate: { path: 'chef employees', populate: 'tasks' } }).populate('tasks')
+    const employees = await User.findById(req.params.id, { password: 0 })
+      .populate({
+        path: "team",
+        populate: { path: "chef employees", populate: "tasks" },
+      })
+      .populate("tasks");
     res.json(employees);
   } catch (error) {
     res.status(500).json({ message: error.message || "error server" });
   }
-}
+};
 
 //Update a User
 exports.updateUser = async (req, res) => {
@@ -95,23 +105,35 @@ exports.updateUser = async (req, res) => {
 //delete a User
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id)
-    if (user.role === 'chef') {
+    const user = await User.findById(req.params.id);
+    if (user.role === "chef") {
       const team = await Team.findOne({ chef: req.params.id });
       await Promise.all(
         team.employees.map(async (employee) => {
-          await User.findByIdAndUpdate(employee, { $unset: { team: 1 } }, { new: true })
+          await User.findByIdAndUpdate(
+            employee,
+            { $unset: { team: 1 } },
+            { new: true }
+          );
         })
-      )
-      await Team.findByIdAndDelete(team._id)
+      );
+      await Team.findByIdAndDelete(team._id);
       await Promise.all(
         team.projects.map(async (project) => {
-          await Project.findByIdAndUpdate(project, { $pull: { teams: team._id } }, { new: true })
+          await Project.findByIdAndUpdate(
+            project,
+            { $pull: { teams: team._id } },
+            { new: true }
+          );
         })
-      )
+      );
     }
-    if (user.role === 'employe') {
-      await Team.findByIdAndUpdate(user.team, { $pull: { employees: req.params.id } }, { new: true });
+    if (user.role === "employe") {
+      await Team.findByIdAndUpdate(
+        user.team,
+        { $pull: { employees: req.params.id } },
+        { new: true }
+      );
     }
     // to add delete absences and affected tasks when deleting an employee or chef
 

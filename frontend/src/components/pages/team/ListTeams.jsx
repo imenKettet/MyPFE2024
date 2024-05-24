@@ -19,7 +19,7 @@ const ListTeams = () => {
 
   useEffect(() => {
     fetchTeams();
-    // eslint-disable-next-line  
+    // eslint-disable-next-line
   }, []);
 
   // Inline styles for the card
@@ -63,15 +63,15 @@ const ListTeams = () => {
           animate__animated
           animate__fadeInUp
           animate__faster
-        `
+        `,
         },
         hideClass: {
           popup: `
           animate__animated
           animate__fadeOutDown
           animate__faster
-        `
-        }
+        `,
+        },
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'équipe:", error);
@@ -85,31 +85,32 @@ const ListTeams = () => {
             animate__animated
             animate__fadeInUp
             animate__faster
-          `
+          `,
         },
         hideClass: {
           popup: `
             animate__animated
             animate__fadeOutDown
             animate__faster
-          `
-        }
+          `,
+        },
       });
     }
   };
 
   //fonction pour afficher les détails d'un equipe :
   const showTeamDetails = (team) => {
+    console.log(team);
     // Construire une chaîne HTML pour afficher les détails du l'equipe
     let TeamDetailsHTML = `
       <div>
         <p><strong>Nom du l'équipe:</strong> ${team.teamName}</p>
-        <p><strong>Chef d'equipe:</strong> ${team.chef.firstName} ${team.chef.lastName}</p>
+        <p><strong>Chef d'equipe:</strong> ${team.chef.firstName} ${
+      team.chef.lastName
+    }</p>
         <p><strong>Membres:</strong> ${team.employees.map((em) => {
-      return (
-        `<span class="badge bg-light text-dark">${em.firstName} ${em.lastName}</span>`
-      )
-    })}</p>
+          return `<span class="badge bg-light text-dark">${em.firstName} ${em.lastName}</span>`;
+        })}</p>
       </div>
     `;
 
@@ -154,50 +155,59 @@ const ListTeams = () => {
           animate__animated
           animate__fadeInUp
           animate__faster
-        `
+        `,
       },
       hideClass: {
         popup: `
           animate__animated
           animate__fadeOutDown
           animate__faster
-        `
-      }
+        `,
+      },
     });
   };
 
   return (
-    <PageContainer title="Liste d'équipes" path='/addTeam' btnColor="primary" btntxt='Ajouter' >
+    <PageContainer
+      title="Liste d'équipes"
+      path="/addTeam"
+      btnColor="primary"
+      btntxt="Ajouter"
+    >
       <div className="row">
         {teams.map((team) => (
           <div key={team._id} className="col-md-4 mb-4">
             <div className="card" style={cardStyle}>
               <div className="card-body p-3">
                 <div className="d-flex justify-content-between">
-                  <h3 className="text-center mb-5">
-                    {team.teamName}
-                  </h3>
+                  <h3 className="text-center mb-5">{team.teamName}</h3>
                   <i
                     className="ti ti-trash h4 text-danger cursor-pointer"
                     onClick={() => confirmDelete(team._id)}
-
                   ></i>
                 </div>
                 <h5 className="card-subtitle mb-2 text-muted">
                   <strong>Chef d'équipe:</strong>
                   {`${team.chef.firstName} ${team.chef.lastName}`}
                 </h5>
-                <strong className="card-text">Membres de l'équipe: {team.employees.length}</strong>
+                <strong className="card-text">
+                  Membres de l'équipe: {team.employees.length}
+                </strong>
 
                 <div className="mt-3 d-flex justify-content-between">
-                  <Link className="btn btn-success" to={`/EditTeam/${team._id}`}>
+                  <Link
+                    className="btn btn-success"
+                    to={`/EditTeam/${team._id}`}
+                  >
                     Modifier <i className="ti ti-pencil"></i>
                   </Link>
 
                   <button
                     className="btn btn-info"
                     onClick={() => showTeamDetails(team)}
-                  >Détails <i className="ti ti-alert-circle"></i></button>
+                  >
+                    Détails <i className="ti ti-alert-circle"></i>
+                  </button>
                 </div>
               </div>
             </div>

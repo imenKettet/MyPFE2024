@@ -97,7 +97,7 @@ const AffectTasks = () => {
             options={projects?.map((project) => {
               return {
                 value: project._id,
-                label: project.nameProject /* Concaténer prénom et nom */,
+                label: project.nameProject,
               };
             })}
             placeholder={"Choisir un projet"}
@@ -116,17 +116,19 @@ const AffectTasks = () => {
             options={
               project?.tasks
                 ? project.tasks
-                  .filter((task) => !task.user)
-                  .map((task) => ({
-                    value: task._id,
-                    label: task.nameTask,
-                  }))
+                    .filter((task) => !task.user)
+                    .map((task) => ({
+                      value: task._id,
+                      label: task.nameTask,
+                    }))
                 : []
             }
             value={selectedTasks}
             onChange={selectTasks}
             placeholder={"Choisir une ou plusieurs taches"}
-            noOptionsMessage={() => "Pas de tâches disponibles pour affecter"}
+            noOptionsMessage={() =>
+              "Pas des tâches disponibles pour affectation"
+            }
             isMulti
           ></Select>
         </div>

@@ -10,7 +10,6 @@ const userSchema = new Schema(
     role: String,
     phone: String,
     adress: String,
-    soldeCongé: Number, // to add
     absences: [{ type: Schema.Types.ObjectId, ref: "Absence" }],
     tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
     team: { type: Schema.Types.ObjectId, ref: "Team" },

@@ -21,7 +21,8 @@ const Dashboard = () => {
     tasksFinished: 0,
     projectsWithWorkedTime: [],
   });
-  const [selectedProjectsInProgress, setSelectedProjectsInProgress] = useState("");
+  const [selectedProjectsInProgress, setSelectedProjectsInProgress] =
+    useState("");
   // Composant de carte générique
   const StatCard = ({ title, value }) => {
     // Inline styles for the card
@@ -143,28 +144,28 @@ const Dashboard = () => {
   // };
   const maxTimeSpent = selectedProject
     ? Math.max(
-      ...stats.projectsWithWorkedTime
-        .find((project) => project._id === selectedProject)
-        .tasks.map((task) => task.timeSpent)
-    )
+        ...stats.projectsWithWorkedTime
+          .find((project) => project._id === selectedProject)
+          .tasks.map((task) => task.timeSpent)
+      )
     : 0;
   const maxEstimatedTime = selectedProject
     ? Math.max(
-      ...stats.projectsWithWorkedTime
-        .find((project) => project._id === selectedProject)
-        .tasks.map((task) => task.estimatedTime)
-    )
+        ...stats.projectsWithWorkedTime
+          .find((project) => project._id === selectedProject)
+          .tasks.map((task) => task.estimatedTime)
+      )
     : 0;
   const maxYAxis = Math.max(maxTimeSpent, maxEstimatedTime) || 1000;
   const selectedProjectData = selectedProject
     ? stats.projectsWithWorkedTime.find(
-      (project) => project._id === selectedProject
-    )
+        (project) => project._id === selectedProject
+      )
     : null;
   const selectedProjectInProgressData = selectedProjectsInProgress
     ? stats.projectsInProgressData.find(
-      (project) => project._id === selectedProjectsInProgress
-    )
+        (project) => project._id === selectedProjectsInProgress
+      )
     : null;
 
   var optionsBarVerticalTasksTime = {
@@ -211,8 +212,8 @@ const Dashboard = () => {
     xaxis: {
       categories: selectedProject
         ? stats.projectsWithWorkedTime
-          .find((project) => project._id === selectedProject)
-          .tasks.map((task) => task.nameTask)
+            .find((project) => project._id === selectedProject)
+            .tasks.map((task) => task.nameTask)
         : [],
     },
     yaxis: {
@@ -249,15 +250,15 @@ const Dashboard = () => {
     ],
     series: selectedProject
       ? [
-        {
-          name: "Temps passé (heures)",
-          data: selectedProjectData.tasks.map((task) => task.timeSpent),
-        },
-        {
-          name: "Temps estimé (heures)",
-          data: selectedProjectData.tasks.map((task) => task.estimatedTime),
-        },
-      ]
+          {
+            name: "Temps passé (heures)",
+            data: selectedProjectData.tasks.map((task) => task.timeSpent),
+          },
+          {
+            name: "Temps estimé (heures)",
+            data: selectedProjectData.tasks.map((task) => task.estimatedTime),
+          },
+        ]
       : [],
   };
   var optionsBarHorizontalProjectsPerTeam = {
@@ -341,13 +342,13 @@ const Dashboard = () => {
     ],
     series: stats.teamsAndTheirProjects
       ? [
-        {
-          name: "Projets",
-          data: stats.teamsAndTheirProjects.map(
-            (team) => team.projects.length
-          ),
-        },
-      ]
+          {
+            name: "Projets",
+            data: stats.teamsAndTheirProjects.map(
+              (team) => team.projects.length
+            ),
+          },
+        ]
       : [{ data: stats.teamsAndTheirProjects.map(() => 0) }],
   };
   var optionsBarHorizontalEmployeesPerTeam = {
@@ -431,13 +432,13 @@ const Dashboard = () => {
     ],
     series: stats.teamsAndTheirProjects
       ? [
-        {
-          name: "Employés",
-          data: stats.teamsAndTheirProjects.map(
-            (team) => team.employees.length
-          ),
-        },
-      ]
+          {
+            name: "Employés",
+            data: stats.teamsAndTheirProjects.map(
+              (team) => team.employees.length
+            ),
+          },
+        ]
       : [{ data: stats.teamsAndTheirProjects.map(() => 0) }],
   };
 
@@ -475,10 +476,10 @@ const Dashboard = () => {
     labels: ["En attente", "En cours", "Terminé"],
     series: stats
       ? [
-        stats.projectsNotStarted,
-        stats.projectsInProgress,
-        stats.projectsFinished,
-      ]
+          stats.projectsNotStarted,
+          stats.projectsInProgress,
+          stats.projectsFinished,
+        ]
       : [0, 0, 0],
   };
 
@@ -515,9 +516,17 @@ const Dashboard = () => {
     colors: ["#FFC55A", "#F97300", "#0C0C0C"],
     labels: ["En attente", "En cours", "Terminé"],
     series: selectedProjectsInProgress
-      ? [selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'En attente').length,
-      selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'En cours').length,
-      selectedProjectInProgressData.tasks?.filter((el) => el.Status === 'Terminé').length]
+      ? [
+          selectedProjectInProgressData.tasks?.filter(
+            (el) => el.Status === "En attente"
+          ).length,
+          selectedProjectInProgressData.tasks?.filter(
+            (el) => el.Status === "En cours"
+          ).length,
+          selectedProjectInProgressData.tasks?.filter(
+            (el) => el.Status === "Terminé"
+          ).length,
+        ]
       : [0, 0, 0],
   };
   useEffect(() => {
@@ -528,7 +537,9 @@ const Dashboard = () => {
         setSelectedProject(response.data.projectsWithWorkedTime[0]._id);
       }
       if (response.data.projectsInProgressData.length > 0) {
-        setSelectedProjectsInProgress(response.data.projectsInProgressData[0]._id);
+        setSelectedProjectsInProgress(
+          response.data.projectsInProgressData[0]._id
+        );
       }
     };
     fetchStats();
@@ -561,7 +572,7 @@ const Dashboard = () => {
             <div className="card overflow-hidden p-1">
               <div className="card-body p-1">
                 <h5 className="card-title mb-9 fw-semibold">
-                  Temps passé sur les projets
+                  Temps passé sur les projets Terminé
                 </h5>
                 <div className="row align-items-center">
                   <select
@@ -607,11 +618,18 @@ const Dashboard = () => {
           <div className="col-lg-4">
             <div className="card overflow-hidden p-1">
               <div className="card-body p-3">
-                <h5 className="card-title mb-9 fw-semibold">Tâches</h5>
+                <h5 className="card-title mb-9 fw-semibold">
+                  {" "}
+                  les projets en cours
+                </h5>
                 <div className="row align-items-center">
-                  {stats.projectsInProgressData.length > 0 ?
+                  {stats.projectsInProgressData.length > 0 ? (
                     <>
-                      <select onChange={handleProjectChange} className="form-select" value={selectedProjectsInProgress}>
+                      <select
+                        onChange={handleProjectChange}
+                        className="form-select"
+                        value={selectedProjectsInProgress}
+                      >
                         {stats.projectsInProgressData.map((project) => (
                           <option key={project._id} value={project._id}>
                             {project.nameProject}
@@ -620,16 +638,14 @@ const Dashboard = () => {
                       </select>
                       <Chart
                         options={donutOptionsTasks}
-                        series={
-                          donutOptionsTasks.series
-                        }
+                        series={donutOptionsTasks.series}
                         type="pie"
                         width="100%"
                       />
-                    </> :
-                    <>
-                      Pas de projet avec statut "En cours"
-                    </>}
+                    </>
+                  ) : (
+                    <>Pas de projet avec statut "En cours"</>
+                  )}
                 </div>
               </div>
             </div>
@@ -638,7 +654,7 @@ const Dashboard = () => {
             <div className="card overflow-hidden p-1">
               <div className="card-body p-1">
                 <h5 className="card-title mb-9 fw-semibold">
-                  Nombre de projets par équipe
+                  Nombre des projets par équipe
                 </h5>
                 <div className="row align-items-center">
                   {stats && (
@@ -657,7 +673,7 @@ const Dashboard = () => {
             <div className="card overflow-hidden p-1">
               <div className="card-body p-1">
                 <h5 className="card-title mb-9 fw-semibold">
-                  Nombre d'employés par équipe
+                  Nombre des employés par équipe
                 </h5>
                 <div className="row align-items-center">
                   {stats && (
