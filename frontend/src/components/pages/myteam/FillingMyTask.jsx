@@ -14,22 +14,35 @@ const FillingMyTask = () => {
   const [loading, setLoading] = useState(false);
   const validationSchema = Yup.object().shape({
     startTime: Yup.string().required("L'heure de début est requise"),
+    // .test(
+    //   "is-between-8-and-18",
+    //   "L'heure de début doit être entre 08:00 et 18:00",
+    //   function (value) {
+    //     const start = new Date(`2000-01-01T${value}`);
+    //     const earliest = new Date(`2000-01-01T08:00`);
+    //     const latest = new Date(`2000-01-01T18:00`);
+    //     return start >= earliest && start <= latest;
+    //   }
+    // ),
     endTime: Yup.string()
       .required("L'heure de fin est requise")
-      .when(
-        "startTime",
-        (startTime, schema) =>
-          startTime &&
-          schema.test({
-            test: function (endTime) {
-              if (!endTime) return true;
-              const start = new Date(`2000-01-01T${startTime}`);
-              const end = new Date(`2000-01-01T${endTime}`);
-              return end > start;
-            },
-            message: "L'heure de fin doit être supérieure à l'heure de début",
-          })
+      .test(
+        "is-greater",
+        "L'heure de fin doit être supérieure à l'heure de début",
+        function (value) {
+          return value > this.parent.startTime;
+        }
       ),
+    // .test(
+    //   "is-between-8-and-18",
+    //   "L'heure de fin doit être entre 08:00 et 18:00",
+    //   function (value) {
+    //     const end = new Date(`2000-01-01T${value}`);
+    //     const earliest = new Date(`2000-01-01T08:00`);
+    //     const latest = new Date(`2000-01-01T18:00`);
+    //     return end >= earliest && end <= latest;
+    //   }
+    // ),
     dateWorked: Yup.string().required("La date du travail est requise"),
     Status: Yup.string().required("Le statut est requis"),
   });
@@ -37,7 +50,7 @@ const FillingMyTask = () => {
   const initialValues = {
     startTime: "",
     endTime: "",
-    dateWorked: "",
+    dateWorked: new Date().toISOString().split("T")[0],
     Status: "En cours",
   };
   const handleSubmit = async (values) => {
@@ -64,7 +77,12 @@ const FillingMyTask = () => {
           <Form className="gap-3 d-flex flex-column">
             <div>
               <label htmlFor="dateWorked">Date du travail</label>
-              <Field className="form-control" type="date" name="dateWorked" />
+              <Field
+                className="form-control"
+                type="date"
+                name="dateWorked"
+                readOnly
+              />
               <ErrorMessage
                 name="dateWorked"
                 className="text-danger"

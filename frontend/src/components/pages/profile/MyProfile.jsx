@@ -45,8 +45,17 @@ const MyProfile = () => {
           password: "",
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("Prénom requis"),
-          lastName: Yup.string().required("Nom requis"),
+          firstName: Yup.string()
+            .required("Prénom requis")
+            .matches(
+              /^[a-zA-Z]+$/,
+              "Le prénom ne doit contenir que des lettres"
+            )
+            .max(10, "Le prénom ne doit pas dépasser 10 caractères"),
+          lastName: Yup.string()
+            .required("Nom requis")
+            .matches(/^[a-zA-Z]+$/, "Le nom ne doit contenir que des lettres")
+            .max(10, "Le nom ne doit pas dépasser 10 caractères"),
           email: Yup.string()
             .email("Adresse e-mail invalide")
             .required("E-mail requis"),
@@ -63,7 +72,15 @@ const MyProfile = () => {
                 : schema;
             }
           ),
-          phone: Yup.string().required("Téléphone requis"),
+          phone: Yup.number()
+            .required("Téléphone requis")
+            .positive("le téléphone doit être un numéro positif")
+            .integer("le téléphone doit être un entier")
+            .test(
+              "len",
+              "Le téléphone doit comporter 8 chiffres",
+              (val) => val && val.toString().length === 8
+            ),
           adress: Yup.string().required("Adresse requise"),
           role: Yup.string().required("Rôle requis"),
         })}

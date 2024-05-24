@@ -20,7 +20,6 @@ const EditUser = () => {
       try {
         const response = await userService.getOne(id);
         setUser(response.data); /// Mise à jour de userdata avec les données de l'utilisateur récupérées depuis l'API
-
       } catch (error) {
         console.error("Error fetching userdata data:", error);
       }
@@ -57,8 +56,17 @@ const EditUser = () => {
           password: "",
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required("Prénom requis"),
-          lastName: Yup.string().required("Nom requis"),
+          firstName: Yup.string()
+            .required("Prénom requis")
+            .matches(
+              /^[a-zA-Z]+$/,
+              "Le prénom ne doit contenir que des lettres"
+            )
+            .max(10, "Le prénom ne doit pas dépasser 10 caractères"),
+          lastName: Yup.string()
+            .required("Nom requis")
+            .matches(/^[a-zA-Z]+$/, "Le nom ne doit contenir que des lettres")
+            .max(10, "Le prénom ne doit pas dépasser 10 caractères"),
           email: Yup.string()
             .email("Adresse e-mail invalide")
             .required("E-mail requis"),
@@ -69,13 +77,25 @@ const EditUser = () => {
                 passwordNotEmpty.length >= 1 &&
                 passwordNotEmpty.length <= 5
                 ? schema.min(
-                  6,
-                  "Le mot de passe doit comporter au moins 6 caractère"
-                )
-                : schema;
+                    6,
+                    "Le mot de passe doit comporter au moins 6 caractère"
+                  )
+                : // .max(
+                  //   10,
+                  //   "Le mot de passe ne doit pas dépasser 10 caractères"
+                  // )
+                  schema;
             }
           ),
-          phone: Yup.string().required("Téléphone requis"),
+          phone: Yup.number()
+            .required("Téléphone requis")
+            .positive("le téléphone doit être un numéro positif")
+            .integer("le téléphone doit être un entier")
+            .test(
+              "len",
+              "Le téléphone doit comporter 8 chiffres",
+              (val) => val && val.toString().length === 8
+            ),
           adress: Yup.string().required("Adresse requise"),
           role: Yup.string().required("Rôle requis"),
         })}

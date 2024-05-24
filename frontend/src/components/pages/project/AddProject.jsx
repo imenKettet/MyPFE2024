@@ -15,33 +15,40 @@ const AddProject = () => {
   const initialValues = {
     nameProject: "",
     client: "",
-    dateStart: `${new Date().getFullYear()}-${
-      new Date().getMonth() + 1
-    }-${new Date().getDate()}`,
-    dateEnd: `${new Date().getFullYear()}-${
-      new Date().getMonth() + 1
-    }-${new Date().getDate()}`,
+    dateStart: "",
+    dateEnd: "",
     tasks: [{ nameTask: "", estimatedDuration: "" }],
   };
 
   const validationSchema = Yup.object().shape({
-    nameProject: Yup.string().required("Nom du projet est obligatoire"),
-    client: Yup.string().required("Nom du client est obligatoire"),
-    dateStart: Yup.date().required("Date début obligatoire"),
-    dateEnd: Yup.date()
-      .required("Date fin obligatoire")
-      .when("dateStart", (dateStart, schema) => {
-        return schema.min(
-          dateStart,
-          "La date de fin doit être après la date de début"
-        );
-      }),
+    nameProject: Yup.string()
+      .required("Nom du projet est obligatoire")
+      .max(10, "Le nom ne doit pas dépasser 10 caractères")
+      .matches(/^[^@]*$/, "Le nom ne doit pas contenir le caractère @"),
+    client: Yup.string()
+      .required("Nom du client est obligatoire")
+      .max(10, "Le nom ne doit pas dépasser 10 caractères"),
+    dateStart: Yup.date()
+      .required("Date début est obligatoire")
+      .test(
+        "is-before-endDate",
+        "La date de début doit être avant à la date de fin",
+        function (value) {
+          const { dateEnd } = this.parent;
+          return dateEnd ? new Date(value) < new Date(dateEnd) : true;
+        }
+      ),
+    dateEnd: Yup.date().required("Date fin est obligatoire"),
     tasks: Yup.array().of(
       Yup.object().shape({
-        nameTask: Yup.string().required("Nom tache obligatoire"),
-        estimatedDuration: Yup.string().required(
-          "Date durée estimation obligatoire"
-        ),
+        nameTask: Yup.string()
+          .required("Nom tache est obligatoire")
+          .max(10, "Le nom ne doit pas dépasser 10 caractères"),
+        estimatedDuration: Yup.number()
+          .required("Date durée estimation est obligatoire")
+          .min(0, "La durée doit être supérieure à 0"),
+        // .positive("la duré doit être positif")
+        //   .integer("le duré doit être un entier"),
       })
     ),
   });

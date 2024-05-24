@@ -89,7 +89,7 @@ exports.resetPassword = async (req, res) => {
   try {
     const token = await Token.findOne({ token: req.params.token });
     if (!token) {
-      res.status(404).json({ message: "token expired" });
+      res.status(404).json({ message: "Échec d'opération " });
     } else {
       const user = await User.findById(token.idUser);
       if (!user) {

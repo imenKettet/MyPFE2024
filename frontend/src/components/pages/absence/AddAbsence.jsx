@@ -13,12 +13,14 @@ import PageContainer from "../../reusedComponents/PageContainer";
 
 const validationSchema = Yup.object().shape({
   date: Yup.string().required("Requis"),
-  absenceType: Yup.string().required("Requis")
+  absenceType: Yup.string().required("Requis"),
+  duration: Yup.number().required("la duré est requis"),
+  // .min(0, "La durée doit être supérieure à 0"),
 });
 
 const AddAbsence = () => {
   const Navigate = useNavigate();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [employeUsers, setEmployeUsers] = useState([]);
   const [selectedEmploye, setSelectedEmploye] = useState(null);
 
@@ -39,7 +41,7 @@ const AddAbsence = () => {
   }, []);
 
   return (
-    <PageContainer title={"Ajouter une absence"} >
+    <PageContainer title={"Ajouter une absence"}>
       <Formik
         initialValues={{
           date: "",
@@ -56,10 +58,8 @@ const AddAbsence = () => {
               setLoading(false);
               return;
             }
-            values.absenceType === "Toute la journée" &&
-              (values.duration = 8);
-            values.absenceType === "Demi journée" &&
-              (values.duration = 4);
+            values.absenceType === "Toute la journée" && (values.duration = 8);
+            values.absenceType === "Demi journée" && (values.duration = 4);
             values.employe = selectedEmploye.value;
             const response = await absenceService.addOne(values);
             toast.success(response.data.message);

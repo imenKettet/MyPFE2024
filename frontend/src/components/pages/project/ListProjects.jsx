@@ -48,7 +48,7 @@ const ListProjects = () => {
       // Afficher une notification de suppression réussie
       Swal.fire({
         title: "Supprimé !",
-        text: "Votre projet a été supprimé.",
+        text: "Le projet et ses tâches associées ont été supprimés avec succès",
         icon: "success",
       });
     } catch (error) {
@@ -68,11 +68,11 @@ const ListProjects = () => {
       <div>
         <p><strong>Nom du Projet:</strong> ${project.nameProject}</p>
         <p><strong>Date de Début:</strong> ${new Date(
-      project.dateStart
-    ).toLocaleDateString()}</p>
+          project.dateStart
+        ).toLocaleDateString()}</p>
         <p><strong>Date de Fin:</strong> ${new Date(
-      project.dateEnd
-    ).toLocaleDateString()}</p>
+          project.dateEnd
+        ).toLocaleDateString()}</p>
         <p><strong>Client:</strong> ${project.client}</p>
       </div>
     `;
@@ -116,21 +116,25 @@ const ListProjects = () => {
           animate__animated
           animate__fadeInUp
           animate__faster
-        `
+        `,
       },
       hideClass: {
         popup: `
           animate__animated
           animate__fadeOutDown
           animate__faster
-        `
-      }
+        `,
+      },
     });
   };
 
   return (
-    <PageContainer title="Liste des projets" path='/addProject' btnColor="primary" btntxt='Ajouter' >
-
+    <PageContainer
+      title="Liste des projets"
+      path="/addProject"
+      btnColor="primary"
+      btntxt="Ajouter"
+    >
       <table className="table">
         <thead>
           <tr>
@@ -153,15 +157,15 @@ const ListProjects = () => {
               <td>
                 <div>
                   <Link to={`/EditProject/${project._id}`}>
-                    <i className="cursor-pointer ti ti-pencil h5 text-success me-2"></i>
+                    <i className="cursor-pointer ti ti-pencil h4 text-success me-2"></i>
                   </Link>
 
                   <i
-                    className="cursor-pointer ti ti-trash h5 text-danger me-2"
+                    className="cursor-pointer ti ti-trash h4 text-danger me-2"
                     onClick={() => confirmDelete(project._id)}
                   ></i>
                   <i
-                    className="cursor-pointer ti ti-alert-circle h5 "
+                    className="cursor-pointer ti ti-alert-circle h4 "
                     onClick={() => showProjectDetails(project)}
                   ></i>
                 </div>

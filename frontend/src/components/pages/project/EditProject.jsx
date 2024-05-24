@@ -24,11 +24,16 @@ const EditProject = () => {
     tasks: [{ nameTask: "", estimatedDuration: "" }],
   };
   const validationSchema = Yup.object().shape({
-    nameProject: Yup.string().required("Nom du projet est obligatoire"),
-    client: Yup.string().required("Nom du client est obligatoire"),
-    dateStart: Yup.date().required("Date début obligatoire"),
+    nameProject: Yup.string()
+      .required("Nom du projet est obligatoire")
+      .max(10, "Le nom ne doit pas dépasser 10 caractères")
+      .matches(/^[^@]*$/, "Le nom ne doit pas contenir le caractère @"),
+    client: Yup.string()
+      .required("Nom du client est obligatoire")
+      .max(10, "Le nom ne doit pas dépasser 10 caractères"),
+    dateStart: Yup.date().required("Date début est obligatoire"),
     dateEnd: Yup.date()
-      .required("Date fin obligatoire")
+      .required("Date fin est obligatoire")
       .when("dateStart", (dateStart, schema) => {
         return schema.min(
           dateStart,
@@ -224,6 +229,10 @@ const EditProject = () => {
                         type="button"
                         className="btn btn-danger"
                         onClick={() => deleteTask(index, values, setValues)}
+                        disabled={
+                          projectStatus === "Terminé" ||
+                          projectStatus === "En cours"
+                        }
                       >
                         <i className="ti ti-trash"></i>
                       </button>

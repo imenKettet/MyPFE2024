@@ -107,7 +107,7 @@ const MyListTimeSheet = () => {
   }, [Context.id]);
 
   return (
-    <PageContainer title=" Mes Feuille de temps">
+    <PageContainer title=" Mes Feuilles de temps">
       <div className="d-flex gap-2">
         <button className="btn btn-light" onClick={handlePreviousWeek}>
           <i className="ti ti-chevron-left"></i>
